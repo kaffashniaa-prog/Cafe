@@ -14,16 +14,17 @@
   body{font-family:Vazirmatn,Tahoma,sans-serif;background:#1e1613;color:#f5ede4;padding-bottom:40px}
   header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#2b201a}
   header h1{font-size:1.1rem}
+  #soundBtn{display:none;background:#4caf7d;color:#10241a;border:none;border-radius:8px;padding:6px 12px;font-family:inherit;font-weight:bold;cursor:pointer;font-size:.8rem}
   #conn{font-size:.75rem;padding:4px 10px;border-radius:12px;background:#1e1613;color:#b7a08c}
   #conn.ok{color:#4caf7d}
-  nav{display:flex;gap:8px;padding:10px 16px;background:#2b201a;position:sticky;top:0;z-index:5}
-  nav button{flex:1;padding:10px;border:none;border-radius:10px;background:#3a2c24;color:#f5ede4;font-family:inherit;font-size:.95rem;cursor:pointer}
+  nav{display:flex;gap:6px;padding:10px 12px;background:#2b201a;position:sticky;top:0;z-index:5}
+  nav button{flex:1;padding:10px 4px;border:none;border-radius:10px;background:#3a2c24;color:#f5ede4;font-family:inherit;font-size:.85rem;cursor:pointer}
   nav button.active{background:#c98a4b;color:#1e1613;font-weight:bold}
   main{padding:16px}
   main section{display:none}
   main section.show{display:block}
   .muted{color:#b7a08c;font-size:.9rem;text-align:center;padding:20px}
-  #tablesGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+  #tablesGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
   .table-card{background:#3a2c24;border:2px solid transparent;border-radius:14px;padding:18px 8px;text-align:center;cursor:pointer}
   .table-card b{display:block;font-size:1.1rem;margin-bottom:6px}
   .table-card span{font-size:.8rem;color:#b7a08c}
@@ -65,12 +66,29 @@
   .order .note{color:#e0b98a;font-size:.85rem;margin:4px 0}
   .badge{display:inline-block;padding:2px 10px;border-radius:12px;background:#1e1613;font-size:.75rem;margin:6px 0}
   .order>button{display:block;width:100%;margin-top:6px;padding:8px;border:none;border-radius:8px;background:#c98a4b;color:#1e1613;font-family:inherit;cursor:pointer;font-weight:bold}
+  #menuWarn{display:none;background:#4a2420;color:#ff9f8f;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.85rem}
+  .mng-hint{background:#2b201a;border-radius:10px;padding:10px 12px;font-size:.85rem;color:#b7a08c;margin-bottom:12px}
+  .mcat{background:#2b201a;border-radius:14px;padding:12px;margin-bottom:12px}
+  .mcat h3{font-size:.95rem;margin-bottom:8px}
+  .mrow{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#3a2c24;border-radius:10px;padding:8px 10px;margin-bottom:6px}
+  .mrow .nm{font-size:.9rem;flex:1}
+  .mrow .nm .pr{display:block;color:#e0b98a;font-size:.75rem}
+  .mrow .nm .so{color:#d06a5a;font-size:.72rem}
+  .mrow .ops{display:flex;gap:4px;flex-shrink:0}
+  .mrow .ops button{border:none;border-radius:8px;background:#1e1613;color:#f5ede4;width:32px;height:32px;cursor:pointer;font-size:.85rem}
+  .mrow .ops button.del{color:#ff8f7a}
+  #addBox{background:#2b201a;border-radius:14px;padding:14px;margin-top:6px}
+  #addBox h3{margin-bottom:10px;font-size:1rem}
+  #addBox input,#addBox select{width:100%;padding:10px;border-radius:10px;border:none;background:#3a2c24;color:#f5ede4;font-family:inherit;margin-bottom:8px}
+  #addBtn{width:100%;padding:12px;border:none;border-radius:10px;background:#c98a4b;color:#1e1613;font-weight:bold;font-family:inherit;cursor:pointer}
+  #resetBtn{width:100%;margin-top:8px;padding:10px;border:1px solid #d06a5a;color:#d06a5a;background:none;border-radius:10px;font-family:inherit;cursor:pointer}
 </style>
 </head>
 <body>
 
 <header>
   <h1>☕ کافه روبیک</h1>
+  <button id="soundBtn">🔔 فعال‌سازی صدا</button>
   <span id="conn">در حال اتصال...</span>
 </header>
 
@@ -78,12 +96,14 @@
   <button data-tab="tables">🪑 میزها</button>
   <button data-tab="menu">📋 منو</button>
   <button data-tab="orders">🧾 سفارش‌ها <span id="ordersBadge"></span></button>
+  <button data-tab="manage">⚙️ مدیریت</button>
 </nav>
 
 <main>
   <section id="tab-tables"><div id="tablesGrid"></div></section>
 
   <section id="tab-menu">
+    <div id="menuWarn">⛔ جدول منو در دیتابیس در دسترس نیست — اول SQL جدول منو را در Supabase اجرا کن.</div>
     <div id="tableBar"></div>
     <div id="cats"></div>
     <input id="search" placeholder="🔍 جستجو در کل منو...">
@@ -98,19 +118,34 @@
 
   <section id="tab-orders">
     <div id="ordersList"></div>
-    <button id="resetBtn" style="width:100%;margin-top:8px;padding:10px;border:1px solid #d06a5a;color:#d06a5a;background:none;border-radius:10px;font-family:inherit;cursor:pointer">🧹 پاک‌سازی همه سفارش‌ها (پایان روز)</button>
+    <button id="resetBtn">🧹 پاک‌سازی همه سفارش‌ها (پایان روز)</button>
+  </section>
+
+  <section id="tab-manage">
+    <div class="mng-hint">⚙️ تغییرات منو بلافاصله برای همه اعمال می‌شود. قیمت‌ها به «هزار تومان» (خالی = توافقی).</div>
+    <div id="manageList"></div>
+    <div id="addBox">
+      <h3>➕ افزودن آیتم جدید</h3>
+      <select id="addCat"></select>
+      <input id="addNewCat" placeholder="نام دسته جدید" style="display:none">
+      <input id="addName" placeholder="نام آیتم (مثلا: چای ماسالا)">
+      <input id="addPrice" inputmode="numeric" placeholder="قیمت به هزار تومان (خالی = توافقی)">
+      <label style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:.9rem"><input type="checkbox" id="addSold"> ناموجود است</label>
+      <button id="addBtn">➕ افزودن به منو</button>
+    </div>
   </section>
 </main>
 
 <script>
-/* ===== اتصال به دیتابیس ===== */
+/* ===== تنظیمات ===== */
 const SUPA_URL = 'https://dkmgewadohmnspkueodi.supabase.co';
 const SUPA_KEY = 'sb_publishable_1IKt1YXof1LUaVeM5VDgpQ_vb8QqjnJ';
-const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
-
+const ADMIN_PIN = '1234';
 const TABLE_COUNT = 15;
 
-const MENU = [
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+const DEFAULT_MENU = [
  {cat:'قهوه‌ها', items:[
   ['اسپرسو سینگل',140],['اسپرسو دبل',170],['آمریکانو سینگل',145],['آمریکانو دبل',175],
   ['اسپرسو عربیکا',200],['چیلی',175],['لته سینگل',210],['لته دبل',240],
@@ -150,25 +185,82 @@ const MENU = [
   ['املت اسفناج',180],['املت قارچ و پنیر',220],['املت ایرانی',160]]}
 ];
 
-let orders = [];          // همه سفارش‌ها از دیتابیس
-let online = false;
-let cart = [];
-let currentTable = null;
-let currentCat = MENU[0].cat;
-let searchTerm = '';
-let currentTab = 'tables';
+let orders = [], menuRows = [], menuSig = '', menuError = false;
+let online = false, cart = [], currentTable = null, currentCat = null, searchTerm = '', currentTab = 'tables';
+let knownOrderIds = null;   // برای تشخیص سفارش/تحویل جدید
+let soundReady = false;
 
 const $ = s => document.querySelector(s);
 const fmt = p => p==null ? 'توافقی' : (p*1000).toLocaleString('fa-IR')+' تومان';
 const sum = arr => (arr||[]).reduce((n,i)=> n + (i.p==null ? 0 : i.p*i.qty), 0) * 1000;
+const cats = () => [...new Set(menuRows.map(r=>r.cat))];
 
-/* ===== دریافت سفارش‌ها (هر ۳.۵ ثانیه) ===== */
+/* ===== صدا (Web Audio، بدون فایل) ===== */
+function tone(freq, delay, dur){
+  const o = actx.createOscillator(), g = actx.createGain();
+  o.type='sine'; o.frequency.value=freq;
+  g.gain.setValueAtTime(0.0001, actx.currentTime+delay);
+  g.gain.exponentialRampToValueAtTime(0.4, actx.currentTime+delay+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+delay+dur);
+  o.connect(g).connect(actx.destination);
+  o.start(actx.currentTime+delay); o.stop(actx.currentTime+delay+dur+0.05);
+}
+let actx = null;
+function playSound(kind){
+  if(!soundReady || !actx) return;
+  try{
+    if(kind==='new'){ tone(880,0,.15); tone(1175,.18,.25); }        // دینگ
+    else{ tone(988,0,.12); tone(784,.14,.12); tone(1319,.28,.3); }  // دینگ‌دونگ تحویل
+  }catch(e){}
+}
+function unlockSound(){
+  if(!actx){ try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return; } }
+  if(actx.state==='suspended') actx.resume();
+  soundReady = true;
+  localStorage.setItem('cafeSoundOn','1');
+  $('#soundBtn').style.display='none';
+}
+if(localStorage.getItem('cafeSoundOn')==='1'){ soundReady = true; }
+
+/* ===== منو ===== */
+async function loadMenu(){
+  try{
+    let {data, error} = await sb.from('cafe_menu').select('*').order('id');
+    if(error) throw error;
+    if(data && !data.length){
+      const rows=[];
+      DEFAULT_MENU.forEach(g=>g.items.forEach(it=>rows.push({cat:g.cat, name:it[0], price:it[1], soldout:!!it[2]})));
+      const ins = await sb.from('cafe_menu').insert(rows);
+      if(ins.error) throw ins.error;
+      ({data, error} = await sb.from('cafe_menu').select('*').order('id'));
+      if(error) throw error;
+    }
+    const sig = JSON.stringify(data);
+    if(sig !== menuSig){
+      menuSig = sig; menuRows = data || [];
+      if(currentTab==='menu') renderMenu();
+      if(currentTab==='manage') renderManage();
+    }
+    menuError = false;
+  }catch(e){ menuError = true; }
+  const w = $('#menuWarn'); if(w) w.style.display = menuError ? 'block' : 'none';
+}
+
+/* ===== سفارش‌ها + تشخیص صدایی ===== */
 async function fetchOrders(){
   try{
     const {data, error} = await sb.from('cafe_orders').select('*').order('id');
     if(error) throw error;
-    orders = data || [];
-    if(!online){ online = true; }
+    const fresh = data || [];
+    if(knownOrderIds !== null && online){
+      fresh.forEach(o=>{
+        if(!knownOrderIds.has(o.id)) playSound('new');                    // سفارش جدید
+        else if(o.status==='done' && !prevDone.has(o.id)) playSound('done'); // تحویل
+      });
+    }
+    prevDone = new Set(fresh.filter(o=>o.status==='done').map(o=>o.id));
+    knownOrderIds = new Set(fresh.map(o=>o.id));
+    orders = fresh; online = true;
   }catch(e){ online = false; }
   const c = $('#conn');
   c.textContent = online ? '✅ متصل' : '🔴 بدون اتصال';
@@ -178,8 +270,10 @@ async function fetchOrders(){
   const badge = orders.filter(o=>o.status!=='done').length;
   $('#ordersBadge').textContent = badge ? badge : '';
 }
+let prevDone = new Set();
 
 /* ===== تب‌ها ===== */
+function askPin(){ return prompt('کد مدیریت را وارد کن:') === ADMIN_PIN; }
 function showTab(name){
   currentTab = name;
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
@@ -187,6 +281,7 @@ function showTab(name){
   if(name==='tables') renderTables();
   if(name==='menu')   renderMenu();
   if(name==='orders') renderOrders();
+  if(name==='manage') renderManage();
 }
 
 /* ===== میزها ===== */
@@ -195,46 +290,45 @@ function renderTables(){
   for(let i=1;i<=TABLE_COUNT;i++){
     const open = orders.filter(o=>o.table_id===i && o.status!=='done').length;
     const d = document.createElement('div');
-    d.className = 'table-card' + (open?' busy':'') + (currentTable===i?' selected':'');
+    d.className = 'table-card' + (open?' busy':'');
     d.innerHTML = `<b>میز ${i}</b><span>${open ? open+' سفارش فعال' : 'آزاد'}</span>`;
     d.onclick = ()=>{ currentTable=i; cart=[]; showTab('menu'); };
     el.appendChild(d);
   }
 }
 
-/* ===== منو ===== */
+/* ===== منو (نمایش) ===== */
 function renderMenu(){
+  const cs = cats();
+  if(!cs.includes(currentCat)) currentCat = cs[0] || '';
   const bar = $('#tableBar');
   bar.innerHTML = currentTable
     ? `<span>میز فعال: <b>میز ${currentTable}</b></span><button onclick="currentTable=null;cart=[];renderMenu()">تغییر میز</button>`
     : `<span>⚠️ اول از تب «میزها» یک میز انتخاب کن</span>`;
 
-  const cats = $('#cats'); cats.innerHTML='';
-  MENU.forEach(g=>{
+  const catsEl = $('#cats'); catsEl.innerHTML='';
+  cs.forEach(c=>{
     const b=document.createElement('button');
-    b.textContent=g.cat;
-    b.className='cat'+(g.cat===currentCat?' active':'');
-    b.onclick=()=>{ currentCat=g.cat; searchTerm=''; $('#search').value=''; renderMenu(); };
-    cats.appendChild(b);
+    b.textContent=c;
+    b.className='cat'+(c===currentCat?' active':'');
+    b.onclick=()=>{ currentCat=c; searchTerm=''; $('#search').value=''; renderMenu(); };
+    catsEl.appendChild(b);
   });
 
   const grid=$('#menuGrid'); grid.innerHTML='';
-  let groups = searchTerm
-    ? MENU.filter(g=>g.items.some(i=>i[0].includes(searchTerm)))
-    : [MENU.find(x=>x.cat===currentCat)];
-  groups.forEach(g=>{
-    g.items.filter(i=>i[0].includes(searchTerm)).forEach(i=>{
-      const c=document.createElement('div'); c.className='item'+(i[2]?' unavail':'');
-      const info=document.createElement('div');
-      info.innerHTML=`<span class="iname">${i[0]}</span>${searchTerm?`<span class="icat">${g.cat}</span>`:''}<span class="iprice">${fmt(i[1])}</span>`;
-      c.appendChild(info);
-      if(i[2]){ const s=document.createElement('span'); s.className='soldout'; s.textContent='ناموجود'; c.appendChild(s); }
-      else{
-        const btn=document.createElement('button'); btn.textContent='+'; btn.onclick=()=>addToCart(i[0],i[1]);
-        c.appendChild(btn);
-      }
-      grid.appendChild(c);
-    });
+  const rows = searchTerm ? menuRows.filter(r=>r.name.includes(searchTerm)) : menuRows.filter(r=>r.cat===currentCat);
+  if(!rows.length) grid.innerHTML='<p class="muted">آیتمی نیست</p>';
+  rows.forEach(r=>{
+    const c=document.createElement('div'); c.className='item'+(r.soldout?' unavail':'');
+    const info=document.createElement('div');
+    info.innerHTML=`<span class="iname">${r.name}</span>${searchTerm?`<span class="icat">${r.cat}</span>`:''}<span class="iprice">${fmt(r.price)}</span>`;
+    c.appendChild(info);
+    if(r.soldout){ const s=document.createElement('span'); s.className='soldout'; s.textContent='ناموجود'; c.appendChild(s); }
+    else{
+      const btn=document.createElement('button'); btn.textContent='+'; btn.onclick=()=>addToCart(r.name, r.price);
+      c.appendChild(btn);
+    }
+    grid.appendChild(c);
   });
   renderCart();
 }
@@ -278,15 +372,12 @@ function renderCart(){
   $('#submitBtn').disabled=false;
 }
 
-/* ===== ثبت سفارش در دیتابیس ===== */
+/* ===== ثبت سفارش ===== */
 async function submitOrder(){
   if(!currentTable || !cart.length) return;
   const btn=$('#submitBtn'); btn.disabled=true; btn.textContent='در حال ثبت...';
   const {error} = await sb.from('cafe_orders').insert({
-    table_id: currentTable,
-    items: cart,
-    note: $('#orderNote').value.trim(),
-    status: 'new'
+    table_id: currentTable, items: cart, note: $('#orderNote').value.trim(), status: 'new'
   });
   btn.disabled=false; btn.textContent='ثبت سفارش';
   if(error){ alert('خطا در ثبت! اینترنت را چک کن و دوباره بزن.'); renderCart(); return; }
@@ -295,7 +386,7 @@ async function submitOrder(){
   showTab('orders');
 }
 
-/* ===== سفارش‌ها ===== */
+/* ===== سفارش‌ها (نمایش) ===== */
 function renderOrders(){
   const el=$('#ordersList'); el.innerHTML='';
   const byTable = {};
@@ -346,8 +437,72 @@ async function freeTable(tid){
   fetchOrders();
 }
 
+/* ===== مدیریت منو ===== */
+function renderManage(){
+  const list=$('#manageList'); list.innerHTML='';
+  cats().forEach(c=>{
+    const box=document.createElement('div'); box.className='mcat';
+    const h=document.createElement('h3'); h.textContent='📂 '+c;
+    box.appendChild(h);
+    menuRows.filter(r=>r.cat===c).forEach(r=>{
+      const row=document.createElement('div'); row.className='mrow';
+      const nm=document.createElement('div'); nm.className='nm';
+      nm.innerHTML=`<span>${r.name}</span><span class="pr">${fmt(r.price)}</span>${r.soldout?'<span class="so">⛔ ناموجود</span>':''}`;
+      const ops=document.createElement('div'); ops.className='ops';
+      const mk=(txt,fn,cls)=>{ const b=document.createElement('button'); b.textContent=txt; if(cls)b.className=cls; b.onclick=fn; return b; };
+      ops.appendChild(mk('✏️', ()=>editItem(r)));
+      ops.appendChild(mk(r.soldout?'✅':'🚫', ()=>mUpdate(r.id,{soldout:!r.soldout})));
+      ops.appendChild(mk('🗑', ()=>delItem(r), 'del'));
+      row.append(nm, ops);
+      box.appendChild(row);
+    });
+    list.appendChild(box);
+  });
+  const sel=$('#addCat');
+  const prev=sel.value;
+  sel.innerHTML='';
+  cats().forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent='دسته: '+c; sel.appendChild(o); });
+  const o=document.createElement('option'); o.value='__new'; o.textContent='➕ دسته جدید';
+  sel.appendChild(o);
+  if(prev) sel.value=prev;
+}
+async function mUpdate(id, fields){
+  const {error} = await sb.from('cafe_menu').update(fields).eq('id', id);
+  if(error) alert('خطا در ذخیره تغییرات');
+  await loadMenu(); renderManage();
+}
+function editItem(r){
+  const name = prompt('نام آیتم:', r.name);
+  if(name===null) return;
+  const ps = prompt('قیمت به هزار تومان (خالی = توافقی):', r.price==null ? '' : r.price);
+  if(ps===null) return;
+  const price = ps.trim()==='' || isNaN(parseInt(ps)) ? null : parseInt(ps);
+  mUpdate(r.id, {name: name.trim()||r.name, price: price});
+}
+function delItem(r){
+  if(!confirm('«'+r.name+'» از منو حذف شود؟')) return;
+  sb.from('cafe_menu').delete().eq('id', r.id).then(()=>{ loadMenu(); renderManage(); });
+}
+async function addItem(){
+  const name=$('#addName').value.trim();
+  if(!name){ alert('نام آیتم را بنویس'); return; }
+  let cat=$('#addCat').value;
+  if(cat==='__new'){
+    cat=$('#addNewCat').value.trim();
+    if(!cat){ alert('نام دسته جدید را بنویس'); return; }
+  }
+  const ps=$('#addPrice').value.trim();
+  const price = ps==='' || isNaN(parseInt(ps)) ? null : parseInt(ps);
+  const {error} = await sb.from('cafe_menu').insert({cat, name, price, soldout: $('#addSold').checked});
+  if(error){ alert('خطا در افزودن'); return; }
+  $('#addName').value=''; $('#addPrice').value=''; $('#addSold').checked=false; $('#addNewCat').value='';
+  await loadMenu(); renderManage();
+}
+
 /* ===== رویدادها ===== */
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+document.querySelectorAll('nav button').forEach(b=>{
+  b.onclick=()=>{ if(b.dataset.tab==='manage' && currentTab!=='manage' && !askPin()) return; showTab(b.dataset.tab); };
+});
 $('#submitBtn').onclick=submitOrder;
 $('#search').oninput=e=>{ searchTerm=e.target.value.trim(); renderMenu(); };
 $('#resetBtn').onclick=async()=>{
@@ -355,8 +510,17 @@ $('#resetBtn').onclick=async()=>{
   await sb.from('cafe_orders').delete().neq('id', 0);
   fetchOrders();
 };
+$('#addBtn').onclick=addItem;
+$('#addCat').onchange=()=>{ $('#addNewCat').style.display = $('#addCat').value==='__new' ? 'block' : 'none'; };
+$('#soundBtn').onclick=unlockSound;
+
+/* ===== شروع ===== */
+if(soundReady) $('#soundBtn').style.display='none';
+else{ document.body.addEventListener('click', function once(){ unlockSound(); document.body.removeEventListener('click', once); }, {once:true}); }
 fetchOrders();
+loadMenu();
 setInterval(fetchOrders, 3500);
+setInterval(()=>{ if(!document.hidden) loadMenu(); }, 15000);
 showTab('tables');
 </script>
 </body>
