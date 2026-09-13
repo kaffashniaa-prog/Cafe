@@ -1,125 +1,170 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#1e1613">
+<meta name="theme-color" content="#171310">
 <title>سفارش‌گیری کافه روبیک</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
-<link rel="manifest" href='data:application/manifest+json,{"name":"Cafe Rubik","short_name":"Cafe","start_url":".","display":"standalone","background_color":"%231e1613","theme_color":"%231e1613"}'>
+<link rel="manifest" href='data:application/manifest+json,{"name":"Cafe Rubik","short_name":"Cafe","start_url":".","display":"standalone","background_color":"%23171310","theme_color":"%23171310"}'>
 <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  *{box-sizing:border-box;margin:0}
-  body{font-family:Vazirmatn,Tahoma,sans-serif;background:#1e1613;color:#f5ede4;padding-bottom:40px}
-  header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#2b201a}
-  header h1{font-size:1.1rem}
-  #soundBtn{display:none;background:#4caf7d;color:#10241a;border:none;border-radius:8px;padding:6px 12px;font-family:inherit;font-weight:bold;cursor:pointer;font-size:.8rem}
-  #conn{font-size:.75rem;padding:4px 10px;border-radius:12px;background:#1e1613;color:#b7a08c}
-  #conn.ok{color:#4caf7d}
-  nav{display:flex;gap:6px;padding:10px 12px;background:#2b201a;position:sticky;top:0;z-index:5}
-  nav button{flex:1;padding:10px 4px;border:none;border-radius:10px;background:#3a2c24;color:#f5ede4;font-family:inherit;font-size:.85rem;cursor:pointer}
-  nav button.active{background:#c98a4b;color:#1e1613;font-weight:bold}
-  main{padding:16px}
+  *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+  :root{--rad:14px}
+  body.theme-dark{--bg:#171310;--panel:#241b16;--card:#2f241d;--text:#f5ede4;--muted:#b7a08c;--accent:#f5872e;--accentText:#1a120c;--line:#3a2c24;--good:#4caf7d;--bad:#e0705c}
+  body.theme-light{--bg:#f6f1ea;--panel:#efe6d8;--card:#ffffff;--text:#3a2a1c;--muted:#8a7660;--accent:#f5872e;--accentText:#ffffff;--line:#e5d8c6;--good:#2e8f5e;--bad:#c4523c}
+  body.theme-orange{--bg:#ef7d17;--panel:#f6934a;--card:#f9a866;--text:#3d1d04;--muted:#7a4a1e;--accent:#ffffff;--accentText:#ef7d17;--line:#e8903f;--good:#1d6e44;--bad:#8f2b18}
+  body.theme-blue{--bg:#123a6b;--panel:#1a4a85;--card:#22589c;--text:#eaf2ff;--muted:#9fc0e8;--accent:#4db2ff;--accentText:#08223f;--line:#2c66ad;--good:#4ad07f;--bad:#ff8f7a}
+  body{font-family:Vazirmatn,Tahoma,sans-serif;background:var(--bg);color:var(--text);padding-bottom:110px;transition:background .3s,color .3s}
+  header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--panel)}
+  header h1{font-size:1.05rem}
+  .hbtns{display:flex;gap:6px;align-items:center}
+  .hbtns button{border:none;background:var(--card);color:var(--text);border-radius:10px;width:34px;height:34px;font-size:1rem;cursor:pointer;font-family:inherit}
+  #soundBtn{display:none;width:auto!important;padding:0 10px;background:var(--good)!important;color:#10241a!important;font-weight:bold;font-size:.75rem!important}
+  #dash{display:flex;gap:8px;flex-wrap:wrap;padding:8px 14px;background:var(--panel);border-bottom:1px solid var(--line);font-size:.78rem;color:var(--muted)}
+  #dash b{color:var(--accent)}
+  nav{display:flex;gap:6px;padding:10px 12px;background:var(--panel);position:sticky;top:0;z-index:15}
+  nav button{flex:1;padding:10px 4px;border:none;border-radius:10px;background:var(--card);color:var(--text);font-family:inherit;font-size:.85rem;cursor:pointer}
+  nav button.active{background:var(--accent);color:var(--accentText);font-weight:bold}
+  main{padding:14px}
   main section{display:none}
   main section.show{display:block}
-  .muted{color:#b7a08c;font-size:.9rem;text-align:center;padding:20px}
-  #tablesGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
-  .table-card{background:#3a2c24;border:2px solid transparent;border-radius:14px;padding:18px 8px;text-align:center;cursor:pointer}
-  .table-card b{display:block;font-size:1.1rem;margin-bottom:6px}
-  .table-card span{font-size:.8rem;color:#b7a08c}
-  .table-card.busy{border-color:#c98a4b}
-  #tableBar{background:#3a2c24;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;font-size:.95rem}
-  #tableBar button{background:none;border:1px solid #c98a4b;color:#c98a4b;border-radius:8px;padding:4px 10px;cursor:pointer;font-family:inherit}
-  #cats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-  .cat{padding:8px 14px;border:none;border-radius:20px;background:#3a2c24;color:#f5ede4;cursor:pointer;font-family:inherit;font-size:.85rem}
-  .cat.active{background:#c98a4b;color:#1e1613;font-weight:bold}
-  #search{width:100%;padding:10px 14px;border-radius:10px;border:none;background:#3a2c24;color:#f5ede4;font-family:inherit;margin-bottom:12px}
+  .muted{color:var(--muted);font-size:.9rem;text-align:center;padding:20px}
+  /* میزها */
+  #tablesGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
+  .table-card{background:var(--card);border:2px solid transparent;border-radius:var(--rad);padding:18px 6px;text-align:center;cursor:pointer;transition:transform .1s}
+  .table-card:active{transform:scale(.95)}
+  .table-card b{display:block;font-size:1.05rem;margin-bottom:6px}
+  .table-card span{font-size:.75rem;color:var(--muted)}
+  .table-card.busy{border-color:var(--accent)}
+  /* منو */
+  .menu-top{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+  #tableBar{flex:1;background:var(--card);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-size:.9rem}
+  #tableBar button{background:none;border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:4px 10px;cursor:pointer;font-family:inherit;font-size:.8rem}
+  #searchToggle{width:44px;height:44px;flex-shrink:0;border:none;border-radius:50%;background:var(--accent);color:var(--accentText);font-size:1.1rem;cursor:pointer}
+  #searchRow{display:none;gap:8px;margin-bottom:12px}
+  #searchRow.open{display:flex}
+  #search{flex:1;padding:11px 14px;border-radius:22px;border:2px solid var(--accent);background:var(--card);color:var(--text);font-family:inherit;outline:none}
+  #searchClose{width:44px;height:44px;border:none;border-radius:50%;background:var(--card);color:var(--muted);font-size:1rem;cursor:pointer}
+  #cats{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:16px}
+  .catc{width:74px;height:74px;border-radius:50%;border:2px solid var(--line);background:var(--card);color:var(--text);font-family:inherit;font-size:.72rem;cursor:pointer;padding:4px;line-height:1.3}
+  .catc.active{background:var(--accent);color:var(--accentText);border-color:var(--accent);font-weight:bold}
   #menuGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:16px}
-  .item{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#3a2c24;border-radius:12px;padding:10px 12px}
+  .item{position:relative;display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--card);border-radius:12px;padding:10px 12px}
   .iname{display:block;font-size:.9rem}
-  .icat{display:block;color:#8f7a66;font-size:.72rem;margin-top:2px}
-  .iprice{display:block;color:#e0b98a;font-size:.8rem;margin-top:4px}
-  .item button{width:32px;height:32px;flex-shrink:0;border:none;border-radius:50%;background:#c98a4b;color:#1e1613;font-size:1.2rem;cursor:pointer;font-weight:bold}
+  .icat{display:block;color:var(--muted);font-size:.72rem;margin-top:2px}
+  .iprice{display:block;color:var(--accent);font-size:.8rem;margin-top:4px;font-weight:bold}
+  .item .add{position:relative;width:36px;height:36px;flex-shrink:0;border:none;border-radius:50%;background:var(--accent);color:var(--accentText);font-size:1.25rem;cursor:pointer;font-weight:bold}
+  .item .add:active{animation:pop .25s}
+  .cnt{position:absolute;top:-6px;left:-6px;background:var(--bad);color:#fff;font-size:.7rem;min-width:20px;height:20px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:bold;padding:0 4px}
   .item.unavail{opacity:.4}
-  .soldout{color:#d06a5a;font-size:.75rem;flex-shrink:0}
-  #cartBox{background:#2b201a;border-radius:14px;padding:14px}
-  #cartBox h3{margin-bottom:10px;font-size:1rem}
-  .cart-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:.95rem;gap:8px}
-  .cart-row small{display:block;color:#e0b98a;font-size:.78rem}
-  .qty{display:flex;align-items:center;gap:8px}
-  .qty button{width:26px;height:26px;border:none;border-radius:8px;background:#3a2c24;color:#f5ede4;cursor:pointer;font-size:1rem}
-  #totalRow{border-top:1px solid #3a2c24;margin-top:8px;padding-top:12px;font-weight:bold;font-size:1rem}
-  #orderNote{width:100%;padding:10px;border-radius:10px;border:none;background:#3a2c24;color:#f5ede4;font-family:inherit;margin:10px 0}
-  #submitBtn{width:100%;padding:12px;border:none;border-radius:10px;background:#4caf7d;color:#10241a;font-weight:bold;font-family:inherit;font-size:1rem;cursor:pointer}
-  #submitBtn:disabled{background:#3a2c24;color:#7a6a5a;cursor:not-allowed}
-  .order-box{background:#2b201a;border-radius:14px;padding:14px;margin-bottom:14px}
+  .soldout{color:var(--bad);font-size:.75rem;flex-shrink:0}
+  #menuWarn{display:none;background:#4a2420;color:#ff9f8f;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.85rem}
+  /* نوار شناور سبد */
+  #cartBar{display:none;position:fixed;bottom:14px;right:14px;left:14px;z-index:30;border:none;border-radius:16px;background:var(--accent);color:var(--accentText);padding:15px 18px;font-family:inherit;font-size:.95rem;font-weight:bold;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.35);display:none;justify-content:space-between;align-items:center}
+  #cartBar.show{display:flex;animation:up .25s ease}
+  /* پنجره‌ها */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;display:none;align-items:flex-end;justify-content:center}
+  .overlay.show{display:flex}
+  .sheet{width:100%;max-width:520px;max-height:82vh;overflow-y:auto;background:var(--panel);border-radius:20px 20px 0 0;padding:16px;animation:up .25s ease}
+  @keyframes up{from{transform:translateY(60px);opacity:.5}to{transform:translateY(0);opacity:1}}
+  @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.25)}100%{transform:scale(1)}}
+  .sh{display:flex;justify-content:space-between;align-items:center;font-size:1rem;font-weight:bold;margin-bottom:12px}
+  .sh button{border:none;background:var(--card);color:var(--muted);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1rem}
+  .srow{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--card);border-radius:10px;padding:9px 11px;margin-bottom:7px}
+  .srow .nm{flex:1;font-size:.9rem}
+  .srow .nm small{display:block;color:var(--accent);font-size:.72rem;margin-top:2px}
+  .srow .ops{display:flex;align-items:center;gap:6px}
+  .srow .ops button{width:27px;height:27px;border:none;border-radius:8px;background:var(--panel);color:var(--text);cursor:pointer;font-size:.95rem}
+  .srow .ops .nb{font-size:.8rem}
+  .sh-total{display:flex;justify-content:space-between;border-top:1px dashed var(--line);margin-top:8px;padding-top:12px;font-weight:bold}
+  #orderNote{width:100%;padding:10px;border-radius:10px;border:none;background:var(--card);color:var(--text);font-family:inherit;margin:10px 0}
+  #submitBtn{width:100%;padding:13px;border:none;border-radius:12px;background:var(--good);color:#10241a;font-weight:bold;font-family:inherit;font-size:1rem;cursor:pointer}
+  /* تم‌ها */
+  .theme-btns{display:flex;gap:10px;justify-content:center;padding:6px 0}
+  .theme-btns button{width:52px;height:52px;border-radius:50%;border:3px solid transparent;cursor:pointer;font-size:1.3rem;font-family:inherit}
+  .theme-btns button.sel{border-color:var(--accent)}
+  /* سفارش‌ها */
+  .order-box{background:var(--panel);border-radius:var(--rad);padding:14px;margin-bottom:14px}
   .order-box h3{display:flex;justify-content:space-between;align-items:center;font-size:1rem;margin-bottom:10px}
-  .order-box h3 .free{background:none;border:1px solid #d06a5a;color:#d06a5a;border-radius:8px;padding:4px 10px;cursor:pointer;font-family:inherit;font-size:.8rem}
-  .order{border-radius:10px;padding:10px 12px;margin-bottom:8px;border-right:4px solid #c98a4b;background:#3a2c24;font-size:.9rem}
+  .order-box h3 .free{background:none;border:1px solid var(--bad);color:var(--bad);border-radius:8px;padding:4px 10px;cursor:pointer;font-family:inherit;font-size:.8rem}
+  .order{border-radius:10px;padding:10px 12px;margin-bottom:8px;border-right:4px solid var(--accent);background:var(--card);font-size:.9rem}
   .order.status-preparing{border-right-color:#5a9bd0}
-  .order.status-done{border-right-color:#4caf7d;opacity:.65}
-  .ohead{display:flex;justify-content:space-between;margin-bottom:6px;color:#b7a08c;font-size:.8rem}
+  .order.status-done{border-right-color:var(--good);opacity:.65}
+  .order.fresh{animation:bounce .55s ease 3}
+  @keyframes bounce{0%,100%{transform:translateY(0)}35%{transform:translateY(-7px)}}
+  .ohead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;color:var(--muted);font-size:.8rem}
+  .late{color:#ffc24b;font-size:.72rem;font-weight:bold}
   .order ul{list-style:none;padding:0}
   .order li{display:flex;justify-content:space-between;padding:3px 0}
-  .order .ototal{border-top:1px dashed #55432f;margin-top:6px;padding-top:6px;display:flex;justify-content:space-between;color:#e0b98a;font-weight:bold}
-  .order .note{color:#e0b98a;font-size:.85rem;margin:4px 0}
-  .badge{display:inline-block;padding:2px 10px;border-radius:12px;background:#1e1613;font-size:.75rem;margin:6px 0}
-  .order>button{display:block;width:100%;margin-top:6px;padding:8px;border:none;border-radius:8px;background:#c98a4b;color:#1e1613;font-family:inherit;cursor:pointer;font-weight:bold}
-  #menuWarn{display:none;background:#4a2420;color:#ff9f8f;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.85rem}
-  .mng-hint{background:#2b201a;border-radius:10px;padding:10px 12px;font-size:.85rem;color:#b7a08c;margin-bottom:12px}
-  .mcat{background:#2b201a;border-radius:14px;padding:12px;margin-bottom:12px}
+  .inote{color:var(--accent);font-size:.75rem}
+  .order .ototal{border-top:1px dashed var(--line);margin-top:6px;padding-top:6px;display:flex;justify-content:space-between;color:var(--accent);font-weight:bold}
+  .order .note{color:var(--accent);font-size:.85rem;margin:4px 0}
+  .badge{display:inline-block;padding:2px 10px;border-radius:12px;background:var(--bg);font-size:.75rem;margin:6px 0}
+  .order>button{display:block;width:100%;margin-top:6px;padding:8px;border:none;border-radius:8px;background:var(--accent);color:var(--accentText);font-family:inherit;cursor:pointer;font-weight:bold}
+  /* مدیریت */
+  .mng-hint{background:var(--card);border-radius:10px;padding:10px 12px;font-size:.8rem;color:var(--muted);margin-bottom:12px}
+  .mcat{background:var(--panel);border-radius:var(--rad);padding:12px;margin-bottom:12px}
   .mcat h3{font-size:.95rem;margin-bottom:8px}
-  .mrow{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#3a2c24;border-radius:10px;padding:8px 10px;margin-bottom:6px}
+  .mrow{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--card);border-radius:10px;padding:8px 10px;margin-bottom:6px}
   .mrow .nm{font-size:.9rem;flex:1}
-  .mrow .nm .pr{display:block;color:#e0b98a;font-size:.75rem}
-  .mrow .nm .so{color:#d06a5a;font-size:.72rem}
+  .mrow .nm .pr{display:block;color:var(--accent);font-size:.75rem}
+  .mrow .nm .so{color:var(--bad);font-size:.72rem}
   .mrow .ops{display:flex;gap:4px;flex-shrink:0}
-  .mrow .ops button{border:none;border-radius:8px;background:#1e1613;color:#f5ede4;width:32px;height:32px;cursor:pointer;font-size:.85rem}
-  .mrow .ops button.del{color:#ff8f7a}
-  #addBox{background:#2b201a;border-radius:14px;padding:14px;margin-top:6px}
-  #addBox h3{margin-bottom:10px;font-size:1rem}
-  #addBox input,#addBox select{width:100%;padding:10px;border-radius:10px;border:none;background:#3a2c24;color:#f5ede4;font-family:inherit;margin-bottom:8px}
-  #addBtn{width:100%;padding:12px;border:none;border-radius:10px;background:#c98a4b;color:#1e1613;font-weight:bold;font-family:inherit;cursor:pointer}
-  #resetBtn{width:100%;margin-top:8px;padding:10px;border:1px solid #d06a5a;color:#d06a5a;background:none;border-radius:10px;font-family:inherit;cursor:pointer}
+  .mrow .ops button{border:none;border-radius:8px;background:var(--bg);color:var(--text);width:32px;height:32px;cursor:pointer;font-size:.85rem}
+  .mrow .ops button.del{color:var(--bad)}
+  #addBox,#codesBox{background:var(--panel);border-radius:var(--rad);padding:14px;margin-top:6px;margin-bottom:14px}
+  #addBox h3,#codesBox h3{margin-bottom:10px;font-size:1rem}
+  #addBox input,#addBox select,#codesBox input{width:100%;padding:10px;border-radius:10px;border:none;background:var(--card);color:var(--text);font-family:inherit;margin-bottom:8px}
+  .bigbtn{width:100%;padding:12px;border:none;border-radius:10px;background:var(--accent);color:var(--accentText);font-weight:bold;font-family:inherit;cursor:pointer;margin-bottom:8px}
+  /* گزارش */
+  .rep-box{background:var(--panel);border-radius:var(--rad);padding:16px;margin-bottom:14px}
+  .rep-row{display:flex;justify-content:space-between;padding:8px 0;font-size:.95rem;border-bottom:1px dashed var(--line)}
+  .rep-row b{color:var(--accent)}
+  .top-chip{display:inline-block;background:var(--card);border-radius:16px;padding:5px 12px;margin:4px;font-size:.82rem}
+  #resetBtn{width:100%;margin-top:8px;padding:11px;border:1px solid var(--bad);color:var(--bad);background:none;border-radius:10px;font-family:inherit;cursor:pointer}
+  /* ورود */
+  #loginOv{position:fixed;inset:0;background:var(--bg);z-index:60;display:none;align-items:center;justify-content:center}
+  #loginOv.show{display:flex}
+  .login-box{text-align:center;width:88%;max-width:340px}
+  .login-box .logo{font-size:3.4rem;margin-bottom:6px}
+  .login-box h2{margin-bottom:4px}
+  .login-box p{color:var(--muted);font-size:.85rem;margin-bottom:18px}
+  #pinInput{width:100%;padding:14px;border-radius:14px;border:2px solid var(--accent);background:var(--card);color:var(--text);font-family:inherit;font-size:1.3rem;text-align:center;letter-spacing:8px;outline:none;margin-bottom:12px}
+  #loginBtn{width:100%;padding:13px;border:none;border-radius:12px;background:var(--accent);color:var(--accentText);font-weight:bold;font-family:inherit;font-size:1rem;cursor:pointer}
+  #loginErr{color:var(--bad);font-size:.8rem;margin-top:10px;min-height:1.2em}
 </style>
 </head>
-<body>
+<body class="theme-dark">
 
 <header>
   <h1>☕ کافه روبیک</h1>
-  <button id="soundBtn">🔔 فعال‌سازی صدا</button>
-  <span id="conn">در حال اتصال...</span>
+  <div class="hbtns">
+    <button id="soundBtn">🔔 فعال‌سازی صدا</button>
+    <button id="themeBtn" title="تم">🎨</button>
+    <button id="exitBtn" title="خروج">🚪</button>
+  </div>
 </header>
+<div id="dash"><span>🪑 میز اشغال: <b id="dTables">۰</b></span><span>🧾 سفارش فعال: <b id="dOrders">۰</b></span><span id="dRevWrap" style="display:none">💰 فروش امروز: <b id="dRev">۰</b></span><span id="conn">در حال اتصال...</span></div>
 
-<nav>
-  <button data-tab="tables">🪑 میزها</button>
-  <button data-tab="menu">📋 منو</button>
-  <button data-tab="orders">🧾 سفارش‌ها <span id="ordersBadge"></span></button>
-  <button data-tab="manage">⚙️ مدیریت</button>
-</nav>
+<nav id="navBar"></nav>
 
 <main>
   <section id="tab-tables"><div id="tablesGrid"></div></section>
 
   <section id="tab-menu">
-    <div id="menuWarn">⛔ جدول منو در دیتابیس در دسترس نیست — اول SQL جدول منو را در Supabase اجرا کن.</div>
-    <div id="tableBar"></div>
-    <div id="cats"></div>
-    <input id="search" placeholder="🔍 جستجو در کل منو...">
-    <div id="menuGrid"></div>
-    <div id="cartBox">
-      <h3>🛒 سبد سفارش</h3>
-      <div id="cartItems"></div>
-      <input id="orderNote" placeholder="توضیحات سفارش (اختیاری) — مثلا: بدون شکر">
-      <button id="submitBtn" disabled>ثبت سفارش</button>
+    <div id="menuWarn">⛔ جدول منو در دیتابیس در دسترس نیست — SQL جدول منو را اجرا کن.</div>
+    <div class="menu-top">
+      <div id="tableBar"></div>
+      <button id="searchToggle">🔍</button>
     </div>
+    <div id="searchRow"><input id="search" placeholder="جستجو در کل منو..."><button id="searchClose">✕</button></div>
+    <div id="cats"></div>
+    <div id="menuGrid"></div>
   </section>
 
-  <section id="tab-orders">
-    <div id="ordersList"></div>
-    <button id="resetBtn">🧹 پاک‌سازی همه سفارش‌ها (پایان روز)</button>
-  </section>
+  <section id="tab-orders"><div id="ordersList"></div></section>
 
   <section id="tab-manage">
     <div class="mng-hint">⚙️ تغییرات منو بلافاصله برای همه اعمال می‌شود. قیمت‌ها به «هزار تومان» (خالی = توافقی).</div>
@@ -131,276 +176,380 @@
       <input id="addName" placeholder="نام آیتم (مثلا: چای ماسالا)">
       <input id="addPrice" inputmode="numeric" placeholder="قیمت به هزار تومان (خالی = توافقی)">
       <label style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:.9rem"><input type="checkbox" id="addSold"> ناموجود است</label>
-      <button id="addBtn">➕ افزودن به منو</button>
+      <button id="addBtn" class="bigbtn">➕ افزودن به منو</button>
+    </div>
+    <div id="codesBox">
+      <h3>🔑 کدهای ورود</h3>
+      <button id="chStaffBtn" class="bigbtn">👷 تغییر کد کارکنان</button>
+      <button id="chAdminBtn" class="bigbtn">👑 تغییر کد مدیر</button>
     </div>
   </section>
+
+  <section id="tab-report">
+    <div class="rep-box" id="repBox"></div>
+    <button id="resetBtn">🧹 پاک‌سازی همه سفارش‌ها (پایان روز)</button>
+  </section>
 </main>
+
+<button id="cartBar"><span>🛒 <b id="barCount">۰</b> آیتم · <span id="barTotal">۰</span></span><span>مشاهده 🡒</span></button>
+
+<div id="sheetOv" class="overlay">
+  <div class="sheet" id="cartSheet">
+    <div class="sh"><span>🛒 سفارش میز <span id="shTable"></span></span><button id="sheetClose">✕</button></div>
+    <div id="sheetItems"></div>
+    <div class="sh-total"><span>جمع کل</span><b id="shTotal">۰</b></div>
+    <input id="orderNote" placeholder="توضیح کلی سفارش (اختیاری) — مثلا: بدون شکر">
+    <button id="submitBtn">✅ ثبت سفارش</button>
+  </div>
+</div>
+
+<div id="themeOv" class="overlay">
+  <div class="sheet" style="text-align:center">
+    <div class="sh"><span>🎨 انتخاب تم</span><button id="themeClose">✕</button></div>
+    <div class="theme-btns">
+      <button data-th="light" title="سفید">🤍</button>
+      <button data-th="dark" title="مشکی">🖤</button>
+      <button data-th="orange" title="نارنجی">🧡</button>
+      <button data-th="blue" title="آبی">💙</button>
+    </div>
+  </div>
+</div>
+
+<div id="loginOv" class="overlay show" style="align-items:center">
+  <div class="login-box">
+    <div class="logo">☕</div>
+    <h2>کافه روبیک</h2>
+    <p>برای ورود، کد را وارد کنید</p>
+    <input id="pinInput" inputmode="numeric" maxlength="6" placeholder="••••">
+    <button id="loginBtn">ورود</button>
+    <p id="loginErr"></p>
+  </div>
+</div>
 
 <script>
 /* ===== تنظیمات ===== */
 const SUPA_URL = 'https://dkmgewadohmnspkueodi.supabase.co';
 const SUPA_KEY = 'sb_publishable_1IKt1YXof1LUaVeM5VDgpQ_vb8QqjnJ';
-const ADMIN_PIN = '1234';
 const TABLE_COUNT = 15;
-
 const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
 
 const DEFAULT_MENU = [
- {cat:'قهوه‌ها', items:[
-  ['اسپرسو سینگل',140],['اسپرسو دبل',170],['آمریکانو سینگل',145],['آمریکانو دبل',175],
-  ['اسپرسو عربیکا',200],['چیلی',175],['لته سینگل',210],['لته دبل',240],
-  ['کاپوچینو سینگل شات',210],['کاپوچینو دبل شات',240],['کارامل ماکیاتو',255],['موکا',255],
-  ['ترک',180],['آیس آمریکانو',150],['آیس لته',245],['هایپ اسپرسو',270],
-  ['آفوگاتو',230],['آیس لته کارامل',260],['کافی کولا',255],['آیس کارامل ماکیاتو',260],['لمون کافی',280]]},
- {cat:'موج سوم', items:[
-  ['کمکس تک کاپ',250],['کمکس دوبل کاپ',440],['سایفون تک کاپ',250],['سایفون دوبل کاپ',440],['فرنچ پرس',225]]},
- {cat:'گرم‌نوش', items:[
-  ['چای ماسالا',260],['هات چاکلت',260],['هات فندقی',280],['وایت چاکلت',260],
-  ['شیر نسکافه',260],['شیرعسل دارچین',270],['هات نوتلا',285],['پینک چاکلت',280]]},
- {cat:'دمنوش‌ها', items:[
-  ['عطر آرامش',155],['اسپایسی چای ترش',155],['سیب دارچین',175],['لیمو نعنا عسلی',165],
-  ['لبخند یلدا',160],['راز بنفش',170],['دل آرام',150],['چای لیوانی',85],['چای با فرنچ پرس',110]]},
- {cat:'خوراک', items:[
-  ['لازانیا گوشت',490],['لازانیا مرغ',460],['پنینی روبو اسپشیال',480],['پنینی چیکن آلفردو',455],
-  ['پنینی گوشت',500],['ماشروم برگر',510],['برگر کلاسیک',420],['پاستا آلفردو',410],
-  ['اسنک روبیک ۸ تکه',480],['اسنک روبیک ۶ تکه',370],['اسنک روبیک ۴ تکه',295],
-  ['سیب‌زمینی با سس قارچ',370],['سیب‌زمینی مخصوص روبیک',480],['چیپس و پنیر',360],['سیب‌زمینی تنوری ساده',250]]},
+ {cat:'قهوه‌ها', items:[['اسپرسو سینگل',140],['اسپرسو دبل',170],['آمریکانو سینگل',145],['آمریکانو دبل',175],['اسپرسو عربیکا',200],['چیلی',175],['لته سینگل',210],['لته دبل',240],['کاپوچینو سینگل شات',210],['کاپوچینو دبل شات',240],['کارامل ماکیاتو',255],['موکا',255],['ترک',180],['آیس آمریکانو',150],['آیس لته',245],['هایپ اسپرسو',270],['آفوگاتو',230],['آیس لته کارامل',260],['کافی کولا',255],['آیس کارامل ماکیاتو',260],['لمون کافی',280]]},
+ {cat:'موج سوم', items:[['کمکس تک کاپ',250],['کمکس دوبل کاپ',440],['سایفون تک کاپ',250],['سایفون دوبل کاپ',440],['فرنچ پرس',225]]},
+ {cat:'گرم‌نوش', items:[['چای ماسالا',260],['هات چاکلت',260],['هات فندقی',280],['وایت چاکلت',260],['شیر نسکافه',260],['شیرعسل دارچین',270],['هات نوتلا',285],['پینک چاکلت',280]]},
+ {cat:'دمنوش‌ها', items:[['عطر آرامش',155],['اسپایسی چای ترش',155],['سیب دارچین',175],['لیمو نعنا عسلی',165],['لبخند یلدا',160],['راز بنفش',170],['دل آرام',150],['چای لیوانی',85],['چای با فرنچ پرس',110]]},
+ {cat:'خوراک', items:[['لازانیا گوشت',490],['لازانیا مرغ',460],['پنینی روبو اسپشیال',480],['پنینی چیکن آلفردو',455],['پنینی گوشت',500],['ماشروم برگر',510],['برگر کلاسیک',420],['پاستا آلفردو',410],['اسنک روبیک ۸ تکه',480],['اسنک روبیک ۶ تکه',370],['اسنک روبیک ۴ تکه',295],['سیب‌زمینی با سس قارچ',370],['سیب‌زمینی مخصوص روبیک',480],['چیپس و پنیر',360],['سیب‌زمینی تنوری ساده',250]]},
  {cat:'سالاد', items:[['سالاد سزار',450]]},
- {cat:'میان‌وعده', items:[
-  ['کرپ نوتلا',230],['کرپ بنفی',310],['کرپ موز توت‌فرنگی',295],['پنکیک نوتلا',230],
-  ['پنکیک موز نوتلا',275],['پنکیک موز توت‌فرنگی',295],['پنکیک مخصوص با بستنی',340],
-  ['مینی پنکیک ساده با چای',295],['مینی پنکیک مخصوص با بستنی',295],['کرپ مافین اسپشیال',300]]},
+ {cat:'میان‌وعده', items:[['کرپ نوتلا',230],['کرپ بنفی',310],['کرپ موز توت‌فرنگی',295],['پنکیک نوتلا',230],['پنکیک موز نوتلا',275],['پنکیک موز توت‌فرنگی',295],['پنکیک مخصوص با بستنی',340],['مینی پنکیک ساده با چای',295],['مینی پنکیک مخصوص با بستنی',295],['کرپ مافین اسپشیال',300]]},
  {cat:'کیک روز', items:[['کیک شکلاتی',105,1],['کیک تریلیچه',150,1]]},
- {cat:'خنکی‌جات', items:[
-  ['موروکو',190],['ملودی',200],['هانی‌بری',185],['الی',195],['سیما',180],
-  ['موهیتو',150],['کرش موهیتو',180],['برنارد',195],['لیموناد',150]]},
- {cat:'بستنی', items:[
-  ['روبو بامبی',225],['کیک بستنی ویژه',305],['کیک بستنی',225],['کیک بستنی شکلاتی',240],['کیک بستنی میوه‌ای',240]]},
+ {cat:'خنکی‌جات', items:[['موروکو',190],['ملودی',200],['هانی‌بری',185],['الی',195],['سیما',180],['موهیتو',150],['کرش موهیتو',180],['برنارد',195],['لیموناد',150]]},
+ {cat:'بستنی', items:[['روبو بامبی',225],['کیک بستنی ویژه',305],['کیک بستنی',225],['کیک بستنی شکلاتی',240],['کیک بستنی میوه‌ای',240]]},
  {cat:'سردنوش', items:[['طلای آرام',240],['عطر بهشت',195],['نفس آبی',195],['ماه چین',195]]},
- {cat:'شیک', items:[
-  ['تروبانا',325],['لتو بری',325],['چوکونات',315],['پیناتلا',355],['پرشین شیک',330],
-  ['شیک نوتلا',305],['شیک کره بادام‌زمینی',295],['شیک توت‌فرنگی',290],['شیک شکلات',285]]},
- {cat:'صبحانه', items:[
-  ['سینی روبیک',400],['بشقاب انگلیسی',380],['سینی دلخواه',null],
-  ['املت اسفناج',180],['املت قارچ و پنیر',220],['املت ایرانی',160]]}
+ {cat:'شیک', items:[['تروبانا',325],['لتو بری',325],['چوکونات',315],['پیناتلا',355],['پرشین شیک',330],['شیک نوتلا',305],['شیک کره بادام‌زمینی',295],['شیک توت‌فرنگی',290],['شیک شکلات',285]]},
+ {cat:'صبحانه', items:[['سینی روبیک',400],['بشقاب انگلیسی',380],['سینی دلخواه',null],['املت اسفناج',180],['املت قارچ و پنیر',220],['املت ایرانی',160]]}
 ];
 
-let orders = [], menuRows = [], menuSig = '', menuError = false;
-let online = false, cart = [], currentTable = null, currentCat = null, searchTerm = '', currentTab = 'tables';
-let knownOrderIds = null;   // برای تشخیص سفارش/تحویل جدید
-let soundReady = false;
+/* ===== وضعیت ===== */
+let orders=[], menuRows=[], menuSig='', menuError=false, online=false;
+let staffPin='1111', adminPin='1396';
+let role = localStorage.getItem('cafeRole')||'';
+let cart=[], currentTable=null, currentCat=null, searchTerm='', currentTab='tables';
+let knownOrderIds=null, prevDone=new Set(), freshIds=new Map();
+let soundReady = localStorage.getItem('cafeSoundOn')==='1';
+let searchOpen=false;
 
-const $ = s => document.querySelector(s);
-const fmt = p => p==null ? 'توافقی' : (p*1000).toLocaleString('fa-IR')+' تومان';
-const sum = arr => (arr||[]).reduce((n,i)=> n + (i.p==null ? 0 : i.p*i.qty), 0) * 1000;
-const cats = () => [...new Set(menuRows.map(r=>r.cat))];
+const $=s=>document.querySelector(s);
+const fmt=p=>p==null?'توافقی':(p*1000).toLocaleString('fa-IR')+' تومان';
+const sum=a=>(a||[]).reduce((n,i)=>n+(i.p==null?0:i.p*i.qty),0)*1000;
+const cats=()=>[...new Set(menuRows.map(r=>r.cat))];
+const faNum=n=>Number(n||0).toLocaleString('fa-IR');
 
-/* ===== صدا (Web Audio، بدون فایل) ===== */
-function tone(freq, delay, dur){
-  const o = actx.createOscillator(), g = actx.createGain();
-  o.type='sine'; o.frequency.value=freq;
-  g.gain.setValueAtTime(0.0001, actx.currentTime+delay);
-  g.gain.exponentialRampToValueAtTime(0.4, actx.currentTime+delay+0.02);
-  g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime+delay+dur);
-  o.connect(g).connect(actx.destination);
-  o.start(actx.currentTime+delay); o.stop(actx.currentTime+delay+dur+0.05);
+/* ===== تم ===== */
+function setTheme(t){
+  document.body.className='theme-'+t;
+  localStorage.setItem('cafeTheme',t);
+  document.querySelectorAll('.theme-btns button').forEach(b=>b.classList.toggle('sel',b.dataset.th===t));
 }
-let actx = null;
-function playSound(kind){
-  if(!soundReady || !actx) return;
+setTheme(localStorage.getItem('cafeTheme')||'dark');
+
+/* ===== صدا ===== */
+let actx=null;
+function tone(f,d,dur){
+  const o=actx.createOscillator(),g=actx.createGain();
+  o.type='sine';o.frequency.value=f;
+  g.gain.setValueAtTime(.0001,actx.currentTime+d);
+  g.gain.exponentialRampToValueAtTime(.4,actx.currentTime+d+.02);
+  g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+d+dur);
+  o.connect(g).connect(actx.destination);
+  o.start(actx.currentTime+d);o.stop(actx.currentTime+d+dur+.05);
+}
+function playSound(k){
+  if(!soundReady||!actx)return;
   try{
-    if(kind==='new'){ tone(880,0,.15); tone(1175,.18,.25); }        // دینگ
-    else{ tone(988,0,.12); tone(784,.14,.12); tone(1319,.28,.3); }  // دینگ‌دونگ تحویل
+    if(k==='new'){tone(880,0,.15);tone(1175,.18,.25);}
+    else{tone(988,0,.12);tone(784,.14,.12);tone(1319,.28,.3);}
   }catch(e){}
 }
 function unlockSound(){
-  if(!actx){ try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return; } }
-  if(actx.state==='suspended') actx.resume();
-  soundReady = true;
-  localStorage.setItem('cafeSoundOn','1');
+  if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){return;}}
+  if(actx.state==='suspended')actx.resume();
+  soundReady=true;localStorage.setItem('cafeSoundOn','1');
   $('#soundBtn').style.display='none';
 }
-if(localStorage.getItem('cafeSoundOn')==='1'){ soundReady = true; }
 
-/* ===== منو ===== */
-async function loadMenu(){
+/* ===== تنظیمات (کدها) ===== */
+async function loadSettings(){
   try{
-    let {data, error} = await sb.from('cafe_menu').select('*').order('id');
-    if(error) throw error;
-    if(data && !data.length){
-      const rows=[];
-      DEFAULT_MENU.forEach(g=>g.items.forEach(it=>rows.push({cat:g.cat, name:it[0], price:it[1], soldout:!!it[2]})));
-      const ins = await sb.from('cafe_menu').insert(rows);
-      if(ins.error) throw ins.error;
-      ({data, error} = await sb.from('cafe_menu').select('*').order('id'));
-      if(error) throw error;
-    }
-    const sig = JSON.stringify(data);
-    if(sig !== menuSig){
-      menuSig = sig; menuRows = data || [];
-      if(currentTab==='menu') renderMenu();
-      if(currentTab==='manage') renderManage();
-    }
-    menuError = false;
-  }catch(e){ menuError = true; }
-  const w = $('#menuWarn'); if(w) w.style.display = menuError ? 'block' : 'none';
+    const {data}=await sb.from('cafe_settings').select('*');
+    (data||[]).forEach(r=>{
+      if(r.key==='staff_pin')staffPin=r.value;
+      if(r.key==='admin_pin')adminPin=r.value;
+    });
+  }catch(e){}
 }
 
-/* ===== سفارش‌ها + تشخیص صدایی ===== */
-async function fetchOrders(){
-  try{
-    const {data, error} = await sb.from('cafe_orders').select('*').order('id');
-    if(error) throw error;
-    const fresh = data || [];
-    if(knownOrderIds !== null && online){
-      fresh.forEach(o=>{
-        if(!knownOrderIds.has(o.id)) playSound('new');                    // سفارش جدید
-        else if(o.status==='done' && !prevDone.has(o.id)) playSound('done'); // تحویل
-      });
-    }
-    prevDone = new Set(fresh.filter(o=>o.status==='done').map(o=>o.id));
-    knownOrderIds = new Set(fresh.map(o=>o.id));
-    orders = fresh; online = true;
-  }catch(e){ online = false; }
-  const c = $('#conn');
-  c.textContent = online ? '✅ متصل' : '🔴 بدون اتصال';
-  c.className = online ? 'ok' : '';
-  if(currentTab==='tables') renderTables();
-  if(currentTab==='orders') renderOrders();
-  const badge = orders.filter(o=>o.status!=='done').length;
-  $('#ordersBadge').textContent = badge ? badge : '';
+/* ===== ورود ===== */
+function showLogin(){
+  $('#loginOv').classList.add('show');
+  $('#pinInput').value='';$('#loginErr').textContent='';
 }
-let prevDone = new Set();
+function doLogin(){
+  const v=$('#pinInput').value.trim();
+  if(v===adminPin){role='admin';}
+  else if(v===staffPin){role='staff';}
+  else{$('#loginErr').textContent='⛔ کد اشتباه است';return;}
+  localStorage.setItem('cafeRole',role);
+  $('#loginOv').classList.remove('show');
+  buildNav();showTab('tables');
+}
+function doExit(){
+  if(!confirm('خروج و تعویض کاربر؟'))return;
+  localStorage.removeItem('cafeRole');role='';
+  cart=[];currentTable=null;closeSheet();
+  showLogin();
+}
 
 /* ===== تب‌ها ===== */
-function askPin(){ return prompt('کد مدیریت را وارد کن:') === ADMIN_PIN; }
+function buildNav(){
+  const nav=$('#navBar');nav.innerHTML='';
+  const tabs=[['tables','🪑 میزها'],['menu','📋 منو'],['orders','🧾 سفارش‌ها']];
+  if(role==='admin')tabs.push(['manage','⚙️ مدیریت'],['report','📊 گزارش']);
+  tabs.forEach(([id,txt])=>{
+    const b=document.createElement('button');
+    b.dataset.tab=id;b.textContent=txt;
+    b.onclick=()=>showTab(id);
+    nav.appendChild(b);
+  });
+}
 function showTab(name){
-  currentTab = name;
-  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
-  document.querySelectorAll('main > section').forEach(s=>s.classList.toggle('show', s.id==='tab-'+name));
-  if(name==='tables') renderTables();
-  if(name==='menu')   renderMenu();
-  if(name==='orders') renderOrders();
-  if(name==='manage') renderManage();
+  if((name==='manage'||name==='report')&&role!=='admin')return;
+  currentTab=name;
+  document.querySelectorAll('#navBar button').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  document.querySelectorAll('main > section').forEach(s=>s.classList.toggle('show',s.id==='tab-'+name));
+  if(name==='tables')renderTables();
+  if(name==='menu')renderMenu();
+  if(name==='orders')renderOrders();
+  if(name==='manage')renderManage();
+  if(name==='report')renderReport();
+}
+
+/* ===== منو از دیتابیس ===== */
+async function loadMenu(){
+  try{
+    let {data,error}=await sb.from('cafe_menu').select('*').order('id');
+    if(error)throw error;
+    if(data && !data.length){
+      const rows=[];
+      DEFAULT_MENU.forEach(g=>g.items.forEach(it=>rows.push({cat:g.cat,name:it[0],price:it[1],soldout:!!it[2]})));
+      const ins=await sb.from('cafe_menu').insert(rows);
+      if(ins.error)throw ins.error;
+      ({data,error}=await sb.from('cafe_menu').select('*').order('id'));
+      if(error)throw error;
+    }
+    const sig=JSON.stringify(data);
+    if(sig!==menuSig){
+      menuSig=sig;menuRows=data||[];
+      if(currentTab==='menu')renderMenu();
+      if(currentTab==='manage')renderManage();
+    }
+    menuError=false;
+  }catch(e){menuError=true;}
+  const w=$('#menuWarn');if(w)w.style.display=menuError?'block':'none';
+}
+
+/* ===== سفارش‌ها + صدا ===== */
+function todayStart(){const d=new Date();d.setHours(0,0,0,0);return d.getTime();}
+async function fetchOrders(){
+  try{
+    const {data,error}=await sb.from('cafe_orders').select('*').order('id');
+    if(error)throw error;
+    const fresh=data||[];
+    if(knownOrderIds!==null&&online){
+      fresh.forEach(o=>{
+        if(!knownOrderIds.has(o.id)){playSound('new');freshIds.set(o.id,Date.now()+6000);setTimeout(()=>{freshIds.delete(o.id);if(currentTab==='orders')renderOrders();},6100);}
+        else if(o.status==='done'&&prevDone.has(o.id)===false){playSound('done');}
+      });
+    }
+    prevDone=new Set(fresh.filter(o=>o.status==='done').map(o=>o.id));
+    knownOrderIds=new Set(fresh.map(o=>o.id));
+    orders=fresh;online=true;
+  }catch(e){online=false;}
+  const c=$('#conn');
+  c.textContent=online?'✅ متصل':'🔴 بدون اتصال';
+  c.style.color=online?'var(--good)':'var(--bad)';
+  updateDash();
+  if(currentTab==='tables')renderTables();
+  if(currentTab==='orders')renderOrders();
+  $('#dRevWrap').style.display=role==='admin'?'':'none';
+}
+function updateDash(){
+  const occ=new Set(orders.filter(o=>o.status!=='done').map(o=>o.table_id));
+  $('#dTables').textContent=faNum(occ.size);
+  $('#dOrders').textContent=faNum(orders.filter(o=>o.status!=='done').length);
+  const t0=todayStart();
+  const rev=orders.filter(o=>new Date(o.created_at).getTime()>=t0).reduce((n,o)=>n+sum(o.items),0);
+  $('#dRev').textContent=faNum(rev)+' تومان';
 }
 
 /* ===== میزها ===== */
 function renderTables(){
-  const el = $('#tablesGrid'); el.innerHTML='';
+  const el=$('#tablesGrid');el.innerHTML='';
   for(let i=1;i<=TABLE_COUNT;i++){
-    const open = orders.filter(o=>o.table_id===i && o.status!=='done').length;
-    const d = document.createElement('div');
-    d.className = 'table-card' + (open?' busy':'');
-    d.innerHTML = `<b>میز ${i}</b><span>${open ? open+' سفارش فعال' : 'آزاد'}</span>`;
-    d.onclick = ()=>{ currentTable=i; cart=[]; showTab('menu'); };
+    const open=orders.filter(o=>o.table_id===i&&o.status!=='done').length;
+    const d=document.createElement('div');
+    d.className='table-card'+(open?' busy':'');
+    d.innerHTML=`<b>میز ${faNum(i)}</b><span>${open?faNum(open)+' سفارش فعال':'آزاد'}</span>`;
+    d.onclick=()=>{currentTable=i;cart=[];showTab('menu');};
     el.appendChild(d);
   }
 }
 
+/* ===== جستجو ===== */
+function openSearch(){searchOpen=true;$('#searchRow').classList.add('open');$('#search').focus();}
+function closeSearch(){searchOpen=false;$('#searchRow').classList.remove('open');if(searchTerm){searchTerm='';$('#search').value='';renderMenu();}}
+$('#searchToggle').onclick=e=>{e.stopPropagation();searchOpen?closeSearch():openSearch();};
+$('#searchClose').onclick=closeSearch;
+document.addEventListener('click',e=>{
+  if(searchOpen&&!$('#searchRow').contains(e.target)&&e.target.id!=='searchToggle')closeSearch();
+});
+
 /* ===== منو (نمایش) ===== */
 function renderMenu(){
-  const cs = cats();
-  if(!cs.includes(currentCat)) currentCat = cs[0] || '';
-  const bar = $('#tableBar');
-  bar.innerHTML = currentTable
-    ? `<span>میز فعال: <b>میز ${currentTable}</b></span><button onclick="currentTable=null;cart=[];renderMenu()">تغییر میز</button>`
-    : `<span>⚠️ اول از تب «میزها» یک میز انتخاب کن</span>`;
-
-  const catsEl = $('#cats'); catsEl.innerHTML='';
+  const cs=cats();
+  if(!cs.includes(currentCat))currentCat=cs[0]||'';
+  const bar=$('#tableBar');
+  bar.innerHTML=currentTable
+    ?`<span>میز فعال: <b>میز ${faNum(currentTable)}</b></span><button onclick="currentTable=null;cart=[];updateBar();renderMenu()">تغییر میز</button>`
+    :`<span>⚠️ اول از تب «میزها» یک میز انتخاب کن</span>`;
+  const catsEl=$('#cats');catsEl.innerHTML='';
   cs.forEach(c=>{
     const b=document.createElement('button');
     b.textContent=c;
-    b.className='cat'+(c===currentCat?' active':'');
-    b.onclick=()=>{ currentCat=c; searchTerm=''; $('#search').value=''; renderMenu(); };
+    b.className='catc'+(c===currentCat?' active':'');
+    b.onclick=()=>{currentCat=c;searchTerm='';$('#search').value='';renderMenu();};
     catsEl.appendChild(b);
   });
-
-  const grid=$('#menuGrid'); grid.innerHTML='';
-  const rows = searchTerm ? menuRows.filter(r=>r.name.includes(searchTerm)) : menuRows.filter(r=>r.cat===currentCat);
-  if(!rows.length) grid.innerHTML='<p class="muted">آیتمی نیست</p>';
+  const grid=$('#menuGrid');grid.innerHTML='';
+  const rows=searchTerm?menuRows.filter(r=>r.name.includes(searchTerm)):menuRows.filter(r=>r.cat===currentCat);
+  if(!rows.length)grid.innerHTML='<p class="muted">آیتمی نیست</p>';
   rows.forEach(r=>{
-    const c=document.createElement('div'); c.className='item'+(r.soldout?' unavail':'');
+    const inCart=cart.find(i=>i.name===r.name);
+    const c=document.createElement('div');c.className='item'+(r.soldout?' unavail':'');
     const info=document.createElement('div');
     info.innerHTML=`<span class="iname">${r.name}</span>${searchTerm?`<span class="icat">${r.cat}</span>`:''}<span class="iprice">${fmt(r.price)}</span>`;
     c.appendChild(info);
-    if(r.soldout){ const s=document.createElement('span'); s.className='soldout'; s.textContent='ناموجود'; c.appendChild(s); }
+    if(r.soldout){const s=document.createElement('span');s.className='soldout';s.textContent='ناموجود';c.appendChild(s);}
     else{
-      const btn=document.createElement('button'); btn.textContent='+'; btn.onclick=()=>addToCart(r.name, r.price);
+      const btn=document.createElement('button');btn.className='add';btn.textContent='+';
+      if(inCart){const n=document.createElement('span');n.className='cnt';n.textContent=faNum(inCart.qty);btn.appendChild(n);}
+      btn.onclick=()=>addToCart(r.name,r.price);
       c.appendChild(btn);
     }
     grid.appendChild(c);
   });
-  renderCart();
+  updateBar();
 }
 
 /* ===== سبد ===== */
-function addToCart(name, price){
-  if(!currentTable){ alert('اول یک میز انتخاب کن'); showTab('tables'); return; }
-  const it = cart.find(i=>i.name===name);
-  it ? it.qty++ : cart.push({name, p:price, qty:1});
-  renderCart();
+function addToCart(name,price){
+  if(!currentTable){alert('اول یک میز انتخاب کن');showTab('tables');return;}
+  const it=cart.find(i=>i.name===name);
+  it?it.qty++:cart.push({name,p:price,qty:1,note:''});
+  renderMenu();updateBar();
 }
-function changeQty(name, delta){
-  const i = cart.findIndex(x=>x.name===name);
-  if(i<0) return;
-  cart[i].qty += delta;
-  if(cart[i].qty<=0) cart.splice(i,1);
-  renderCart();
+function changeQty(name,delta){
+  const i=cart.findIndex(x=>x.name===name);
+  if(i<0)return;
+  cart[i].qty+=delta;
+  if(cart[i].qty<=0)cart.splice(i,1);
+  renderMenu();renderSheet();
 }
-function renderCart(){
-  const el=$('#cartItems');
-  if(!cart.length){
-    el.innerHTML='<p class="muted">سبد خالی است</p>';
-    $('#submitBtn').disabled=true;
-    return;
-  }
-  el.innerHTML='';
+function updateBar(){
+  const bar=$('#cartBar');
+  const n=cart.reduce((s,i)=>s+i.qty,0);
+  if(currentTable&&n){bar.classList.add('show');$('#barCount').textContent=faNum(n);$('#barTotal').textContent=faNum(sum(cart))+' تومان';}
+  else bar.classList.remove('show');
+}
+function openSheet(){
+  if(!cart.length)return;
+  $('#shTable').textContent=faNum(currentTable);
+  $('#sheetOv').classList.add('show');
+  renderSheet();
+}
+function closeSheet(){$('#sheetOv').classList.remove('show');}
+function renderSheet(){
+  const el=$('#sheetItems');el.innerHTML='';
   cart.forEach(i=>{
-    const r=document.createElement('div'); r.className='cart-row';
-    const t=document.createElement('div');
-    t.innerHTML=`<span>${i.name}</span><small>${i.p==null?'':fmt(i.p*i.qty)}</small>`;
-    const q=document.createElement('span'); q.className='qty';
-    const minus=document.createElement('button'); minus.textContent='−'; minus.onclick=()=>changeQty(i.name,-1);
-    const plus=document.createElement('button'); plus.textContent='+'; plus.onclick=()=>changeQty(i.name,1);
-    q.append(minus, document.createTextNode(i.qty), plus);
-    r.append(t,q);
+    const r=document.createElement('div');r.className='srow';
+    const nm=document.createElement('div');nm.className='nm';
+    nm.innerHTML=`<span>${i.name} × ${faNum(i.qty)}</span><small>${i.p==null?'توافقی':fmt(i.p*i.qty)}${i.note?' — 📝 '+i.note:''}</small>`;
+    const ops=document.createElement('div');ops.className='ops';
+    const mk=(t,fn,cls)=>{const b=document.createElement('button');b.textContent=t;if(cls)b.className=cls;b.onclick=fn;return b;};
+    ops.appendChild(mk('−',()=>changeQty(i.name,-1)));
+    ops.appendChild(mk('+',()=>changeQty(i.name,1)));
+    ops.appendChild(mk('📝',()=>{
+      const n=prompt('یادداشت برای «'+i.name+'»:',i.note||'');
+      if(n!==null){i.note=n.trim();renderSheet();renderMenu();}
+    },'nb'));
+    r.append(nm,ops);
     el.appendChild(r);
   });
-  const tot=document.createElement('div'); tot.className='cart-row'; tot.id='totalRow';
-  tot.innerHTML=`<span>جمع کل</span><span>${sum(cart).toLocaleString('fa-IR')} تومان</span>`;
-  el.appendChild(tot);
-  $('#submitBtn').disabled=false;
+  $('#shTotal').textContent=faNum(sum(cart))+' تومان';
 }
 
 /* ===== ثبت سفارش ===== */
 async function submitOrder(){
-  if(!currentTable || !cart.length) return;
-  const btn=$('#submitBtn'); btn.disabled=true; btn.textContent='در حال ثبت...';
-  const {error} = await sb.from('cafe_orders').insert({
-    table_id: currentTable, items: cart, note: $('#orderNote').value.trim(), status: 'new'
+  if(!currentTable||!cart.length)return;
+  const btn=$('#submitBtn');btn.disabled=true;btn.textContent='در حال ثبت...';
+  const {error}=await sb.from('cafe_orders').insert({
+    table_id:currentTable,
+    items:cart.map(i=>({name:i.name,p:i.p,qty:i.qty,note:i.note||''})),
+    note:$('#orderNote').value.trim(),
+    status:'new'
   });
-  btn.disabled=false; btn.textContent='ثبت سفارش';
-  if(error){ alert('خطا در ثبت! اینترنت را چک کن و دوباره بزن.'); renderCart(); return; }
-  cart=[]; $('#orderNote').value='';
+  btn.disabled=false;btn.textContent='✅ ثبت سفارش';
+  if(error){alert('خطا در ثبت! اینترنت را چک کن و دوباره بزن.');return;}
+  cart=[];$('#orderNote').value='';
+  closeSheet();updateBar();
   await fetchOrders();
   showTab('orders');
 }
 
 /* ===== سفارش‌ها (نمایش) ===== */
 function renderOrders(){
-  const el=$('#ordersList'); el.innerHTML='';
-  const byTable = {};
-  orders.forEach(o=>{ (byTable[o.table_id] = byTable[o.table_id] || []).push(o); });
-  const tids = Object.keys(byTable).sort((a,b)=>a-b);
-  if(!tids.length){ el.innerHTML='<p class="muted">هنوز سفارشی ثبت نشده است.</p>'; return; }
+  const el=$('#ordersList');el.innerHTML='';
+  const byTable={};
+  orders.forEach(o=>{(byTable[o.table_id]=byTable[o.table_id]||[]).push(o);});
+  const tids=Object.keys(byTable).sort((a,b)=>a-b);
+  if(!tids.length){el.innerHTML='<p class="muted">هنوز سفارشی ثبت نشده است.</p>';return;}
   tids.forEach(tid=>{
-    const list = byTable[tid];
-    const box=document.createElement('div'); box.className='order-box';
-    const allDone = list.every(o=>o.status==='done');
+    const list=byTable[tid];
+    const box=document.createElement('div');box.className='order-box';
+    const allDone=list.every(o=>o.status==='done');
     const h=document.createElement('h3');
-    h.innerHTML=`<span>🪑 میز ${tid}</span>`;
+    h.innerHTML=`<span>🪑 میز ${faNum(tid)}</span>`;
     if(allDone){
-      const f=document.createElement('button'); f.className='free'; f.textContent='آزادسازی میز';
+      const f=document.createElement('button');f.className='free';f.textContent='آزادسازی میز';
       f.onclick=()=>freeTable(tid);
       h.appendChild(f);
     }
@@ -410,118 +559,161 @@ function renderOrders(){
   });
 }
 function orderCard(o){
-  const labels={new:'🆕 جدید', preparing:'⏳ در حال آماده‌سازی', done:'✅ تحویل شد'};
-  const nextBtn={new:'شروع آماده‌سازی', preparing:'تحویل شد ✅', done:null};
-  const d=document.createElement('div'); d.className='order status-'+o.status;
-  const time = new Date(o.created_at).toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'});
-  d.innerHTML=`<div class="ohead"><b>سفارش #${o.id}</b><span>${time}</span></div>
-    <ul>${(o.items||[]).map(i=>`<li><span>${i.name} × ${i.qty}</span><span>${i.p==null?'توافقی':fmt(i.p*i.qty)}</span></li>`).join('')}</ul>
+  const labels={new:'🆕 جدید',preparing:'⏳ در حال آماده‌سازی',done:'✅ تحویل شد'};
+  const nextBtn={new:'شروع آماده‌سازی',preparing:'تحویل شد ✅',done:null};
+  const d=document.createElement('div');d.className='order status-'+o.status;
+  if(freshIds.has(o.id))d.classList.add('fresh');
+  const time=new Date(o.created_at).toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'});
+  const mins=(Date.now()-new Date(o.created_at).getTime())/60000;
+  const late=(o.status!=='done'&&mins>=5)?' <span class="late">⏱ معلط '+faNum(Math.floor(mins))+' دقیقه</span>':'';
+  d.innerHTML=`<div class="ohead"><b>سفارش #${o.id}${late}</b><span>${time}</span></div>
+    <ul>${(o.items||[]).map(i=>`<li><span>${i.name} × ${faNum(i.qty)}${i.note?` <span class="inote">(${i.note})</span>`:''}</span><span>${i.p==null?'توافقی':fmt(i.p*i.qty)}</span></li>`).join('')}</ul>
     ${o.note?`<p class="note">📝 ${o.note}</p>`:''}
-    <div class="ototal"><span>جمع کل</span><span>${sum(o.items).toLocaleString('fa-IR')} تومان</span></div>
+    <div class="ototal"><span>جمع کل</span><span>${faNum(sum(o.items))} تومان</span></div>
     <span class="badge">${labels[o.status]||o.status}</span>`;
   if(nextBtn[o.status]){
-    const b=document.createElement('button'); b.textContent=nextBtn[o.status];
-    b.onclick=()=>advance(o.id, o.status);
+    const b=document.createElement('button');b.textContent=nextBtn[o.status];
+    b.onclick=()=>advance(o.id,o.status);
     d.appendChild(b);
   }
   return d;
 }
-async function advance(id, status){
-  const next = status==='new' ? 'preparing' : 'done';
-  await sb.from('cafe_orders').update({status: next}).eq('id', id);
+async function advance(id,status){
+  const next=status==='new'?'preparing':'done';
+  await sb.from('cafe_orders').update({status:next}).eq('id',id);
   fetchOrders();
 }
 async function freeTable(tid){
-  if(!confirm('همه سفارش‌های میز '+tid+' پاک شود؟')) return;
-  await sb.from('cafe_orders').delete().eq('table_id', tid);
+  if(!confirm('همه سفارش‌های میز '+tid+' پاک شود؟'))return;
+  await sb.from('cafe_orders').delete().eq('table_id',tid);
   fetchOrders();
 }
 
 /* ===== مدیریت منو ===== */
 function renderManage(){
-  const list=$('#manageList'); list.innerHTML='';
+  const list=$('#manageList');list.innerHTML='';
   cats().forEach(c=>{
-    const box=document.createElement('div'); box.className='mcat';
-    const h=document.createElement('h3'); h.textContent='📂 '+c;
+    const box=document.createElement('div');box.className='mcat';
+    const h=document.createElement('h3');h.textContent='📂 '+c;
     box.appendChild(h);
     menuRows.filter(r=>r.cat===c).forEach(r=>{
-      const row=document.createElement('div'); row.className='mrow';
-      const nm=document.createElement('div'); nm.className='nm';
+      const row=document.createElement('div');row.className='mrow';
+      const nm=document.createElement('div');nm.className='nm';
       nm.innerHTML=`<span>${r.name}</span><span class="pr">${fmt(r.price)}</span>${r.soldout?'<span class="so">⛔ ناموجود</span>':''}`;
-      const ops=document.createElement('div'); ops.className='ops';
-      const mk=(txt,fn,cls)=>{ const b=document.createElement('button'); b.textContent=txt; if(cls)b.className=cls; b.onclick=fn; return b; };
-      ops.appendChild(mk('✏️', ()=>editItem(r)));
-      ops.appendChild(mk(r.soldout?'✅':'🚫', ()=>mUpdate(r.id,{soldout:!r.soldout})));
-      ops.appendChild(mk('🗑', ()=>delItem(r), 'del'));
-      row.append(nm, ops);
+      const ops=document.createElement('div');ops.className='ops';
+      const mk=(t,fn,cls)=>{const b=document.createElement('button');b.textContent=t;if(cls)b.className=cls;b.onclick=fn;return b;};
+      ops.appendChild(mk('✏️',()=>editItem(r)));
+      ops.appendChild(mk(r.soldout?'✅':'🚫',()=>mUpdate(r.id,{soldout:!r.soldout})));
+      ops.appendChild(mk('🗑',()=>delItem(r),'del'));
+      row.append(nm,ops);
       box.appendChild(row);
     });
     list.appendChild(box);
   });
-  const sel=$('#addCat');
-  const prev=sel.value;
-  sel.innerHTML='';
-  cats().forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent='دسته: '+c; sel.appendChild(o); });
-  const o=document.createElement('option'); o.value='__new'; o.textContent='➕ دسته جدید';
-  sel.appendChild(o);
-  if(prev) sel.value=prev;
+  const sel=$('#addCat');const prev=sel.value;sel.innerHTML='';
+  cats().forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent='دسته: '+c;sel.appendChild(o);});
+  const o=document.createElement('option');o.value='__new';o.textContent='➕ دسته جدید';sel.appendChild(o);
+  if(prev)sel.value=prev;
 }
-async function mUpdate(id, fields){
-  const {error} = await sb.from('cafe_menu').update(fields).eq('id', id);
-  if(error) alert('خطا در ذخیره تغییرات');
-  await loadMenu(); renderManage();
+async function mUpdate(id,fields){
+  const {error}=await sb.from('cafe_menu').update(fields).eq('id',id);
+  if(error)alert('خطا در ذخیره تغییرات');
+  await loadMenu();renderManage();
 }
 function editItem(r){
-  const name = prompt('نام آیتم:', r.name);
-  if(name===null) return;
-  const ps = prompt('قیمت به هزار تومان (خالی = توافقی):', r.price==null ? '' : r.price);
-  if(ps===null) return;
-  const price = ps.trim()==='' || isNaN(parseInt(ps)) ? null : parseInt(ps);
-  mUpdate(r.id, {name: name.trim()||r.name, price: price});
+  const name=prompt('نام آیتم:',r.name);
+  if(name===null)return;
+  const ps=prompt('قیمت به هزار تومان (خالی = توافقی):',r.price==null?'':r.price);
+  if(ps===null)return;
+  const price=ps.trim()===''||isNaN(parseInt(ps))?null:parseInt(ps);
+  mUpdate(r.id,{name:name.trim()||r.name,price:price});
 }
 function delItem(r){
-  if(!confirm('«'+r.name+'» از منو حذف شود؟')) return;
-  sb.from('cafe_menu').delete().eq('id', r.id).then(()=>{ loadMenu(); renderManage(); });
+  if(!confirm('«'+r.name+'» از منو حذف شود؟'))return;
+  sb.from('cafe_menu').delete().eq('id',r.id).then(()=>{loadMenu();renderManage();});
 }
 async function addItem(){
   const name=$('#addName').value.trim();
-  if(!name){ alert('نام آیتم را بنویس'); return; }
+  if(!name){alert('نام آیتم را بنویس');return;}
   let cat=$('#addCat').value;
   if(cat==='__new'){
     cat=$('#addNewCat').value.trim();
-    if(!cat){ alert('نام دسته جدید را بنویس'); return; }
+    if(!cat){alert('نام دسته جدید را بنویس');return;}
   }
   const ps=$('#addPrice').value.trim();
-  const price = ps==='' || isNaN(parseInt(ps)) ? null : parseInt(ps);
-  const {error} = await sb.from('cafe_menu').insert({cat, name, price, soldout: $('#addSold').checked});
-  if(error){ alert('خطا در افزودن'); return; }
-  $('#addName').value=''; $('#addPrice').value=''; $('#addSold').checked=false; $('#addNewCat').value='';
-  await loadMenu(); renderManage();
+  const price=ps===''||isNaN(parseInt(ps))?null:parseInt(ps);
+  const {error}=await sb.from('cafe_menu').insert({cat,name,price,soldout:$('#addSold').checked});
+  if(error){alert('خطا در افزودن');return;}
+  $('#addName').value='';$('#addPrice').value='';$('#addSold').checked=false;$('#addNewCat').value='';
+  await loadMenu();renderManage();
+}
+
+/* ===== تغییر کدها ===== */
+async function changePin(key,label){
+  const v=prompt('کد جدید برای '+label+' (۴ تا ۶ رقم):','');
+  if(v===null)return;
+  if(!/^\d{4,6}$/.test(v.trim())){alert('کد باید ۴ تا ۶ رقم عددی باشد');return;}
+  const {error}=await sb.from('cafe_settings').upsert({key,value:v.trim()});
+  if(error){alert('خطا در ذخیره');return;}
+  await loadSettings();
+  alert('✅ کد '+label+' عوض شد');
+}
+
+/* ===== گزارش فروش ===== */
+function renderReport(){
+  const t0=todayStart();
+  const todays=orders.filter(o=>new Date(o.created_at).getTime()>=t0);
+  const total=todays.reduce((n,o)=>n+sum(o.items),0);
+  const items={};
+  todays.forEach(o=>(o.items||[]).forEach(i=>{items[i.name]=(items[i.name]||0)+i.qty;}));
+  const top=Object.entries(items).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const avg=todays.length?Math.round(total/todays.length):0;
+  $('#repBox').innerHTML=`
+    <h3 style="margin-bottom:10px">📊 گزارش امروز</h3>
+    <div class="rep-row"><span>تعداد سفارش‌ها</span><b>${faNum(todays.length)}</b></div>
+    <div class="rep-row"><span>جمع فروش</span><b>${faNum(total)} تومان</b></div>
+    <div class="rep-row"><span>میانگین هر سفارش</span><b>${faNum(avg)} تومان</b></div>
+    <div style="margin-top:12px;font-size:.9rem">🔥 پرفروش‌ترین‌ها:</div>
+    <div>${top.length?top.map(([n,q])=>`<span class="top-chip">${n} — ${faNum(q)}×</span>`).join(''):'<span class="muted" style="padding:8px 0;display:block">هنوز سفارشی ثبت نشده</span>'}</div>`;
 }
 
 /* ===== رویدادها ===== */
-document.querySelectorAll('nav button').forEach(b=>{
-  b.onclick=()=>{ if(b.dataset.tab==='manage' && currentTab!=='manage' && !askPin()) return; showTab(b.dataset.tab); };
-});
+$('#loginBtn').onclick=doLogin;
+$('#pinInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+$('#exitBtn').onclick=doExit;
+$('#themeBtn').onclick=()=>$('#themeOv').classList.add('show');
+$('#themeClose').onclick=()=>$('#themeOv').classList.remove('show');
+$('#themeOv').addEventListener('click',e=>{if(e.target.id==='themeOv')$('#themeOv').classList.remove('show');});
+document.querySelectorAll('.theme-btns button').forEach(b=>b.onclick=()=>setTheme(b.dataset.th));
+$('#cartBar').onclick=openSheet;
+$('#sheetClose').onclick=closeSheet;
+$('#sheetOv').addEventListener('click',e=>{if(e.target.id==='sheetOv')closeSheet();});
 $('#submitBtn').onclick=submitOrder;
-$('#search').oninput=e=>{ searchTerm=e.target.value.trim(); renderMenu(); };
-$('#resetBtn').onclick=async()=>{
-  if(!confirm('همه سفارش‌های امروز از دیتابیس پاک شود؟')) return;
-  await sb.from('cafe_orders').delete().neq('id', 0);
-  fetchOrders();
-};
+$('#search').oninput=e=>{searchTerm=e.target.value.trim();renderMenu();};
 $('#addBtn').onclick=addItem;
-$('#addCat').onchange=()=>{ $('#addNewCat').style.display = $('#addCat').value==='__new' ? 'block' : 'none'; };
+$('#addCat').onchange=()=>{$('#addNewCat').style.display=$('#addCat').value==='__new'?'block':'none';};
+$('#chStaffBtn').onclick=()=>changePin('staff_pin','کارکنان');
+$('#chAdminBtn').onclick=()=>changePin('admin_pin','مدیر');
+$('#resetBtn').onclick=async()=>{
+  if(!confirm('همه سفارش‌های امروز از دیتابیس پاک شود؟'))return;
+  await sb.from('cafe_orders').delete().neq('id',0);
+  fetchOrders();renderReport();
+};
 $('#soundBtn').onclick=unlockSound;
 
 /* ===== شروع ===== */
-if(soundReady) $('#soundBtn').style.display='none';
-else{ document.body.addEventListener('click', function once(){ unlockSound(); document.body.removeEventListener('click', once); }, {once:true}); }
-fetchOrders();
-loadMenu();
-setInterval(fetchOrders, 3500);
-setInterval(()=>{ if(!document.hidden) loadMenu(); }, 15000);
-showTab('tables');
+(async function init(){
+  await loadSettings();
+  buildNav();
+  if(soundReady)$('#soundBtn').style.display='none';
+  else document.body.addEventListener('click',function once(){unlockSound();document.body.removeEventListener('click',once);},{once:true});
+  if(role){$('#loginOv').classList.remove('show');showTab('tables');}
+  else showLogin();
+  fetchOrders();loadMenu();
+  setInterval(fetchOrders,3500);
+  setInterval(()=>{if(!document.hidden)loadMenu();},15000);
+  setInterval(loadSettings,60000);
+})();
 </script>
 </body>
 </html>
