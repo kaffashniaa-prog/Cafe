@@ -1,18 +1,18 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#171310">
+<meta name="theme-color" content="#0b0b0b">
 <title>سفارش‌گیری کافه روبیک</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
-<link rel="manifest" href='data:application/manifest+json,{"name":"Cafe Rubik","short_name":"Cafe","start_url":".","display":"standalone","background_color":"%23171310","theme_color":"%23171310"}'>
+<link rel="manifest" href='data:application/manifest+json,{"name":"Cafe Rubik","short_name":"Cafe","start_url":".","display":"standalone","background_color":"%230b0b0b","theme_color":"%230b0b0b"}'>
 <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
   :root{--rad:14px}
-  body.theme-dark{--bg:#171310;--panel:#241b16;--card:#2f241d;--text:#f5ede4;--muted:#b7a08c;--accent:#f5872e;--accentText:#1a120c;--line:#3a2c24;--good:#4caf7d;--bad:#e0705c}
+  body.theme-dark{--bg:#0b0b0b;--panel:#161616;--card:#202020;--text:#f2ede6;--muted:#a39a90;--accent:#f5872e;--accentText:#1a120c;--line:#2d2d2d;--good:#4caf7d;--bad:#e0705c}
   body.theme-light{--bg:#f6f1ea;--panel:#efe6d8;--card:#ffffff;--text:#3a2a1c;--muted:#8a7660;--accent:#f5872e;--accentText:#ffffff;--line:#e5d8c6;--good:#2e8f5e;--bad:#c4523c}
   body.theme-orange{--bg:#ef7d17;--panel:#f6934a;--card:#f9a866;--text:#3d1d04;--muted:#7a4a1e;--accent:#ffffff;--accentText:#ef7d17;--line:#e8903f;--good:#1d6e44;--bad:#8f2b18}
   body.theme-blue{--bg:#123a6b;--panel:#1a4a85;--card:#22589c;--text:#eaf2ff;--muted:#9fc0e8;--accent:#4db2ff;--accentText:#08223f;--line:#2c66ad;--good:#4ad07f;--bad:#ff8f7a}
@@ -55,14 +55,17 @@
   .iname{display:block;font-size:.9rem}
   .icat{display:block;color:var(--muted);font-size:.72rem;margin-top:2px}
   .iprice{display:block;color:var(--accent);font-size:.8rem;margin-top:4px;font-weight:bold}
-  .item .add{position:relative;width:36px;height:36px;flex-shrink:0;border:none;border-radius:50%;background:var(--accent);color:var(--accentText);font-size:1.25rem;cursor:pointer;font-weight:bold}
+  .ops-inline{display:flex;align-items:center;gap:8px;flex-shrink:0}
+  .qbtn{width:34px;height:34px;border:none;border-radius:50%;background:var(--accent);color:var(--accentText);font-size:1.15rem;cursor:pointer;font-weight:bold}
+  .qbtn:active{animation:pop .25s}
+  .qnum{font-size:.95rem;font-weight:bold;min-width:20px;text-align:center}
+  .item .add{width:36px;height:36px;flex-shrink:0;border:none;border-radius:50%;background:var(--accent);color:var(--accentText);font-size:1.25rem;cursor:pointer;font-weight:bold}
   .item .add:active{animation:pop .25s}
-  .cnt{position:absolute;top:-6px;left:-6px;background:var(--bad);color:#fff;font-size:.7rem;min-width:20px;height:20px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:bold;padding:0 4px}
   .item.unavail{opacity:.4}
   .soldout{color:var(--bad);font-size:.75rem;flex-shrink:0}
   #menuWarn{display:none;background:#4a2420;color:#ff9f8f;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.85rem}
   /* نوار شناور سبد */
-  #cartBar{display:none;position:fixed;bottom:14px;right:14px;left:14px;z-index:30;border:none;border-radius:16px;background:var(--accent);color:var(--accentText);padding:15px 18px;font-family:inherit;font-size:.95rem;font-weight:bold;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.35);display:none;justify-content:space-between;align-items:center}
+  #cartBar{position:fixed;bottom:14px;right:14px;left:14px;z-index:30;border:none;border-radius:16px;background:var(--accent);color:var(--accentText);padding:15px 18px;font-family:inherit;font-size:.95rem;font-weight:bold;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.35);display:none;justify-content:space-between;align-items:center}
   #cartBar.show{display:flex;animation:up .25s ease}
   /* پنجره‌ها */
   .overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;display:none;align-items:flex-end;justify-content:center}
@@ -460,10 +463,18 @@ function renderMenu(){
     c.appendChild(info);
     if(r.soldout){const s=document.createElement('span');s.className='soldout';s.textContent='ناموجود';c.appendChild(s);}
     else{
-      const btn=document.createElement('button');btn.className='add';btn.textContent='+';
-      if(inCart){const n=document.createElement('span');n.className='cnt';n.textContent=faNum(inCart.qty);btn.appendChild(n);}
-      btn.onclick=()=>addToCart(r.name,r.price);
-      c.appendChild(btn);
+      const ops=document.createElement('div');ops.className='ops-inline';
+      if(inCart){
+        const mk=(t,fn)=>{const b=document.createElement('button');b.className='qbtn';b.textContent=t;b.onclick=fn;return b;};
+        ops.appendChild(mk('−',()=>changeQty(r.name,-1)));
+        const n=document.createElement('span');n.className='qnum';n.textContent=faNum(inCart.qty);ops.appendChild(n);
+        ops.appendChild(mk('+',()=>addToCart(r.name,r.price)));
+      }else{
+        const btn=document.createElement('button');btn.className='add';btn.textContent='+';
+        btn.onclick=()=>addToCart(r.name,r.price);
+        ops.appendChild(btn);
+      }
+      c.appendChild(ops);
     }
     grid.appendChild(c);
   });
@@ -565,7 +576,7 @@ function orderCard(o){
   if(freshIds.has(o.id))d.classList.add('fresh');
   const time=new Date(o.created_at).toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'});
   const mins=(Date.now()-new Date(o.created_at).getTime())/60000;
-  const late=(o.status!=='done'&&mins>=5)?' <span class="late">⏱ معلط '+faNum(Math.floor(mins))+' دقیقه</span>':'';
+  const late=(o.status!=='done'&&mins>=5)?' <span class="late">⏱ معطل '+faNum(Math.floor(mins))+' دقیقه</span>':'';
   d.innerHTML=`<div class="ohead"><b>سفارش #${o.id}${late}</b><span>${time}</span></div>
     <ul>${(o.items||[]).map(i=>`<li><span>${i.name} × ${faNum(i.qty)}${i.note?` <span class="inote">(${i.note})</span>`:''}</span><span>${i.p==null?'توافقی':fmt(i.p*i.qty)}</span></li>`).join('')}</ul>
     ${o.note?`<p class="note">📝 ${o.note}</p>`:''}
