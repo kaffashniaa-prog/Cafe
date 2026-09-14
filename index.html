@@ -751,3 +751,41 @@ function showTab(id){_showTab(id);if(id==='chat')renderChat();}
 function showTab(id){$('#nav').dataset.cur=id;document.querySelectorAll('main section').forEach(s=>s.classList.remove('show'));const sec=$('#s-'+id);if(sec)sec.classList.add('show');$('#nav').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.t===id));if(id==='tables'){renderDash();renderTables();}if(id==='orders')renderOrders();if(id==='menu'){renderCats();renderMenuList();}if(id==='admin'&&role==='admin')renderAdmin();if(id==='report'&&role==='admin')renderReport();if(id==='chat')renderChat();}
 fetchMsgs();setInterval(fetchMsgs,4000);
 </script>
+<script>
+/* ===== پچ شروع چت توسط مدیر ===== */
+let pickOpen=false;
+function renderChat(){const box=$('#chatArea');
+ if(role==='admin'&&!chatWith){
+  const groups={};msgs.forEach(m=>{const other=m.role==='admin'?m.rcpt:m.sender;if(!other)return;groups[other]=groups[other]||[];groups[other].push(m);});
+  let h='<div class="muted" style="margin-bottom:8px">گفتگو با کارکنان:</div>'
+  +(Object.keys(groups).length?Object.keys(groups).map(n=>{const unread=groups[n].filter(m=>m.rcpt==='admin'&&new Date(m.created_at)>new Date(msgSeen.admin||0)).length;
+   return '<div class="row" style="cursor:pointer" data-cw="'+n+'"><span>👤 '+n+'</span>'+(unread?'<span class="badge">'+unread+' جدید</span>':'<span class="muted">'+groups[n].length+' پیام</span>')+'</div>';}).join(''):'<div class="muted">هنوز گفتگوئی نیست</div>')
+  +'<button class="act" id="newChatBtn" style="width:100%;margin-top:12px">➕ پیام به کارمند</button>'
+  +'<button class="act ghost" id="msgPurge" style="width:100%;margin-top:8px">🧹 پاک‌سازی پیام‌های قدیمی</button>';
+  if(pickOpen){
+   h+='<div class="muted" style="margin-top:12px">با کدوم کارمند؟</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">'
+   +(staffList.length?staffList.map(s=>'<button class="act ghost" data-pick="'+s.name+'">'+s.name+'</button>').join(''):'<div class="muted">اول از تب مدیریت کارمند بساز</div>')+'</div>';}
+  box.innerHTML=h;
+  $('#newChatBtn').onclick=()=>{pickOpen=!pickOpen;renderChat();};
+  box.querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>{chatWith=b.dataset.pick;pickOpen=false;msgSeen.admin=new Date().toISOString();localStorage.setItem('cafeMsgSeen',JSON.stringify(msgSeen));renderChat();});
+  box.querySelectorAll('[data-cw]').forEach(b=>b.onclick=()=>{chatWith=b.dataset.cw;msgSeen.admin=new Date().toISOString();localStorage.setItem('cafeMsgSeen',JSON.stringify(msgSeen));renderChat();});
+  const pg=$('#msgPurge');if(pg)pg.onclick=async()=>{const d=prompt('پاک‌سازی پیام‌های قدیمی‌تر از چند روز؟ (عدد — یا all برای همه)');if(!d)return;
+   if(d==='all'){if(confirm('همه پیام‌ها حذف شوند؟'))await sb.from('cafe_messages').delete().neq('id',0);}
+   else{const n=parseInt(d);if(n>0)await sb.from('cafe_messages').delete().lt('created_at',new Date(Date.now()-n*864e5).toISOString());}
+   fetchMsgs();showToast('پاک‌سازی شد');};
+  return;}
+ const other=role==='admin'?chatWith:'مدیر';
+ const conv=msgs.filter(m=>(m.sender===other&&(!m.rcpt||m.rcpt===userName))||(m.sender===userName&&m.rcpt===other));
+ const key=role==='admin'?'admin':userName;
+ msgSeen[key]=new Date().toISOString();localStorage.setItem('cafeMsgSeen',JSON.stringify(msgSeen));
+ box.innerHTML=(role==='admin'?'<button class="mini" id="chatBack">🡐 برگشت</button> ':'')+'<b>گفتگو با '+other+'</b>'
+ +'<div style="margin:10px 0;max-height:46vh;overflow-y:auto">'+(conv.length?conv.map(m=>'<div style="text-align:'+(m.sender===userName?'left':'right')+';margin-bottom:6px"><span style="display:inline-block;max-width:80%;padding:8px 12px;border-radius:14px;font-size:.85rem;background:'+(m.sender===userName?'var(--accent)':'var(--card)')+';color:'+(m.sender===userName?'var(--accentText)':'var(--text)')+'">'+(m.tag==='shop'?'🛒 ':'')+(m.tag==='rem'?'📌 ':'')+m.body+'<div style="font-size:.65rem;opacity:.7">'+hhmm(m.created_at)+'</div></span></div>').join(''):'<div class="muted">اولین پیام رو بفرست!</div>')+'</div>'
+ +'<div class="frm"><input id="chatInp" placeholder="پیام..."><button class="act" id="chatSend">ارسال</button></div>'
+ +(role==='staff'?'<label class="muted" style="display:flex;gap:6px;align-items:center;font-size:.78rem"><input type="checkbox" id="chatShop" style="width:auto"> این یه لیست خریده 🛒</label>':'');
+ const bk=$('#chatBack');if(bk)bk.onclick=()=>{chatWith=null;renderChat();};
+ $('#chatSend').onclick=async()=>{const v=$('#chatInp').value.trim();if(!v)return;
+  const{error}=await sb.from('cafe_messages').insert({sender:userName,rcpt:other,role:role,body:v,tag:($('#chatShop')&&$('#chatShop').checked)?'shop':''});
+  if(error){showToast('خطا در ارسال: '+error.message);return;}
+  $('#chatInp').value='';fetchMsgs();};
+ $('#chatInp').onkeydown=e=>{if(e.key==='Enter')$('#chatSend').click();};}
+</script>
