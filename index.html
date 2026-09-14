@@ -436,3 +436,18 @@ async function addCat(){const c=prompt('اسم دسته جدید:');if(!c)return
  await sb.from('cafe_settings').upsert({key:'extra_cats',value:JSON.stringify(extraCats)});
  currentCat=c.trim();renderCats();renderMng();showToast('دسته «'+c.trim()+'» اضافه شد');}
 </script>
+<script>
+/* ===== پچ ثبت سفارش ===== */
+async function submitOrder(){if(!cart.length||!currentTable)return;const btn=$('#cartSubmit');btn.disabled=true;
+ const base={table_id:currentTable,items:JSON.stringify(cart),status:'new'};
+ const tries=[Object.assign({note:'',who:userName},base),Object.assign({note:'',created_by:userName},base),base];
+ let lastErr=null;
+ for(const payload of tries){
+  const{error}=await sb.from('cafe_orders').insert(payload);
+  if(!error){lastErr=null;break;}
+  lastErr=error;
+ }
+ btn.disabled=false;
+ if(lastErr){showToast('خطا: '+(lastErr.message||'نامشخص'));return;}
+ cart=[];$('#cartOv').classList.remove('show');updateCartBar();showToast('سفارش میز '+currentTable+' ثبت شد');fetchOrders();showTab('tables');}
+</script>
