@@ -745,3 +745,9 @@ function buildNav(){const tabs=[['tables','میزها'],['menu','منو'],['orde
 const _showTab=showTab;
 function showTab(id){_showTab(id);if(id==='chat')renderChat();}
 </script>
+<script>
+/* ===== پچ اصلاح تب پیام ===== */
+(function(){if(!$('#s-chat')){const s=document.createElement('section');s.id='s-chat';s.innerHTML='<div id="chatArea"></div>';document.querySelector('main').appendChild(s);}})();
+function showTab(id){$('#nav').dataset.cur=id;document.querySelectorAll('main section').forEach(s=>s.classList.remove('show'));const sec=$('#s-'+id);if(sec)sec.classList.add('show');$('#nav').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.t===id));if(id==='tables'){renderDash();renderTables();}if(id==='orders')renderOrders();if(id==='menu'){renderCats();renderMenuList();}if(id==='admin'&&role==='admin')renderAdmin();if(id==='report'&&role==='admin')renderReport();if(id==='chat')renderChat();}
+fetchMsgs();setInterval(fetchMsgs,4000);
+</script>
