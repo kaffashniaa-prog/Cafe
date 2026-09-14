@@ -451,3 +451,41 @@ async function submitOrder(){if(!cart.length||!currentTable)return;const btn=$('
  if(lastErr){showToast('خطا: '+(lastErr.message||'نامشخص'));return;}
  cart=[];$('#cartOv').classList.remove('show');updateCartBar();showToast('سفارش میز '+currentTable+' ثبت شد');fetchOrders();showTab('tables');}
 </script>
+<script>
+/* ===== پچ افزودن به سفارش تحویل‌شده ===== */
+function addMore(id){const o=orders.find(x=>x.id===id);if(!o)return;const wasDone=o.status==='done';
+ openEdit(id);
+ const btn=$('#editSave');if(!btn)return;
+ btn.onclick=async()=>{if(!editItems.length){if(confirm('سفارش خالی شد — حذف شود؟')){await delOrder(id);}$('#editOv').classList.remove('show');return;}
+  const up={items:JSON.stringify(editItems)};if(wasDone)up.status='preparing';
+  await sb.from('cafe_orders').update(up).eq('id',id);
+  $('#editOv').classList.remove('show');
+  showToast(wasDone?'به سفارش اضافه شد — دوباره فعال شد':'سفارش ویرایش شد');
+  fetchOrders();};}
+function renderOrders(){const act=tableOrders().filter(o=>o.status!=='done').sort((a,b)=>b.id-a.id);
+ const don=doneToday().sort((a,b)=>b.id-a.id);
+ let h=act.length?act.map(o=>orderCard(o)).join(''):'<div class="muted" style="padding:20px;text-align:center">سفارش فعالی نیست</div>';
+ if(don.length)h+='<h3>تحویل‌شده‌های امروز ('+don.length+')</h3>'+don.map(o=>{const its=parseItems(o);
+  return '<div class="oc" style="opacity:.8"><div class="oh"><b>سفارش #'+o.id+' · میز '+o.table_id+'</b><span>'+hhmm(o.created_at)+(o.who?' · '+o.who:'')+'</span></div>'
+  +'<div class="ol">'+its.map(it=>it.name+' ×'+it.qty+(it.note?' <span class="muted">('+it.note+')</span>':'')).join('<br>')+'</div>'
+  +'<div class="ot">'+fmt(orderTotal(o))+' تومان · <span style="color:var(--good)">تحویل شد ✓</span></div>'
+  +'<div class="obtns"><button class="act ghost" data-more="'+o.id+'">افزودن به سفارش</button><button class="act danger" data-del="'+o.id+'">حذف</button></div></div>';}).join('');
+ $('#ordersList').innerHTML=h;
+ $('#ordersList').querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{const id=+b.dataset.id,a=b.dataset.act;
+  if(a==='prep')setStatus(id,'preparing');if(a==='done')setStatus(id,'done');if(a==='del')delOrder(id);if(a==='edit')openEdit(id);});
+ $('#ordersList').querySelectorAll('[data-more]').forEach(b=>b.onclick=()=>addMore(+b.dataset.more));
+ $('#ordersList').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>delOrder(+b.dataset.del));}
+function openTableSheet(t){const list=orders.filter(o=>!o.archived&&o.table_id===t).sort((a,b)=>b.id-a.id);
+ const stLbl=s=>s==='new'?'جدید':(s==='preparing'?'در حال آماده‌سازی':'تحویل شد ✓');
+ $('#tableSheet').innerHTML='<b>میز '+t+'</b><div style="margin:10px 0">'+(list.length?list.map(o=>'<div class="row"><span style="flex:1">'+hhmm(o.created_at)+' · '+parseItems(o).length+' آیتم · <b style="color:var(--accent)">'+fmt(orderTotal(o))+'</b> · '+stLbl(o.status)+'</span><button class="mini" data-te="'+o.id+'">ویرایش</button></div>').join(''):'<span class="muted">سفارشی ندارد</span>')+'</div>'
+ +'<div style="display:grid;gap:8px"><button class="act" id="tsAdd">سفارش جدید برای این میز</button>'
+ +(orders.some(o=>o.table_id===t)?'<button class="act ghost" id="tsRep">تکرار سفارش قبلی این میز</button>':'')
+ +(list.length?'<button class="act danger" id="tsFree">مشتری رفت — میز خالی شد</button>':'')+'</div>';
+ $('#tsAdd').onclick=()=>{$('#tableOv').classList.remove('show');startOrder(t);};
+ const r=$('#tsRep');if(r)r.onclick=()=>{const last=orders.filter(o=>o.table_id===t).sort((a,b)=>b.id-a.id)[0];cart=parseItems(last);currentTable=t;$('#tableOv').classList.remove('show');showTab('menu');openCart();};
+ const f=$('#tsFree');if(f)f.onclick=async()=>{if(!confirm('همه سفارش‌های این میز بسته و میز آزاد شود؟'))return;
+  await sb.from('cafe_orders').update({archived:true,archived_at:new Date().toISOString()}).in('id',list.map(o=>o.id));
+  $('#tableOv').classList.remove('show');showToast('میز '+t+' خالی شد');fetchOrders();};
+ $('#tableSheet').querySelectorAll('[data-te]').forEach(b=>b.onclick=()=>{$('#tableOv').classList.remove('show');addMore(+b.dataset.te);});
+ $('#tableOv').classList.add('show');}
+</script>
