@@ -398,3 +398,41 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&inited){e
 </script>
 </body>
 </html>
+<script>
+/* ===== پچ اصلاحی ===== */
+function startOrder(t){currentTable=t;cart=[];showToast('میز '+t+' انتخاب شد — سفارش بگیر');showTab('menu');}
+function ensureTable(cb){if(currentTable!=null){cb();return;}
+ const s=$('#tableSheet');s.innerHTML='<b>سفارش برای کدام میز؟</b><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px">'+Array.from({length:TABLE_COUNT},(_,i)=>'<button class="act ghost" data-pt="'+(i+1)+'">میز '+(i+1)+'</button>').join('')+'</div>';
+ s.querySelectorAll('[data-pt]').forEach(b=>b.onclick=()=>{currentTable=+b.dataset.pt;$('#tableOv').classList.remove('show');cb();});
+ $('#tableOv').classList.add('show');}
+function renderTables(){const act=activeOrders();const byT={};act.forEach(o=>{(byT[o.table_id]=byT[o.table_id]||[]).push(o);});
+ let h='';for(let i=1;i<=TABLE_COUNT;i++){const list=(byT[i]||[]);const occ=list.length>0;
+  let sub='آزاد';if(occ){const old=list.reduce((m,o)=>new Date(o.created_at)<m?new Date(o.created_at):m,new Date(list[0].created_at));const mins=Math.floor((Date.now()-old)/60000);sub=list.length+' سفارش · '+mins+' دقیقه';}
+  h+='<div class="tcard'+(occ?' occ':'')+'" data-t="'+i+'"><div class="tn">میز '+i+'</div><div class="ts">'+sub+'</div></div>';}
+ $('#tgrid').innerHTML=h;
+ $('#tgrid').querySelectorAll('.tcard').forEach(c=>c.onclick=()=>{const t=+c.dataset.t;(byT[t]||[]).length?openTableSheet(t):startOrder(t);});}
+function renderCats(){const cats=allCats();
+ if(!currentCat||!cats.includes(currentCat))currentCat=cats[0]||null;
+ $('#catCircles').innerHTML=cats.map(c=>'<button class="circ'+(c===currentCat?' active':'')+'" data-c="'+c+'">'+c+'</button>').join('');
+ $('#catCircles').querySelectorAll('.circ[data-c]').forEach(b=>b.onclick=()=>{currentCat=b.dataset.c;renderCats();renderMenuList();});}
+function renderMng(){const box=$('#mngArea');
+ if(!currentCat){const cats=allCats();
+  box.innerHTML='<div class="muted" style="text-align:center;margin-bottom:10px">برای مدیریت، یک دسته را انتخاب کنید:</div><div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">'+cats.map(c=>'<button class="circ" data-c="'+c+'">'+c+'</button>').join('')+'<button class="circ" id="addCatBtn" style="border-style:dashed">+ دسته جدید</button></div>';
+  box.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{currentCat=b.dataset.c;renderMng();});
+  $('#addCatBtn').onclick=addCat;return;}
+ const items=menuRows.filter(r=>r.cat===currentCat);
+ box.innerHTML='<button class="act ghost" id="backCats" style="margin-bottom:10px">برگشت به دسته‌ها</button><div class="muted" style="margin-bottom:8px">دسته: <b style="color:var(--accent)">'+currentCat+'</b></div>'
+ +(items.length?items.map(r=>'<div class="row"><span>'+r.name+' · '+(r.price!=null?fmt(r.price):'—')+(r.soldout?' · <span class="badge">ناموجود</span>':'')+'</span><span class="btns"><button class="mini" data-me="'+r.id+'">ویرایش</button><button class="mini" data-ms="'+r.id+'">'+(r.soldout?'موجود شد':'ناموجود')+'</button><button class="mini rd" data-md="'+r.id+'">حذف</button></span></div>').join(''):'<div class="muted">آیتمی در این دسته نیست</div>')
+ +'<div class="frm"><input id="addName" placeholder="نام آیتم جدید"><input id="addPrice" placeholder="قیمت (هزار تومان)" inputmode="numeric"><button class="act" id="addItemBtn">افزودن</button></div>';
+ $('#backCats').onclick=()=>{currentCat=null;renderMng();};
+ $('#addItemBtn').onclick=addItem;
+ box.querySelectorAll('[data-me]').forEach(b=>b.onclick=()=>{const r=menuRows.find(x=>x.id==+b.dataset.me);const nn=prompt('اسم جدید:',r.name);if(nn===null)return;const np=prompt('قیمت جدید (هزار تومان، خالی=بدون قیمت):',r.price==null?'':r.price);if(np===null)return;sb.from('cafe_menu').update({name:nn.trim(),price:np.trim()===''?null:Number(np)}).eq('id',r.id).then(loadMenu);});
+ box.querySelectorAll('[data-ms]').forEach(b=>b.onclick=()=>{const r=menuRows.find(x=>x.id==+b.dataset.ms);sb.from('cafe_menu').update({soldout:!r.soldout}).eq('id',r.id).then(loadMenu);});
+ box.querySelectorAll('[data-md]').forEach(b=>b.onclick=()=>{if(confirm('حذف شود؟'))sb.from('cafe_menu').delete().eq('id',+b.dataset.md).then(loadMenu);});}
+function openCart(){if(!cart.length)return;
+ if(currentTable==null){ensureTable(()=>{renderCart();$('#cartOv').classList.add('show');});return;}
+ renderCart();$('#cartOv').classList.add('show');}
+async function addCat(){const c=prompt('اسم دسته جدید:');if(!c)return;extraCats.push(c.trim());
+ await sb.from('cafe_settings').upsert({key:'extra_cats',value:JSON.stringify(extraCats)});
+ currentCat=c.trim();renderCats();renderMng();showToast('دسته «'+c.trim()+'» اضافه شد');}
+</script>
