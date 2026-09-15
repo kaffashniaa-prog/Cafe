@@ -1413,3 +1413,25 @@ setTimeout(()=>showToast('✅ نسخه ۴.۹ فعال شد'),800);
  ensure();setInterval(ensure,2000);
 })();
 </script>
+<script>
+/* ===== پچ v5.0: مخفی/نمایش فروش امروز با لمس ===== */
+document.title='کافه روبیک v5.0';
+setTimeout(()=>showToast('✅ نسخه ۵.۰ فعال شد'),800);
+(function(){
+ function attachSale(){
+  const chip=[...document.querySelectorAll('.chip')].find(c=>(c.textContent||'').includes('فروش امروز'));
+  if(!chip)return;
+  const b=chip.querySelector('b');if(!b)return;
+  const masked=localStorage.getItem('saleHidden')==='1';
+  if(!b.dataset.real)b.dataset.real=b.textContent;
+  if((b.textContent||'').indexOf('•')===-1)b.dataset.real=b.textContent;
+  if(masked&&(b.textContent||'').indexOf('•')===-1)b.textContent='••••••';
+  if(!masked&&b.dataset.real&&(b.textContent||'').indexOf('•')!==-1)b.textContent=b.dataset.real;
+  if(!chip.dataset.st){chip.dataset.st='1';chip.style.cursor='pointer';
+   chip.onclick=()=>{const now=localStorage.getItem('saleHidden')==='1';
+    localStorage.setItem('saleHidden',now?'0':'1');
+    showToast(now?'👁 فروش نمایش داده شد':'🔒 فروش مخفی شد');
+    chip.dataset.st='';attachSale();};}}
+ attachSale();setInterval(attachSale,1200);
+})();
+</script>
