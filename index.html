@@ -1220,3 +1220,43 @@ setTimeout(()=>showToast('✅ نسخه ۴.۳ فعال شد'),800);
  const iv=setInterval(()=>{const n=shrink();if(n&&!once){once=true;setTimeout(()=>showToast('🔍 '+n+' دسته کوچک شد'),400);}},1200);
 })();
 </script>
+<script>
+/* ===== پچ v4.4: گرید دسته‌های فشرده (ساخت خودمان) ===== */
+document.title='کافه روبیک v4.4';
+setTimeout(()=>showToast('✅ نسخه ۴.۴ فعال شد'),800);
+(function(){
+ const KN=['قهوه‌ها','موج سوم','گرم‌نوش','دمنوش‌ها','خوراک','سالاد','میان‌وعده','کیک روز','خنک‌جات','بستنی','سردنوش','شیک','صبحانه','متفرقه'];
+ const norm=t=>(t||'').replace(/\u200c/g,'').trim();
+ function findGrid(){let best=null,bn=0;
+  document.querySelectorAll('div,section,nav,ul').forEach(p=>{if(p.id==='nav'||p.id==='myCats')return;
+   const n=[...p.children].filter(c=>{const t=norm(c.textContent);return t&&t.length<25&&KN.some(k=>norm(k)===t);}).length;
+   if(n>bn){bn=n;best=p;}});
+  return bn>=5?best:null;}
+ function catsOf(g){const s=[];[...g.querySelectorAll('*')].forEach(n=>{if(!n.children.length){const t=norm(n.textContent);
+  if(t&&t.length<25&&!s.includes(t))s.push(t);}});return s;}
+ let grid=findGrid();
+ if(!grid){setTimeout(()=>showToast('⚠️ گرید دسته‌ها پیدا نشد'),1300);return;}
+ const acc=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#c87137';
+ const wrap=document.createElement('div');wrap.id='myCats';
+ wrap.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:10px;justify-items:center;margin:4px 0 14px';
+ let last=localStorage.getItem('lastCat')||'';
+ function draw(list){wrap.innerHTML='';
+  list.forEach(nm=>{const d=document.createElement('div');d.textContent=nm;const act=norm(nm)===norm(last);
+   d.style.cssText='width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font-size:.62rem;padding:4px;cursor:pointer;user-select:none;border:2px solid '+(act?acc:'#e2d9cc')+';background:'+(act?acc:'#fff')+';color:'+(act?'#fff':'#3a3a3a')+';box-shadow:0 2px 6px rgba(0,0,0,.07);font-weight:'+(act?'700':'400');
+   d.onclick=()=>{last=nm;localStorage.setItem('lastCat',nm);
+    const el=[...document.querySelectorAll('*')].find(n=>n.id!=='myCats'&&!n.children.length&&norm(n.textContent)===norm(nm)&&!wrap.contains(n));
+    if(el)el.click();else showToast('دسته پیدا نشد: '+nm);
+    setTimeout(()=>draw(cats),50);};
+   wrap.appendChild(d);});}
+ let cats=catsOf(grid);
+ grid.style.setProperty('display','none','important');
+ grid.parentNode.insertBefore(wrap,grid);
+ draw(cats);
+ setTimeout(()=>showToast('🔍 '+cats.length+' دسته فشرده شد'),1300);
+ setInterval(()=>{const g=findGrid();
+  if(g){if(g!==grid){grid=g;cats=catsOf(g);}
+   if(g.style.display!=='none')g.style.setProperty('display','none','important');
+   if(!document.body.contains(wrap))g.parentNode.insertBefore(wrap,g);}
+ },1500);
+})();
+</script>
