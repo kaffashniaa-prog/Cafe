@@ -1029,3 +1029,57 @@ function settleTable(t){const list=orders.filter(o=>!o.archived&&o.table_id===t)
  list.forEach(o=>{if(itemRem(o)>0){const its=parseItems(o).map(i=>Object.assign({},i,{pd:true}));jobs.push(sb.from('cafe_orders').update({items:JSON.stringify(its),paid:true}).eq('id',o.id));}});
  Promise.all(jobs).then(async()=>{showToast('💵 کل '+tblLabel(t)+' تسویه شد');await fetchOrders();openTableSheet(t);});}
 </script>
+<script>
+/* ===== پچ v3.8: برگشت پرداخت ↩️ + رفع پرش کیبورد ===== */
+document.title='کافه روبیک v3.8';
+setTimeout(()=>showToast('✅ نسخه ۳.۸ فعال شد'),800);
+
+/* --- ۱) برگشت پرداخت آیتم --- */
+function unmarkItemPaid(id,idx){const o=orders.find(x=>x.id===id);if(!o)return;const its=parseItems(o);if(!its[idx])return;its[idx].pd=false;
+ const up={items:JSON.stringify(its),paid:its.some(i=>i.pd)};
+ sb.from('cafe_orders').update(up).eq('id',id).then(async()=>{showToast('↩️ پرداخت برگشت خورد');await fetchOrders();refreshSheet(id);});}
+
+/* --- ۲) کیبورد: تا موقع تایپ، صفحه چت از نو ساخته نشه --- */
+let chatDraft='';
+document.addEventListener('input',e=>{if(e.target&&e.target.id==='chatInp')chatDraft=e.target.value;});
+document.addEventListener('click',e=>{if(e.target&&e.target.closest&&e.target.closest('#chatSend'))chatDraft='';});
+const _rc=window.renderChat;
+window.renderChat=function(){const a=document.activeElement;
+ if(a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA'))return;
+ if(_rc)_rc();
+ const inp=$('#chatInp');if(inp&&chatDraft&&!inp.value)inp.value=chatDraft;};
+
+/* --- ۳) پنجره میز جدید: جلوی هر آیتم 💵 یا ✅↩️ --- */
+function openTableSheet(t){const list=orders.filter(o=>!o.archived&&o.table_id===t).sort((a,b)=>b.id-a.id);
+ const stLbl=o=>o.status==='new'?'جدید':(o.status==='preparing'?'در حال آماده‌سازی':'تحویل شد ✓');
+ const paidSum=list.reduce((s,o)=>s+itemPaid(o),0),tot=list.reduce((s,o)=>s+orderTotal(o),0),rem=tot-paidSum;
+ const rows=list.map(o=>{const its=parseItems(o);
+  const items=its.map((it,ix)=>'<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.85rem;padding:5px 0;border-bottom:1px dashed var(--line)"><span>'+it.name+' ×'+it.qty+'</span><span style="display:flex;gap:6px;align-items:center;white-space:nowrap"><b>'+fmt(it.price*it.qty)+'</b>'
+   +(it.pd?'<span style="color:var(--good)">✅</span><button class="mini" data-un="'+o.id+':'+ix+'">↩️</button>':'<button class="mini" data-pd="'+o.id+':'+ix+'">💵</button>')+'</span></div>').join('');
+  const orem=itemRem(o);
+  return '<div class="oc" style="margin:8px 0"><div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted)"><span>#'+o.id+' · '+hhmm(o.created_at)+' · '+stLbl(o)+'</span>'
+  +(o.status==='done'?'<button class="mini" data-ud="'+o.id+'">↩️ برگشت تحویل</button>':'')+'</div>'
+  +items
+  +'<div style="text-align:left;font-size:.75rem;margin-top:4px">'+(orem>0?('مانده: <b style="color:var(--accent)">'+fmt(orem)+'</b>'):'<span style="color:var(--good)">تسویه شد ✅</span>')+'</div></div>';}).join('');
+ $('#tableSheet').innerHTML='<div style="display:flex;justify-content:space-between;align-items:center"><b>'+tblLabel(t)+'</b><button class="mini" id="tsClose">✕</button></div>'
+ +'<div style="margin:8px 0;font-size:.85rem">💵 پرداخت‌شده: <b>'+fmt(paidSum)+'</b> · ⏳ مانده: <b style="color:'+(rem>0?'var(--accent)':'var(--good)')+'">'+fmt(rem)+'</b></div>'
+ +(list.length?rows:'<div class="muted" style="padding:10px;text-align:center">سفارشی ندارد</div>')
+ +(list.length?'<button class="act" id="tsSettle" style="width:100%;margin-top:6px">💵 تسویه کل — همه پرداخت شد</button>':'')
+ +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">'
+ +'<button class="act" id="tsNew">سفارش جدید</button>'
+ +(list.length?'<button class="act ghost" id="tsRep">تکرار آخرین سفارش</button><button class="act ghost" id="tsMove">🔄 انتقال میز</button>':'')
+ +(t!==TAKEOUT&&list.length?'<button class="act danger" id="tsClose2">مشتری رفت — بستن حساب</button>':'')
+ +'</div>';
+ $('#tsClose').onclick=()=>$('#tableOv').classList.remove('show');
+ $('#tableSheet').querySelectorAll('[data-pd]').forEach(b=>b.onclick=()=>{const p=b.dataset.pd.split(':');markItemPaid(+p[0],+p[1]);});
+ $('#tableSheet').querySelectorAll('[data-un]').forEach(b=>b.onclick=()=>{const p=b.dataset.un.split(':');if(confirm('پرداخت این آیتم برگشت داده شود؟'))unmarkItemPaid(+p[0],+p[1]);});
+ $('#tableSheet').querySelectorAll('[data-ud]').forEach(b=>b.onclick=()=>{const id=+b.dataset.ud;if(confirm('سفارش به «در حال آماده‌سازی» برگردد؟'))sb.from('cafe_orders').update({status:'preparing',delivered_by:''}).eq('id',id).then(async()=>{showToast('↩️ برگشت خورد');await fetchOrders();openTableSheet(t);});});
+ const st=$('#tsSettle');if(st)st.onclick=()=>settleTable(t);
+ $('#tsNew').onclick=()=>{$('#tableOv').classList.remove('show');startOrder(t);};
+ const rp=$('#tsRep');if(rp)rp.onclick=async()=>{const last=list[0];if(!last)return;
+  await sb.from('cafe_orders').insert({table_id:t,items:last.items,who:userName});
+  showToast('سفارش تکراری ثبت شد');await fetchOrders();openTableSheet(t);};
+ const mv=$('#tsMove');if(mv)mv.onclick=()=>moveTable(t);
+ const cl=$('#tsClose2');if(cl)cl.onclick=()=>{$('#tableOv').classList.remove('show');doCloseTable(t,orders.filter(o=>!o.archived&&o.table_id===t));};
+ $('#tableOv').classList.add('show');}
+</script>
