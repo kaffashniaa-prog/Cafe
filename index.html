@@ -1147,3 +1147,21 @@ setTimeout(()=>showToast('✅ نسخه ۴.۰ فعال شد'),800);
     if(el)setTimeout(()=>el.click(),0);}return r;};}
 })();
 </script>
+<script>
+/* ===== پچ v4.1: دایره‌های دسته کوچیک — ۴ تایی در ردیف ===== */
+document.title='کافه روبیک v4.1';
+setTimeout(()=>showToast('✅ نسخه ۴.۱ فعال شد'),800);
+(function(){
+ const sec=document.querySelector('#s-menu');if(!sec)return;
+ function shrink(){
+  const cand=[...sec.querySelectorAll('div,button,span')].filter(n=>{
+   const s=getComputedStyle(n);const r=parseFloat(s.borderRadius);
+   return r>0&&n.offsetWidth>0&&Math.min(n.offsetWidth,n.offsetHeight)>=100&&r/Math.min(n.offsetWidth,n.offsetHeight)>=0.4&&n.textContent.trim().length>0&&n.textContent.trim().length<25&&n.children.length<=1;});
+  cand.forEach(n=>{n.style.width='80px';n.style.height='80px';n.style.minWidth='80px';n.style.fontSize='.7rem';n.style.padding='4px';});
+  const p=cand[0]&&cand[0].parentElement;
+  if(p){p.style.display='grid';p.style.gridTemplateColumns='repeat(4,1fr)';p.style.gap='8px';p.style.justifyItems='center';}}
+ shrink();
+ if(window.renderCats){const _rc=window.renderCats;window.renderCats=function(){const r=_rc.apply(this,arguments);setTimeout(shrink,0);return r;};}
+ if(window.showTab){const _st=window.showTab;window.showTab=function(){const r=_st.apply(this,arguments);setTimeout(shrink,0);return r;};}
+})();
+</script>
