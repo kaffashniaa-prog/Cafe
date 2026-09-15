@@ -1271,3 +1271,47 @@ setTimeout(()=>showToast('✅ نسخه ۴.۵ تمیز شد'),800);
   return _t?_t.apply(this,arguments):undefined;};
 })();
 </script>
+<script>
+/* ===== پچ v4.6: شمارش سفارش و آیتم در فاکتور و چیپ تحویل‌شده‌ها ===== */
+document.title='کافه روبیک v4.6';
+setTimeout(()=>showToast('✅ نسخه ۴.۶ فعال شد'),800);
+function openTableSheet(t){const list=orders.filter(o=>!o.archived&&o.table_id===t).sort((a,b)=>a.id-b.id);
+ const stLbl=o=>o.status==='new'?'جدید':(o.status==='preparing'?'در حال آماده‌سازی':'تحویل شد ✓');
+ const paidSum=list.reduce((s,o)=>s+itemPaid(o),0),tot=list.reduce((s,o)=>s+orderTotal(o),0),rem=tot-paidSum;
+ const nOrd=list.length,nItm=list.reduce((s,o)=>s+parseItems(o).length,0);
+ const secs=list.map(o=>{const its=parseItems(o);
+  const items=its.map((it,ix)=>'<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.88rem;padding:6px 0;border-bottom:1px dashed var(--line)"><span>'+it.name+' ×'+it.qty+'</span><span style="display:flex;gap:6px;align-items:center;white-space:nowrap"><b>'+fmt(it.price*it.qty)+'</b>'
+   +(it.pd?'<span style="color:var(--good)">✅</span><button class="mini" data-un="'+o.id+':'+ix+'">↩️</button>':'<button class="mini" data-pd="'+o.id+':'+ix+'">💵</button>')+'</span></div>').join('');
+  return '<div style="display:flex;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--muted);margin:8px 0 2px"><span>#'+o.id+' · '+hhmm(o.created_at)+' · '+stLbl(o)+'</span>'+(o.status==='done'?'<button class="mini" data-ud="'+o.id+'">↩️ برگشت</button>':'')+'</div>'+items;}).join('');
+ $('#tableSheet').innerHTML='<div style="display:flex;justify-content:space-between;align-items:center"><b>'+tblLabel(t)+'</b><button class="mini" id="tsClose">✕</button></div>'
+ +'<div style="margin:6px 0 2px;font-size:.8rem;color:var(--muted)">🧾 '+nOrd+' سفارش · '+nItm+' آیتم</div>'
+ +'<div style="margin:2px 0 8px;font-size:.85rem">💵 پرداخت‌شده: <b>'+fmt(paidSum)+'</b> · ⏳ مانده: <b style="color:'+(rem>0?'var(--accent)':'var(--good)')+'">'+fmt(rem)+'</b></div>'
+ +'<div class="oc">'+(list.length?secs:'<div class="muted" style="padding:10px;text-align:center">سفارشی ندارد</div>')
+ +'<div style="display:flex;justify-content:space-between;margin-top:8px;font-size:.9rem"><span>جمع کل فاکتور ('+nItm+' آیتم):</span><b style="color:var(--accent)">'+fmt(tot)+'</b></div></div>'
+ +(rem>0&&list.length?'<button class="act" id="tsSettle" style="width:100%;margin-top:10px">💵 تسویه کل — همه پرداخت شد</button>':'')
+ +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><button class="act" id="tsNew">سفارش جدید</button>'
+ +(list.length?'<button class="act ghost" id="tsMove">🔄 انتقال میز</button>':'')
+ +(t!==TAKEOUT&&list.length?'<button class="act danger" id="tsClose2">مشتری رفت — بستن حساب</button>':'')+'</div>';
+ $('#tsClose').onclick=()=>$('#tableOv').classList.remove('show');
+ $('#tableSheet').querySelectorAll('[data-pd]').forEach(b=>b.onclick=()=>{const p=b.dataset.pd.split(':');markItemPaid(+p[0],+p[1]);});
+ $('#tableSheet').querySelectorAll('[data-un]').forEach(b=>b.onclick=()=>{const p=b.dataset.un.split(':');if(confirm('پرداخت این آیتم برگشت داده شود؟'))unmarkItemPaid(+p[0],+p[1]);});
+ $('#tableSheet').querySelectorAll('[data-ud]').forEach(b=>b.onclick=()=>{const id=+b.dataset.ud;if(confirm('سفارش به «در حال آماده‌سازی» برگردد؟'))sb.from('cafe_orders').update({status:'preparing',delivered_by:''}).eq('id',id).then(async()=>{showToast('↩️ برگشت خورد');await fetchOrders();openTableSheet(t);});});
+ const st=$('#tsSettle');if(st)st.onclick=()=>settleTable(t);
+ $('#tsNew').onclick=()=>{$('#tableOv').classList.remove('show');startOrder(t);};
+ const mv=$('#tsMove');if(mv)mv.onclick=()=>moveTable(t);
+ const cl=$('#tsClose2');if(cl)cl.onclick=()=>{$('#tableOv').classList.remove('show');doCloseTable(t,orders.filter(o=>!o.archived&&o.table_id===t));};
+ $('#tableOv').classList.add('show');}
+function renderOrders(){const act=tableOrders().filter(o=>o.status!=='done').sort((a,b)=>b.id-a.id);
+ const don=doneToday();
+ let h=act.length?act.map(o=>orderCard(o)).join(''):'<div class="muted" style="padding:14px;text-align:center">سفارش فعالی نیست</div>';
+ if(don.length){const byT={};don.forEach(o=>{(byT[o.table_id]=byT[o.table_id]||[]).push(o);});
+  h+='<h3>تحویل‌شده‌های امروز ('+don.length+')</h3><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">'
+  +Object.keys(byT).map(t=>{const n=byT[t].length,m=byT[t].reduce((s,o)=>s+parseItems(o).length,0);
+   return '<button class="act ghost" data-chip="'+t+'" style="padding:8px 4px;font-size:.72rem;line-height:1.6">'+tblLabel(+t)+'<br><b style="color:var(--accent)">'+n+'</b> سفارش · <b>'+m+'</b> آیتم</button>';}).join('')+'</div>';}
+ $('#ordersList').innerHTML=h;
+ $('#ordersList').querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{const id=+b.dataset.id,a=b.dataset.act;
+  if(a==='prep')setStatus(id,'preparing');if(a==='done')setStatus(id,'done');if(a==='del')delOrder(id);if(a==='edit')openEdit(id);});
+ $('#ordersList').querySelectorAll('[data-chip]').forEach(b=>b.onclick=()=>openTableSheet(+b.dataset.chip));
+ $('#ordersList').querySelectorAll('[data-pay]').forEach(b=>b.onclick=()=>markPaid(+b.dataset.pay));
+ $('#ordersList').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>delOrder(+b.dataset.del));}
+</script>
