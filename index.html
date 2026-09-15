@@ -1366,3 +1366,37 @@ setTimeout(()=>showToast('✅ نسخه ۴.۷ فعال شد'),800);
  setInterval(()=>{[byName('پیام'),byName('مدیریت'),byName('گزارش')].forEach(b=>{if(b)b.style.display==='none'||b.style.setProperty('display','none','important');});},3000);
 })();
 </script>
+<script>
+/* ===== پچ v4.8: دکمه ⋯ خودترمیم ===== */
+document.title='کافه روبیک v4.8';
+setTimeout(()=>showToast('✅ نسخه ۴.۸ فعال شد'),800);
+(function(){
+ function openMore(){let ov=document.getElementById('moreOv');
+  if(!ov){ov=document.createElement('div');ov.id='moreOv';
+   ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:95;display:none;align-items:flex-end';
+   ov.innerHTML='<div style="background:var(--card,#f5efe6);border-radius:18px 18px 0 0;padding:14px;width:100%"><div style="display:grid;gap:8px"><button class="act" id="mRep">📊 گزارش</button><button class="act" id="mAdm">👑 مدیریت</button><button class="act ghost" id="mX">بستن</button></div></div>';
+   document.body.appendChild(ov);
+   ov.addEventListener('click',e=>{if(e.target===ov)ov.style.display='none';});}
+  $('#mRep').onclick=()=>{ov.style.display='none';window.showTab('report');};
+  $('#mAdm').onclick=()=>{ov.style.display='none';window.showTab('admin');};
+  $('#mX').onclick=()=>ov.style.display='none';
+  ov.style.display='flex';}
+ window.__openMore=openMore;
+ function ensure(){
+  const nav=$('#nav');if(!nav)return;
+  const norm=t=>(t||'').replace(/[^\u0600-\u06FF]/g,'');
+  [...nav.querySelectorAll('button')].forEach(b=>{const n=norm(b.textContent);
+   if(n==='پیام'||n==='مدیریت'||n==='گزارش')b.style.setProperty('display','none','important');});
+  let m=$('#moreBtn');
+  if(!m||!nav.contains(m)){
+   if(m)m.remove();
+   m=document.createElement('button');m.id='moreBtn';m.textContent='⋯';
+   m.style.setProperty('font-size','1.5rem','important');
+   m.style.setProperty('min-width','60px','important');
+   m.style.setProperty('flex','0 0 auto','important');
+   m.style.setProperty('display','block','important');
+   m.onclick=openMore;
+   nav.appendChild(m);}}
+ ensure();setInterval(ensure,2000);
+})();
+</script>
