@@ -1260,3 +1260,14 @@ setTimeout(()=>showToast('✅ نسخه ۴.۴ فعال شد'),800);
  },1500);
 })();
 </script>
+<script>
+/* ===== پچ v4.5: خاموش کردن پیام‌های خطای دسته‌ها ===== */
+document.title='کافه روبیک v4.5';
+setTimeout(()=>showToast('✅ نسخه ۴.۵ تمیز شد'),800);
+(function(){
+ const _t=window.showToast;
+ window.showToast=function(m){
+  if(/گرید دسته|کوچک شد|فشرده شد|پیدا نشد/.test(m||''))return;
+  return _t?_t.apply(this,arguments):undefined;};
+})();
+</script>
