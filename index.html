@@ -1400,3 +1400,16 @@ setTimeout(()=>showToast('✅ نسخه ۴.۸ فعال شد'),800);
  ensure();setInterval(ensure,2000);
 })();
 </script>
+<script>
+/* ===== پچ v4.9: ⋯ فقط مدیر ===== */
+document.title='کافه روبیک v4.9';
+setTimeout(()=>showToast('✅ نسخه ۴.۹ فعال شد'),800);
+(function(){
+ function ensure(){
+  const nav=$('#nav');if(!nav)return;
+  const m=$('#moreBtn');
+  const isAdmin=(typeof role!=='undefined'&&role==='admin');
+  if(m)m.style.setProperty('display',isAdmin?'block':'none','important');}
+ ensure();setInterval(ensure,2000);
+})();
+</script>
