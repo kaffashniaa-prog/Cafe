@@ -1165,3 +1165,24 @@ setTimeout(()=>showToast('✅ نسخه ۴.۱ فعال شد'),800);
  if(window.showTab){const _st=window.showTab;window.showTab=function(){const r=_st.apply(this,arguments);setTimeout(shrink,0);return r;};}
 })();
 </script>
+<script>
+/* ===== پچ v4.2: دایره‌های دسته کوچیک (جستجوی سراسری) ===== */
+document.title='کافه روبیک v4.2';
+setTimeout(()=>showToast('✅ نسخه ۴.۲ فعال شد'),800);
+(function(){
+ function shrink(){
+  const circ=[...document.querySelectorAll('button,div,span,a')].filter(n=>{
+   const s=getComputedStyle(n);if(s.display==='none')return false;
+   const w=n.offsetWidth,h=n.offsetHeight;
+   if(!w||w<90||Math.abs(w-h)>14)return false;
+   const r=parseFloat(s.borderRadius);
+   if(!(r/Math.min(w,h)>=0.4))return false;
+   const t=(n.textContent||'').trim();
+   return t.length>0&&t.length<25&&n.children.length<=1;});
+  circ.forEach(n=>{n.style.width='76px';n.style.height='76px';n.style.minWidth='76px';n.style.fontSize='.68rem';n.style.padding='2px';});
+  const p=circ[0]&&circ[0].parentElement;
+  if(p&&p.children.length>=4&&p.id!=='nav'){
+   p.style.display='grid';p.style.gridTemplateColumns='repeat(4,1fr)';p.style.gap='10px';p.style.justifyItems='center';p.style.alignItems='center';}}
+ shrink();setInterval(shrink,1500);
+})();
+</script>
