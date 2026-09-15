@@ -1435,3 +1435,25 @@ setTimeout(()=>showToast('✅ نسخه ۵.۰ فعال شد'),800);
  attachSale();setInterval(attachSale,1200);
 })();
 </script>
+<script>
+/* ===== پچ v5.1: مخفی‌ماندن پایدار فروش امروز ===== */
+document.title='کافه روبیک v5.1';
+setTimeout(()=>showToast('✅ نسخه ۵.۱ فعال شد'),800);
+(function(){
+ function apply(){
+  const chip=[...document.querySelectorAll('.chip')].find(c=>(c.textContent||'').includes('فروش امروز'));
+  if(!chip)return;const b=chip.querySelector('b');if(!b)return;
+  const t=b.textContent||'';
+  if(t.indexOf('•')===-1)b.dataset.real=t;
+  if(localStorage.getItem('saleHidden')==='1'){if((b.textContent||'').indexOf('•')===-1)b.textContent='••••••';}
+  else if(b.dataset.real&&(b.textContent||'').indexOf('•')!==-1)b.textContent=b.dataset.real;
+  if(!chip.dataset.st){chip.dataset.st='1';chip.style.cursor='pointer';
+   chip.onclick=()=>{const now=localStorage.getItem('saleHidden')==='1';
+    localStorage.setItem('saleHidden',now?'0':'1');
+    showToast(now?'👁 فروش نمایش داده شد':'🔒 فروش مخفی شد');apply();};}}
+ const _rd=window.renderDash;
+ window.renderDash=function(){const r=_rd?_rd.apply(this,arguments):undefined;apply();return r;};
+ apply();
+ new MutationObserver(()=>apply()).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
