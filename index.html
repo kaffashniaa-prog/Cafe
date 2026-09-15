@@ -1186,3 +1186,37 @@ setTimeout(()=>showToast('✅ نسخه ۴.۲ فعال شد'),800);
  shrink();setInterval(shrink,1500);
 })();
 </script>
+<script>
+/* ===== پچ v4.3: دایره‌های دسته کوچیک (پشتیبانی از %) ===== */
+document.title='کافه روبیک v4.3';
+setTimeout(()=>showToast('✅ نسخه ۴.۳ فعال شد'),800);
+(function(){
+ function isCircle(n){
+  if(n.closest('#nav')||n.tagName==='I')return false;
+  const s=getComputedStyle(n);if(s.display==='none')return false;
+  const w=n.offsetWidth,h=n.offsetHeight;
+  if(!w||w<140||w>320||Math.abs(w-h)>20)return false;
+  const br=s.borderRadius||'';
+  if(br.includes('%')){if(!n.textContent.trim())return false;}
+  else{const r=parseFloat(br)||0;if(!(r/Math.min(w,h)>=0.4))return false;}
+  const t=(n.textContent||'').trim();
+  return t.length>0&&t.length<25&&n.children.length<=2;}
+ function shrink(){
+  const circ=[...document.querySelectorAll('#s-menu button, #s-menu div, #s-menu span, #s-menu a, button, div, span, a')].filter(isCircle);
+  circ.forEach(n=>{const st=n.style;
+   st.setProperty('width','76px','important');st.setProperty('height','76px','important');
+   st.setProperty('min-width','76px','important');st.setProperty('max-width','76px','important');
+   st.setProperty('font-size','.66rem','important');st.setProperty('padding','2px','important');});
+  const p=circ[0]&&circ[0].parentElement;
+  if(p&&circ.length>=4){
+   const same=[...p.children].filter(isCircle).length;
+   if(same>=circ.length*0.6){
+    p.style.setProperty('display','grid','important');
+    p.style.setProperty('grid-template-columns','repeat(4,1fr)','important');
+    p.style.setProperty('gap','10px','important');
+    p.style.setProperty('justify-items','center','important');}}
+  return circ.length;}
+ let once=false;
+ const iv=setInterval(()=>{const n=shrink();if(n&&!once){once=true;setTimeout(()=>showToast('🔍 '+n+' دسته کوچک شد'),400);}},1200);
+})();
+</script>
