@@ -1315,3 +1315,54 @@ function renderOrders(){const act=tableOrders().filter(o=>o.status!=='done').sor
  $('#ordersList').querySelectorAll('[data-pay]').forEach(b=>b.onclick=()=>markPaid(+b.dataset.pay));
  $('#ordersList').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>delOrder(+b.dataset.del));}
 </script>
+<script>
+/* ===== پچ v4.7: نوار ۳ تب بزرگ + ⋯ + 💬 با بج در هدر ===== */
+document.title='کافه روبیک v4.7';
+setTimeout(()=>showToast('✅ نسخه ۴.۷ فعال شد'),800);
+(function(){
+ const norm=t=>(t||'').replace(/[^\u0600-\u06FF]/g,'');
+ const nav=$('#nav');
+ if(!nav)return;
+ const byName=t=>[...nav.querySelectorAll('button')].find(b=>norm(b.textContent).includes(t));
+ [byName('پیام'),byName('مدیریت'),byName('گزارش')].forEach(b=>{if(b)b.style.setProperty('display','none','important');});
+ nav.querySelectorAll('button:not(#moreBtn)').forEach(b=>{b.style.setProperty('font-size','.95rem','important');b.style.setProperty('padding','12px 6px','important');});
+ if(!$('#moreBtn')){const m=document.createElement('button');m.id='moreBtn';m.textContent='⋯';
+  m.style.cssText='font-size:1.4rem;min-width:56px;padding:12px 6px';
+  nav.appendChild(m);m.onclick=()=>openMore();}
+ function openMore(){let ov=document.getElementById('moreOv');
+  if(!ov){ov=document.createElement('div');ov.id='moreOv';
+   ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:95;display:none;align-items:flex-end';
+   ov.innerHTML='<div style="background:var(--card,#f5efe6);border-radius:18px 18px 0 0;padding:14px;width:100%"><div style="display:grid;gap:8px"><button class="act" id="mRep">📊 گزارش</button><button class="act" id="mAdm">👑 مدیریت</button><button class="act ghost" id="mX">بستن</button></div></div>';
+   document.body.appendChild(ov);
+   ov.addEventListener('click',e=>{if(e.target===ov)ov.style.display='none';});}
+  $('#mRep').onclick=()=>{ov.style.display='none';window.showTab('report');};
+  $('#mAdm').onclick=()=>{ov.style.display='none';window.showTab('admin');};
+  $('#mX').onclick=()=>ov.style.display='none';
+  ov.style.display='flex';}
+ const titleEl=[...document.querySelectorAll('h1,h2,b,div,span')].find(n=>!n.children.length&&n.textContent.trim()==='کافه روبیک');
+ let grp=null;
+ if(titleEl){const hdr=titleEl.closest('header')||titleEl.parentElement;
+  const cands=[...(hdr?hdr.querySelectorAll('div'):[])].filter(d=>d.querySelectorAll(':scope > button').length>=2);
+  grp=cands[cands.length-1];}
+ function chatBtn(){let c=document.getElementById('chatHdrBtn');
+  if(c)return c;
+  c=document.createElement('button');c.id='chatHdrBtn';c.textContent='💬';c.style.position='relative';
+  const b=document.createElement('span');b.id='chatBadge';
+  b.style.cssText='position:absolute;top:-5px;left:-5px;background:#e53935;color:#fff;border-radius:10px;font-size:.62rem;padding:1px 6px;font-weight:700;display:none';
+  c.appendChild(b);
+  c.onclick=()=>window.showTab('chat');
+  if(grp)grp.appendChild(c);
+  else{c.style.cssText+=';position:fixed;top:12px;left:12px;z-index:60';document.body.appendChild(c);}
+  return c;}
+ chatBtn();
+ function unread(){try{
+  if(role==='admin')return msgs.filter(m=>m.role!=='admin'&&(!msgSeen.admin||new Date(m.created_at)>new Date(msgSeen.admin))).length;
+  return msgs.filter(m=>m.role==='admin'&&m.sender!==userName&&(!msgSeen[userName]||new Date(m.created_at)>new Date(msgSeen[userName]))).length;
+ }catch(e){return 0;}}
+ setInterval(()=>{const c=$('#chatHdrBtn');if(!c)return;
+  let b=$('#chatBadge');
+  if(!b){b=document.createElement('span');b.id='chatBadge';b.style.cssText='position:absolute;top:-5px;left:-5px;background:#e53935;color:#fff;border-radius:10px;font-size:.62rem;padding:1px 6px;font-weight:700';c.appendChild(b);}
+  const n=unread();b.textContent=n;b.style.display=n?'block':'none';},2000);
+ setInterval(()=>{[byName('پیام'),byName('مدیریت'),byName('گزارش')].forEach(b=>{if(b)b.style.display==='none'||b.style.setProperty('display','none','important');});},3000);
+})();
+</script>
