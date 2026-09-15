@@ -1112,3 +1112,38 @@ function openTableSheet(t){const list=orders.filter(o=>!o.archived&&o.table_id==
  const cl=$('#tsClose2');if(cl)cl.onclick=()=>{$('#tableOv').classList.remove('show');doCloseTable(t,orders.filter(o=>!o.archived&&o.table_id===t));};
  $('#tableOv').classList.add('show');}
 </script>
+<script>
+/* ===== پچ v4.0: دسته‌ها توی پنجره + آیتم دو ستونه ===== */
+document.title='کافه روبیک v4.0';
+setTimeout(()=>showToast('✅ نسخه ۴.۰ فعال شد'),800);
+(function(){
+ const q=s=>document.querySelector(s);
+ const listEl=q('#menuList')||q('#menu-list')||q('#menuItems');
+ if(listEl){listEl.style.display='grid';listEl.style.gridTemplateColumns='1fr 1fr';listEl.style.gap='8px';}
+ const catsEl=q('#cats')||q('#catsRow')||q('#catGrid');
+ const sec=q('#s-menu');
+ if(!catsEl||!sec)return;
+ let ov=document.getElementById('catOv');
+ if(!ov){ov=document.createElement('div');ov.id='catOv';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:90;display:none;align-items:flex-end';
+  ov.innerHTML='<div style="background:var(--card,#232323);border-radius:18px 18px 0 0;padding:14px;width:100%;max-height:70vh;overflow:auto"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><b>دسته‌ها</b><button class="mini" id="catX">✕</button></div><div id="catHolder"></div></div>';
+  document.body.appendChild(ov);
+  ov.addEventListener('click',e=>{if(e.target===ov)closeCats();});
+  q('#catX').onclick=closeCats;}
+ function closeCats(){ov.style.display='none';}
+ catsEl.parentNode.removeChild(catsEl);
+ q('#catHolder').appendChild(catsEl);
+ let btn=document.getElementById('catBtn');
+ if(!btn){btn=document.createElement('button');btn.id='catBtn';btn.className='act';btn.style.cssText='width:100%;margin-bottom:10px';sec.insertBefore(btn,sec.firstChild);}
+ btn.innerHTML='◎ انتخاب دسته: '+(localStorage.getItem('lastCat')||'—');
+ btn.onclick=()=>{ov.style.display='flex';};
+ catsEl.addEventListener('click',e=>{const t=(e.target.textContent||'').trim().split('\n')[0].slice(0,24);
+  if(t&&!/✕/.test(t)){localStorage.setItem('lastCat',t);btn.innerHTML='◎ '+t;}
+  setTimeout(closeCats,150);},true);
+ if(window.renderCats){const _rc=window.renderCats;
+  window.renderCats=function(){const r=_rc.apply(this,arguments);
+   const last=localStorage.getItem('lastCat');
+   if(last){const el=[...catsEl.querySelectorAll('*')].find(n=>!n.children.length&&n.textContent.trim()===last);
+    if(el)setTimeout(()=>el.click(),0);}return r;};}
+})();
+</script>
