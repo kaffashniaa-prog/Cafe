@@ -1015,3 +1015,17 @@ function settleTable(t){const list=orders.filter(o=>!o.archived&&o.table_id===t)
  list.forEach(o=>{if(itemRem(o)>0){const its=parseItems(o).map(i=>Object.assign({},i,{pd:true}));jobs.push(sb.from('cafe_orders').update({items:JSON.stringify(its),paid:true}).eq('id',o.id));}});
  Promise.all(jobs).then(async()=>{showToast('💵 کل '+tblLabel(t)+' تسویه شد');await fetchOrders();openTableSheet(t);});}
 </script>
+<script>
+/* ===== پچ v3.7: نشان نسخه + رفرش فوری پرداخت ===== */
+document.title='کافه روبیک v3.7';
+setTimeout(()=>showToast('✅ نسخه ۳.۷ فعال شد'),800);
+function refreshSheet(id){const o=orders.find(x=>x.id===id);if(o&&$('#tableOv')&&$('#tableOv').classList.contains('show'))openTableSheet(o.table_id);}
+function markItemPaid(id,idx){const o=orders.find(x=>x.id===id);if(!o)return;const its=parseItems(o);if(!its[idx])return;its[idx].pd=true;
+ const up={items:JSON.stringify(its)};if(its.every(i=>i.pd))up.paid=true;
+ sb.from('cafe_orders').update(up).eq('id',id).then(async()=>{showToast('💵 پرداخت شد');await fetchOrders();refreshSheet(id);});}
+function markPaid(id){const o=orders.find(x=>x.id===id);if(!o)return;const its=parseItems(o).map(i=>Object.assign({},i,{pd:true}));
+ sb.from('cafe_orders').update({items:JSON.stringify(its),paid:true}).eq('id',id).then(async()=>{showToast('💵 پرداخت ثبت شد');await fetchOrders();refreshSheet(id);});}
+function settleTable(t){const list=orders.filter(o=>!o.archived&&o.table_id===t);const jobs=[];
+ list.forEach(o=>{if(itemRem(o)>0){const its=parseItems(o).map(i=>Object.assign({},i,{pd:true}));jobs.push(sb.from('cafe_orders').update({items:JSON.stringify(its),paid:true}).eq('id',o.id));}});
+ Promise.all(jobs).then(async()=>{showToast('💵 کل '+tblLabel(t)+' تسویه شد');await fetchOrders();openTableSheet(t);});}
+</script>
