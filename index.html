@@ -1522,3 +1522,125 @@ sb.from=function(t){const b=_sbFromOld(t);
   if(b.upsert){const _u=b.upsert.bind(b);b.upsert=function(v){return _u(Array.isArray(v)?v.map(fix):fix(v));};}}
  return b;};
 </script>
+<script>
+/* ===== پچ v5.3: تخفیف + پیام مدیر↔مدیر + آنلاین/آفلاین ===== */
+document.title='کافه روبیک v5.3';
+setTimeout(()=>showToast('✅ نسخه ۵.۳ فعال شد'),800);
+/* --- اسم مدیر --- */
+if(typeof role!=='undefined'&&role==='admin'){
+ if(!localStorage.getItem('adminName')){setTimeout(()=>{const n=prompt('اسمت چیه؟ (برای پیام‌ها و ثبت تخفیف)');if(n&&n.trim()){localStorage.setItem('adminName',n.trim());try{userName=n.trim();}catch(e){}}},1500);}
+ else{try{if(!userName||userName==='مدیر')userName=localStorage.getItem('adminName');}catch(e){}}}
+/* --- ۱) تخفیف --- */
+function applyDiscount(id){const o=orders.find(x=>x.id===id);if(!o)return;
+ const rem=Math.max(0,orderTotal(o)-itemPaid(o)-Number(o.discount||0));
+ const v=prompt('مبلغ تخفیف (تومان) — 0 برای حذف:','');if(v===null)return;
+ const n=Math.max(0,parseInt(String(v).replace(/[^\d]/g,''),10)||0);
+ if(n>rem){showToast('بیشتر از مانده نمیشه! مانده: '+fmt(rem));return;}
+ if(n===0){sb.from('cafe_orders').update({discount:0,disc_by:''}).eq('id',id).then(async()=>{showToast('تخفیف حذف شد');await fetchOrders();refreshSheet(id);});return;}
+ sb.from('cafe_orders').update({discount:n,disc_by:(userName||'')}).eq('id',id).then(async()=>{showToast('🏷️ تخفیف ثبت شد');await fetchOrders();refreshSheet(id);});}
+(function(){const _rr=window.renderReport;
+ window.renderReport=function(){const r=_rr?_rr.apply(this,arguments):undefined;
+  try{const sec=$('#s-report');if(sec){let d=$('#discRep');if(d)d.remove();
+   const td=(typeof todayOrders==='function'?todayOrders():[]).filter(o=>Number(o.discount||0)>0);
+   if(td.length){d=document.createElement('div');d.id='discRep';
+    const by={};td.forEach(o=>{const k=o.disc_by||'—';by[k]=(by[k]||0)+Number(o.discount||0);});
+    const sum=td.reduce((s,o)=>s+Number(o.discount||0),0);
+    d.innerHTML='<h3>🏷️ تخفیف‌های امروز ('+fmt(sum)+')</h3>'+Object.keys(by).map(k=>'<div class="row"><span>'+k+'</span><b>'+fmt(by[k])+'</b></div>').join('');
+    sec.appendChild(d);}}}catch(e){}return r;};})();
+/* --- پنجره میز با تخفیف --- */
+function openTableSheet(t){const list=orders.filter(o=>!o.archived&&o.table_id===t).sort((a,b)=>a.id-b.id);
+ const stLbl=o=>o.status==='new'?'جدید':(o.status==='preparing'?'در حال آماده‌سازی':'تحویل شد ✓');
+ const paidSum=list.reduce((s,o)=>s+itemPaid(o),0),tot=list.reduce((s,o)=>s+orderTotal(o),0);
+ const discSum=list.reduce((s,o)=>s+Number(o.discount||0),0);
+ const rem=Math.max(0,tot-paidSum-discSum);
+ const nOrd=list.length,nItm=list.reduce((s,o)=>s+parseItems(o).length,0);
+ const secs=list.map(o=>{const its=parseItems(o);
+  const items=its.map((it,ix)=>{const pq=paidQty(it);let ctrl;
+   if(pq>=it.qty)ctrl='<span style="color:var(--good)">✅ '+it.qty+'/'+it.qty+'</span><button class="mini" data-un="'+o.id+':'+ix+'">↩️</button>';
+   else if(pq>0)ctrl='<span style="color:var(--good)">'+pq+'/'+it.qty+'</span><button class="mini" data-pd="'+o.id+':'+ix+'">💵</button><button class="mini" data-un="'+o.id+':'+ix+'">↩️</button>';
+   else ctrl='<button class="mini" data-pd="'+o.id+':'+ix+'">💵</button>';
+   return '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.88rem;padding:6px 0;border-bottom:1px dashed var(--line)"><span>'+it.name+' ×'+it.qty+'</span><span style="display:flex;gap:6px;align-items:center;white-space:nowrap"><b>'+fmt(it.price*it.qty)+'</b>'+ctrl+'</span></div>';}).join('');
+  const drow=Number(o.discount||0)>0?'<div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--accent);padding:2px 0"><span>🏷️ تخفیف ('+(o.disc_by||'—')+')</span><span>−'+fmt(Number(o.discount))+' <button class="mini" data-dsc="'+o.id+'">✏️</button></span></div>':'';
+  return '<div style="display:flex;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--muted);margin:8px 0 2px"><span>#'+o.id+' · '+hhmm(o.created_at)+' · '+stLbl(o)+'</span><span>'+(o.status==='done'?'<button class="mini" data-ud="'+o.id+'">↩️ برگشت</button> ':'')+'<button class="mini" data-dsc="'+o.id+'">🏷️ تخفیف</button></span></div>'+items+drow;}).join('');
+ $('#tableSheet').innerHTML='<div style="display:flex;justify-content:space-between;align-items:center"><b>'+tblLabel(t)+'</b><button class="mini" id="tsClose">✕</button></div>'
+ +'<div style="margin:6px 0 2px;font-size:.8rem;color:var(--muted)">🧾 '+nOrd+' سفارش · '+nItm+' آیتم</div>'
+ +'<div style="margin:2px 0 8px;font-size:.85rem">💵 پرداخت‌شده: <b>'+fmt(paidSum)+'</b>'+(discSum>0?' · 🏷️ تخفیف: <b style="color:var(--accent)">'+fmt(discSum)+'</b>':'')+' · ⏳ مانده: <b style="color:'+(rem>0?'var(--accent)':'var(--good)')+'">'+fmt(rem)+'</b></div>'
+ +'<div class="oc">'+(list.length?secs:'<div class="muted" style="padding:10px;text-align:center">سفارشی ندارد</div>')
+ +'<div style="display:flex;justify-content:space-between;margin-top:8px;font-size:.9rem"><span>جمع کل فاکتور ('+nItm+' آیتم):</span><b style="color:var(--accent)">'+fmt(tot)+'</b></div></div>'
+ +(rem>0&&list.length?'<button class="act" id="tsSettle" style="width:100%;margin-top:10px">💵 تسویه کل — همه پرداخت شد</button>':'')
+ +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><button class="act" id="tsNew">سفارش جدید</button>'
+ +(list.length?'<button class="act ghost" id="tsMove">🔄 انتقال میز</button>':'')
+ +(t!==TAKEOUT&&list.length?'<button class="act danger" id="tsClose2">مشتری رفت — بستن حساب</button>':'')+'</div>';
+ $('#tsClose').onclick=()=>$('#tableOv').classList.remove('show');
+ $('#tableSheet').querySelectorAll('[data-pd]').forEach(b=>b.onclick=()=>{const p=b.dataset.pd.split(':');markItemPaid(+p[0],+p[1]);});
+ $('#tableSheet').querySelectorAll('[data-un]').forEach(b=>b.onclick=()=>{const p=b.dataset.un.split(':');if(confirm('یکی از پرداخت‌های این آیتم برگشت داده شود؟'))unmarkItemPaid(+p[0],+p[1]);});
+ $('#tableSheet').querySelectorAll('[data-ud]').forEach(b=>b.onclick=()=>{const id=+b.dataset.ud;if(confirm('سفارش به «در حال آماده‌سازی» برگردد؟'))sb.from('cafe_orders').update({status:'preparing',delivered_by:''}).eq('id',id).then(async()=>{showToast('↩️ برگشت خورد');await fetchOrders();openTableSheet(t);});});
+ $('#tableSheet').querySelectorAll('[data-dsc]').forEach(b=>b.onclick=()=>applyDiscount(+b.dataset.dsc));
+ const st=$('#tsSettle');if(st)st.onclick=()=>settleTable(t);
+ $('#tsNew').onclick=()=>{$('#tableOv').classList.remove('show');startOrder(t);};
+ const mv=$('#tsMove');if(mv)mv.onclick=()=>moveTable(t);
+ const cl=$('#tsClose2');if(cl)cl.onclick=()=>{$('#tableOv').classList.remove('show');doCloseTable(t,orders.filter(o=>!o.archived&&o.table_id===t));};
+ $('#tableOv').classList.add('show');}
+/* --- آنلاین/آفلاین --- */
+window.presence={};
+function isOn(n){return presence[n]&&(Date.now()-new Date(presence[n]).getTime())<90000;}
+function adminNames(){const s=new Set();Object.keys(presence).forEach(n=>{if(!n.startsWith('#')&&presence['#'+n]==='admin')s.add(n);});return [...s];}
+async function hb(){try{if(typeof sb==='undefined'||!userName)return;await sb.from('cafe_presence').upsert({name:userName,role:(typeof role!=='undefined'?role:'staff'),last_seen:new Date().toISOString()});}catch(e){}}
+async function fetchPresence(){try{if(typeof sb==='undefined')return;const{data}=await sb.from('cafe_presence').select('*');(data||[]).forEach(p=>{presence[p.name]=p.last_seen;presence['#'+p.name]=p.role;});renderOnlineBar();}catch(e){}}
+function renderOnlineBar(){const sec=$('#s-chat');if(!sec)return;let b=$('#onlineBar');
+ if(!b){b=document.createElement('div');b.id='onlineBar';b.style.cssText='font-size:.8rem;margin-bottom:8px;color:var(--muted)';sec.insertBefore(b,sec.firstChild);}
+ const ons=Object.keys(presence).filter(n=>!n.startsWith('#')&&isOn(n)&&n!==userName);
+ b.innerHTML='🟢 آنلاین: '+(ons.length?ons.map(n=>'👤 '+n).join(' · '):'کسی نیست');}
+setTimeout(hb,1000);setInterval(hb,30000);setTimeout(fetchPresence,2500);setInterval(fetchPresence,30000);
+/* --- چت (مدیر↔مدیر + کارمند) --- */
+function chatBusy(){const a=document.activeElement;return !!a&&a.id==='chatInp';}
+window.__pickMode='';
+window.renderChat=function(){const box=$('#chatArea');if(!box)return;
+ if(chatBusy())return;
+ const isAdmin=(typeof role!=='undefined'&&role==='admin');
+ const key=isAdmin?'admin':userName;
+ if(isAdmin&&!window.__chatWith){
+  const me=userName;const groups={};
+  msgs.forEach(m=>{const o=m.sender===me?m.rcpt:m.sender;if(!o||o===me)return;
+   if(!(m.sender===me||m.rcpt===me||(m.rcpt==='مدیر'&&m.role!=='admin')))return;
+   groups[o]=groups[o]||[];groups[o].push(m);});
+  const adms=new Set([...adminNames(),...msgs.filter(m=>m.role==='admin'&&m.sender!==me&&m.sender!=='مدیر').map(m=>m.sender)]);adms.delete(me);
+  let h='<div style="font-size:.78rem;color:var(--muted);margin-bottom:6px">🟢 سبز = الان اپش بازه</div>';
+  h+=Object.keys(groups).map(n=>{const g=groups[n];
+   const u=g.filter(m=>m.sender!==me&&(m.rcpt===me||m.rcpt==='مدир'||m.rcpt==='مدیر')).filter(m=>!msgSeen['admin']||new Date(m.created_at)>new Date(msgSeen['admin'])).length;
+   return '<div class="row" style="cursor:pointer" data-cw="'+n+'"><span>'+(isOn(n)?'🟢':'⚪')+' 👤 '+n+'</span>'+(u?'<span class="badge">'+u+' جدید</span>':'<span class="muted">'+g.length+' پیام</span>')+'</div>';}).join('')||'<div class="muted">هنوز گفتگوئی نیست</div>';
+  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px"><button class="act" id="pickAdm">👑 پیام به مدیر</button><button class="act ghost" id="pickStf">👷 پیام به کارمند</button></div>'
+  +'<button class="act ghost" id="msgPurge" style="width:100%;margin-top:8px">🧹 پاک‌سازی پیام‌های قدیمی</button>'
+  +'<button class="mini" id="chgName" style="width:100%;margin-top:6px">✏️ اسم من: '+(localStorage.getItem('adminName')||'—')+'</button>';
+  if(window.__pickMode==='adm')h+='<div class="muted" style="margin-top:10px">کدوم مدیر؟</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px">'+([...adms].map(n=>'<button class="act ghost" data-pk="'+n+'">'+(isOn(n)?'🟢 ':'')+'👑 '+n+'</button>').join('')||'<div class="muted">مدیر دیگه‌ای ثبت نشده</div>')+'</div>';
+  if(window.__pickMode==='stf')h+='<div class="muted" style="margin-top:10px">کدوم کارمند؟</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px">'+((typeof staffList!=='undefined'?staffList:[]).map(s=>'<button class="act ghost" data-pk="'+s.name+'">'+(isOn(s.name)?'🟢 ':'')+s.name+'</button>').join('')||'<div class="muted">کارمندی نیست</div>')+'</div>';
+  box.innerHTML=h;
+  box.querySelectorAll('[data-cw]').forEach(b=>b.onclick=()=>{window.__chatWith=b.dataset.cw;window.__pickMode='';msgSeen['admin']=new Date().toISOString();localStorage.setItem('cafeMsgSeen',JSON.stringify(msgSeen));renderChat();});
+  const pa=$('#pickAdm'),ps=$('#pickStf');
+  if(pa)pa.onclick=()=>{window.__pickMode=window.__pickMode==='adm'?'':'adm';renderChat();};
+  if(ps)ps.onclick=()=>{window.__pickMode=window.__pickMode==='stf'?'':'stf';renderChat();};
+  box.querySelectorAll('[data-pk]').forEach(b=>b.onclick=()=>{window.__chatWith=b.dataset.pk;window.__pickMode='';msgSeen['admin']=new Date().toISOString();localStorage.setItem('cafeMsgSeen',JSON.stringify(msgSeen));renderChat();});
+  const pg=$('#msgPurge');if(pg)pg.onclick=async()=>{const d=prompt('پاک‌سازی پیام‌های قدیمی‌تر از چند روز؟ (عدد یا all)');if(!d)return;
+   if(d==='all'){if(confirm('همه پیام‌ها حذف شوند؟'))await sb.from('cafe_messages').delete().neq('id',0);}
+   else{const n=parseInt(d);if(n>0)await sb.from('cafe_messages').delete().lt('created_at',new Date(Date.now()-n*864e5).toISOString());}
+   fetchMsgs();showToast('پاک‌سازی شد');};
+  const cn=$('#chgName');if(cn)cn.onclick=()=>{const n=prompt('اسمت:',localStorage.getItem('adminName')||'');if(n&&n.trim()){localStorage.setItem('adminName',n.trim());try{userName=n.trim();}catch(e){}}hb();renderChat();};
+  return;}
+ const other=isAdmin?window.__chatWith:'مدیر';
+ const conv=isAdmin?msgs.filter(m=>(m.sender===other&&(m.rcpt===userName||m.rcpt==='مدیر'))||(m.sender===userName&&m.rcpt===other)):msgs.filter(m=>m.sender===userName||m.rcpt===userName);
+ msgSeen[key]=new Date().toISOString();localStorage.setItem('cafeMsgSeen',JSON.stringify(msgSeen));
+ const items=conv.map(m=>'<div style="display:flex;justify-content:'+(m.sender===userName?'flex-start':'flex-end')+';margin:4px 0"><div style="background:'+(m.sender===userName?'var(--accent)':'rgba(128,128,128,.2)')+';color:'+(m.sender===userName?'#fff':'inherit')+';padding:8px 12px;border-radius:14px;max-width:80%">'+(m.tag==='shop'?'🛒 ':'')+(m.tag==='p'?'📌 ':'')+m.body+'<div style="font-size:.65rem;opacity:.75">'+hhmm(m.created_at)+' · '+m.sender+'</div></div></div>').join('');
+ box.innerHTML=(isAdmin?'<button class="mini" id="backBtn">← گفتگوها</button>':'')+'<div style="font-weight:700;margin:6px 0">'+(isAdmin?('👤 '+other+' '+(isOn(other)?'🟢':'⚪')):'💬 گفتگو با مدیر '+(adminNames().some(n=>isOn(n))?'🟢':'⚪'))+'</div><div id="chatMsgs" style="max-height:50vh;overflow:auto">'+(items||'<div class="muted">پیامی نیست</div>')+'</div><div style="display:flex;gap:6px;margin-top:8px"><input id="chatInp" style="flex:1" placeholder="پیام..."><button class="act" id="chatSend">ارسال</button></div>'+(isAdmin?'':'<label style="font-size:.75rem;display:flex;gap:6px;align-items:center;margin-top:4px"><input type="checkbox" id="chatShop"> لیست خرید 🛒</label>');
+ const bb=$('#backBtn');if(bb)bb.onclick=()=>{window.__chatWith=null;renderChat();};
+ $('#chatSend').onclick=async()=>{const v=$('#chatInp').value.trim();if(!v)return;
+  const rcpt=isAdmin?window.__chatWith:'مدیر';
+  const{error}=await sb.from('cafe_messages').insert({sender:userName,rcpt:rcpt,role:role,body:v,tag:($('#chatShop')&&$('#chatShop').checked)?'shop':''});
+  if(error){showToast('خطا: '+error.message);return;}
+  $('#chatInp').value='';fetchMsgs();renderChat();};
+ $('#chatInp').onkeydown=e=>{if(e.key==='Enter')$('#chatSend').click();};
+ const cm=$('#chatMsgs');if(cm)cm.scrollTop=cm.scrollHeight;};
+setInterval(()=>{try{const s=$('#s-chat');if(s&&s.classList.contains('show'))renderChat();}catch(e){}},5000);
+setInterval(()=>{try{const b=$('#chatBadge');if(!b)return;const key=(typeof role!=='undefined'&&role==='admin')?'admin':userName;
+ const n=msgs.filter(m=>m.sender!==userName&&(m.rcpt===userName||((typeof role!=='undefined'&&role==='admin')&&m.rcpt==='مدیر'))).filter(m=>!msgSeen[key]||new Date(m.created_at)>new Date(msgSeen[key])).length;
+ b.textContent=n;b.style.display=n?'block':'none';}catch(e){}},1200);
+</script>
