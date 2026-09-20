@@ -6,49 +6,50 @@
 <title>کافه روبیک</title>
 <style>
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
-:root{--bg:#0c0a08;--card:#181310;--line:#2b221a;--tx:#f5ede2;--mut:#a5988a;--or:#ff8a2a;--or2:#ffb35c}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Vazirmatn,sans-serif;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--tx);padding-bottom:92px}
-.note{background:#3a2413;color:var(--or2);text-align:center;font-size:12px;padding:7px 12px}
-header{padding:44px 20px 26px;text-align:center;background:radial-gradient(130% 100% at 50% 0%,#452a12 0%,#1a1109 55%,var(--bg) 100%)}
-header .beans{font-size:20px;letter-spacing:8px;opacity:.7}
-header h1{font-size:34px;margin-top:6px;background:linear-gradient(90deg,var(--or),var(--or2));-webkit-background-clip:text;background-clip:text;color:transparent}
-header p{color:var(--mut);margin-top:6px;font-size:14px}
-section{display:none;padding:18px 14px}
-section.on{display:block}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 12px;scrollbar-width:none}
+body{background:var(--bg);color:var(--text);transition:.35s;padding-bottom:110px}
+body[data-theme=latte]{--bg:#FAF6F0;--text:#2B211B;--mut:#78695C;--card:#fff;--brd:#E8DDD1;--acc:#A94F2B;--acc2:#D4874A;--pbg:#F7E2D2;--nav:#FFFDF9EE;--sh:0 10px 28px #7B5B4218;
+ --hero:radial-gradient(circle at 85% 8%,#E8B58B 0 10%,transparent 32%),radial-gradient(#B66A3A22 1.5px,transparent 1.5px),linear-gradient(135deg,#F1E2D1,#FFF9F3);--hero-t:#4C3528;--chip-on:#4C3528;--chip-on-t:#fff;--ico:linear-gradient(135deg,#F3D4B5,#FFF1DF);--chipbg:#fff;--chipt:#78695C}
+body[data-theme=luxury]{--bg:#130F0D;--text:#F8EEDC;--mut:#B9A890;--card:linear-gradient(145deg,#FFFFFF16,#FFFFFF06);--brd:#FFFFFF20;--acc:#D7A84A;--acc2:#F3C86B;--pbg:#D7A84A20;--nav:#241B16DD;--sh:0 14px 35px #0008;
+ --hero:radial-gradient(circle at 50% -10%,#805221 0,transparent 46%),radial-gradient(#F3C86B30 1.5px,transparent 1.5px),linear-gradient(160deg,#2B1B12,#110D0B 75%);--hero-t:#F3C86B;--chip-on:linear-gradient(135deg,#D7A84A,#F3C86B);--chip-on-t:#24170D;--ico:radial-gradient(circle at 30% 25%,#F3C86B,#805221);--chipbg:#FFFFFF0D;--chipt:#B9A890}
+body[data-theme=italian]{--bg:#2A1A12;--text:#F8E9D2;--mut:#D3BBA2;--card:#3B251A;--brd:#684332;--acc:#F0CFA2;--acc2:#78915B;--pbg:#A83F4228;--nav:#21130EDD;--sh:0 10px 26px #0005;
+ --hero:radial-gradient(circle at 20% -5%,#79442A 0,transparent 40%),linear-gradient(135deg,#4A2B1D,#24150F);--hero-t:#F0CFA2;--chip-on:#A83F42;--chip-on-t:#FFF4E5;--ico:linear-gradient(135deg,#F0CFA2,#78915B);--chipbg:#3B251A;--chipt:#D3BBA2}
+.theme-btn{position:fixed;top:14px;left:14px;z-index:9;width:44px;height:44px;border-radius:50%;border:1px solid var(--brd);background:var(--nav);backdrop-filter:blur(10px);font-size:20px;cursor:pointer;box-shadow:var(--sh)}
+.hero{padding:48px 20px 34px;text-align:center;border-radius:0 0 30px 30px;background:var(--hero);color:var(--hero-t)}
+.hero .cup{font-size:44px}
+.hero h1{font-size:30px;font-weight:800;margin-top:8px}
+.hero p{margin-top:5px;font-size:13.5px;opacity:.8}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:16px 14px 4px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
-.chip{flex:0 0 auto;background:var(--card);border:1px solid var(--line);color:var(--mut);border-radius:30px;padding:9px 16px;font-size:13px;cursor:pointer}
-.chip.on{background:linear-gradient(90deg,var(--or),var(--or2));color:#1a0e02;font-weight:700;border-color:transparent}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 12px;text-align:center}
-.card .ico{width:52px;height:52px;margin:0 auto 9px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;background:radial-gradient(circle at 30% 25%,#4a2c12,#241505);border:1px solid #3d2812}
-.card h3{font-size:14.5px;font-weight:600}
-.card .pr{display:inline-block;margin-top:8px;background:rgba(255,138,42,.12);color:var(--or2);border:1px solid rgba(255,138,42,.3);border-radius:20px;padding:3px 11px;font-size:12.5px;font-weight:700}
-h2.sec{font-size:17px;margin:4px 2px 12px;border-right:3px solid var(--or);padding-right:9px}
-.rule{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;display:flex;gap:11px;align-items:flex-start;margin-bottom:10px}
-.rule .n{flex:0 0 30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));color:#1a0e02;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px}
-.rule p{font-size:13.5px;color:#ddd2c4;line-height:1.9}
-.cbtn{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--line);border-radius:15px;padding:15px;margin-bottom:11px;text-decoration:none;color:var(--tx)}
-.cbtn .i{flex:0 0 46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;background:linear-gradient(135deg,var(--or),var(--or2))}
-.cbtn b{font-size:14px;display:block}
-.cbtn span{font-size:12.5px;color:var(--mut)}
-nav{position:fixed;bottom:0;right:0;left:0;display:flex;background:rgba(16,12,9,.96);border-top:1px solid var(--line);backdrop-filter:blur(10px);padding:9px 8px calc(9px + env(safe-area-inset-bottom))}
-nav button{flex:1;background:none;border:0;color:var(--mut);font-family:inherit;font-size:11.5px;cursor:pointer;padding:5px 0}
-nav button .e{display:block;font-size:21px;margin-bottom:3px;filter:grayscale(1);opacity:.65}
-nav button.on{color:var(--or);font-weight:700}
+.chip{flex:0 0 auto;background:var(--chipbg);border:1px solid var(--brd);color:var(--chipt);border-radius:30px;padding:9px 16px;font-size:13px;cursor:pointer;font-weight:600}
+.chip.on{background:var(--chip-on)!important;color:var(--chip-on-t)!important;border-color:transparent}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px}
+.item{background:var(--card);border:1px solid var(--brd);border-radius:20px;padding:16px 10px;text-align:center;box-shadow:var(--sh);animation:rise .45s both}
+body[data-theme=luxury] .item{backdrop-filter:blur(16px)}
+.item .ico{width:54px;height:54px;margin:0 auto 10px;border-radius:50%;background:var(--ico);display:flex;align-items:center;justify-content:center;font-size:25px}
+.item h3{font-size:14.5px;font-weight:600}
+.price{display:inline-block;margin-top:9px;padding:5px 12px;border-radius:20px;background:var(--pbg);color:var(--acc);font-weight:700;font-size:12.5px}
+h2.sec{font-size:17px;font-weight:800;margin:16px 16px 4px;border-right:3px solid var(--acc2);padding-right:9px}
+.rule{background:var(--card);border:1px solid var(--brd);border-radius:16px;padding:13px 14px;display:flex;gap:11px;margin:10px 14px;box-shadow:var(--sh)}
+.rule .n{flex:0 0 30px;height:30px;border-radius:50%;background:var(--acc2);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+body[data-theme=latte] .rule .n{background:var(--acc)}
+.rule p{font-size:13.5px;line-height:1.9;opacity:.92}
+.cbtn{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--brd);border-radius:16px;padding:15px;margin:10px 14px;color:var(--text);text-decoration:none;box-shadow:var(--sh)}
+.cbtn .i{flex:0 0 46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--ico)}
+.cbtn b{font-size:14px;display:block}.cbtn span{font-size:12.5px;color:var(--mut)}
+nav{position:fixed;right:14px;left:14px;bottom:14px;display:flex;border-radius:24px;background:var(--nav);border:1px solid var(--brd);backdrop-filter:blur(18px);box-shadow:0 10px 30px #0003;padding:9px}
+nav button{flex:1;background:none;border:0;color:var(--mut);font-size:11.5px;font-family:inherit;cursor:pointer;padding:5px 0;font-weight:600}
+nav button .e{display:block;font-size:21px;margin-bottom:3px;filter:grayscale(1);opacity:.6}
+nav button.on{color:var(--acc)}
 nav button.on .e{filter:none;opacity:1}
-footer{text-align:center;color:#6d6154;font-size:11px;padding:26px 0 10px}
+section{display:none}section.on{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 </style>
 </head>
-<body>
-<div class="note">📌 پیش‌نمایش طرح — قیمت‌ها و اطلاعات تماس نمونه‌ان، بعد از تأیید واقعی می‌شن</div>
+<body data-theme="luxury">
+<button class="theme-btn" onclick="nextTheme()">🎨</button>
 
-<header>
-  <div class="beans">☕ 🫘 ☕</div>
-  <h1>کافه روبیک</h1>
-  <p>قهوه‌ای که می‌چسبه…</p>
-</header>
+<div class="hero"><div class="cup">☕</div><h1>کافه روبیک</h1><p>قهوه‌ای که می‌چسبه…</p></div>
 
 <section id="v-menu" class="on">
   <div class="chips" id="chips"></div>
@@ -59,20 +60,17 @@ footer{text-align:center;color:#6d6154;font-size:11px;padding:26px 0 10px}
   <h2 class="sec">📜 قوانین کافه</h2>
   <div class="rule"><div class="n">۱</div><p>حداقل سفارش به ازای هر نفر الزامی است.</p></div>
   <div class="rule"><div class="n">۲</div><p>مدت مجاز نشستن در ساعات شلوغی، یک ساعت است.</p></div>
-  <div class="rule"><div class="n">۳</div><p>آوردن کیک و شیرینی بیرونی فقط با هماهنگی قبلی امکان‌پذیر است.</p></div>
-  <div class="rule"><div class="n">۴</div><p>تغییر میز فقط با هماهنگی پرسنل انجام می‌شود.</p></div>
-  <div class="rule"><div class="n">۵</div><p>استفاده از سیگار و قلیان فقط در فضای تعیین‌شده مجاز است.</p></div>
+  <div class="rule"><div class="n">۳</div><p>آوردن کیک و شیرینی بیرونی فقط با هماهنگی قبلی.</p></div>
+  <div class="rule"><div class="n">۴</div><p>تغییر میز فقط با هماهنگی پرسنل.</p></div>
 </section>
 
 <section id="v-contact">
   <h2 class="sec">📞 ارتباط با ما</h2>
-  <a class="cbtn" href="tel:09120000000"><div class="i">📱</div><div><b>تماس با کافه</b><span>۰۹۱۲ ۰۰۰ ۰۰۰۰ (نمونه)</span></div></a>
+  <a class="cbtn" href="tel:09120000000"><div class="i">📱</div><div><b>تماس با کافه</b><span>نمونه — شماره واقعی بعداً</span></div></a>
   <a class="cbtn" href="https://instagram.com/caferubik" target="_blank"><div class="i">📷</div><div><b>اینستاگرام</b><span>@caferubik (نمونه)</span></div></a>
-  <div class="cbtn"><div class="i">📍</div><div><b>آدرس کافه</b><span>[آدرس دقیق اینجا قرار می‌گیره]</span></div></div>
-  <div class="cbtn"><div class="i">🕐</div><div><b>ساعت کاری</b><span>همه روزه ۸ صبح تا ۱۲ شب (نمونه)</span></div></div>
+  <div class="cbtn"><div class="i">📍</div><div><b>آدرس کافه</b><span>[آدرس دقیق]</span></div></div>
+  <div class="cbtn"><div class="i">🕐</div><div><b>ساعت کاری</b><span>نمونه — ۸ صبح تا ۱۲ شب</span></div></div>
 </section>
-
-<footer>کافه روبیک © ۱۴۰۴ — با ☕ و ❤️</footer>
 
 <nav>
   <button class="on" onclick="tab(this,'v-menu')"><span class="e">☕</span>منو</button>
@@ -90,10 +88,14 @@ const ITEMS=[
  ['کیک','🍰','کیک شکلات','۱۲۵٬۰۰۰'],['کیک','🍮','ترس‌لچس','۱۴۰٬۰۰۰'],
  ['سرد','🍹','موهیتو','۱۱۵٬۰۰۰'],['سرد','🥤','شیک شکلات','۱۶۵٬۰۰۰']];
 const chips=document.getElementById('chips'),grid=document.getElementById('grid');
-CATS.forEach(([id,lbl],i)=>{const c=document.createElement('div');c.className='chip'+(i?'':' on');c.textContent=lbl;c.onclick=()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');draw(id);};chips.appendChild(c);});
-function draw(cat){grid.innerHTML=ITEMS.filter(it=>cat==='all'||it[0]===cat).map(it=>`<div class="card"><div class="ico">${it[1]}</div><h3>${it[2]}</h3><div class="pr">${it[3]} تومان</div></div>`).join('');}
+CATS.forEach(([id,lbl],i)=>{const c=document.createElement('div');c.className='chip'+(i?'':' on');c.textContent=lbl;
+ c.onclick=()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');draw(id);};chips.appendChild(c);});
+function draw(cat){grid.innerHTML=ITEMS.filter(it=>cat==='all'||it[0]===cat).map((it,j)=>`<div class="item" style="animation-delay:${j*40}ms"><div class="ico">${it[1]}</div><h3>${it[2]}</h3><div class="price">${it[3]}</div></div>`).join('');}
 draw('all');
-function tab(btn,id){document.querySelectorAll('nav button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.querySelectorAll('section').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo(0,0);}
+function tab(b,id){document.querySelectorAll('nav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+ document.querySelectorAll('section').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo(0,0);}
+const TH=['latte','luxury','italian'],TN=['☀️ کرم روشن','🌙 لوکس شب','🇮🇹 ایتالیایی'];let ti=1;
+function nextTheme(){ti=(ti+1)%TH.length;document.body.dataset.theme=TH[ti];document.querySelector('.theme-btn').textContent=['☀️','🌙','🇮🇹'][ti];}
 </script>
 </body>
 </html>
