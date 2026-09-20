@@ -485,3 +485,17 @@ window._setTh=function(t){saveCfg('theme',t).then(()=>toast('🎨 تم ذخیر�
 setInterval(mk,800);
 })();
 </script>
+<script>
+/* ===== پچ ادمین v10: لیست تم‌های جدید ===== */
+(function(){
+setInterval(function(){
+ var c=document.getElementById('thmCard');
+ if(c&&!c.dataset.v10){c.dataset.v10='1';
+  c.innerHTML='<h3>🎨 تم سایت</h3><div style="display:flex;gap:8px;flex-wrap:wrap">'+
+  '<button class="b gold" onclick="window._setTh(\'lux\')">☀️ لوکس کرم</button>'+
+  '<button class="b" onclick="window._setTh(\'noir\')">🌙 مشکی طلایی</button>'+
+  '<button class="b" onclick="window._setTh(\'royal\')">🍷 شرابی لوکس</button></div>'+
+  '<div style="font-size:11px;color:#9A9182;margin-top:7px">بعد از انتخاب، سایت رو ریفرش کن تا تم عوض شه</div>';}
+},1000);
+})();
+</script>
