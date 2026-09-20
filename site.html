@@ -393,3 +393,59 @@ setTimeout(function(){try{
 }catch(_){}},1500);
 })();
 </script>
+<script>
+/* ===== پچ سایت v4: تم طوسی لاکچری + لاته کاراملی ===== */
+(function(){
+const st=document.createElement('style');
+st.textContent=`
+body[data-theme=stone]{background:radial-gradient(80% 30% at 85% 0%,#D8C29826 0%,transparent 55%),linear-gradient(180deg,#F5F4F2,#EDEBE7 50%,#E7E4DF)!important;color:#2E2C29!important}
+body[data-theme=stone] .sheet0{background:#FFFFFF!important;border:1px solid #E3E0DA!important;box-shadow:0 12px 30px #A8A49C30!important}
+body[data-theme=stone] .sh0h h2,body[data-theme=stone] .sec>h3{color:#2E2C29!important}
+body[data-theme=stone] .cbtn{background:#F1EFEA!important;border:1px solid #E3E0DA!important;color:#55524C!important}
+body[data-theme=stone] .acc{background:linear-gradient(135deg,#EAE8E4,#DEDBD4)!important;border:1px solid #CFCBC3!important}
+body[data-theme=stone] .acch b{color:#3B3833!important}
+body[data-theme=stone] .cv{color:#8B877F!important}
+body[data-theme=stone] .cat .ci{background:#FFFFFF!important;border:1px solid #E4E1DB!important;box-shadow:0 4px 12px #00000012!important}
+body[data-theme=stone] .cat span{color:#4A4741!important}
+body[data-theme=stone] .chipbar{background:#FFFFFFE6!important;border:1px solid #E3E0DA!important}
+body[data-theme=stone] .chip{background:#F1EFEA!important;color:#3B3833!important;border:1px solid #E3E0DA!important}
+body[data-theme=stone] .chip.on{background:linear-gradient(135deg,#B99A5B,#D4B87C)!important;color:#fff!important;border-color:transparent!important}
+body[data-theme=stone] .grid>*{background:#FFFFFF!important;border:1px solid #E6E3DD!important;box-shadow:0 6px 16px #A8A49C26!important}
+body[data-theme=stone] .ph{background:#F2F0EB!important;border-bottom:1px solid #E6E3DD}
+body[data-theme=stone] .nm{color:#2E2C29!important}
+body[data-theme=stone] .pr b{color:#A8863D!important}
+body[data-theme=stone] .pr span{color:#98948C!important}
+body[data-theme=stone] #sh{background:#FFFFFF!important}
+body[data-theme=stone] #snm{color:#2E2C29!important}
+body[data-theme=stone] #sds{color:#7C786F!important}
+body[data-theme=stone] #spr{color:#A8863D!important}
+body[data-theme=latte]{background:radial-gradient(85% 35% at 80% 0%,#C89B6226 0%,transparent 55%),linear-gradient(180deg,#FAF4EC,#F4E8D8 50%,#EFDFCA)!important;color:#3A2E24!important}
+body[data-theme=latte] .sheet0{background:#FFFBF5!important;border:1px solid #EBDCC8!important;box-shadow:0 12px 30px #B0854E2E!important}
+body[data-theme=latte] .sh0h h2,body[data-theme=latte] .sec>h3{color:#3A2E24!important}
+body[data-theme=latte] .cbtn{background:#F3E8D8!important;border:1px solid #EBDCC8!important;color:#6B543C!important}
+body[data-theme=latte] .acc{background:linear-gradient(135deg,#F1E1CB,#E5CFB1)!important;border:1px solid #D8BE97!important}
+body[data-theme=latte] .acch b{color:#5A4530!important}
+body[data-theme=latte] .cv{color:#9C8465!important}
+body[data-theme=latte] .cat .ci{background:#FFFBF5!important;border:1px solid #EBDCC8!important;box-shadow:0 4px 12px #B0854E1F!important}
+body[data-theme=latte] .cat span{color:#6B543C!important}
+body[data-theme=latte] .chipbar{background:#FFFBF5E6!important;border:1px solid #EBDCC8!important}
+body[data-theme=latte] .chip{background:#F3E8D8!important;color:#5A4530!important;border:1px solid #EBDCC8!important}
+body[data-theme=latte] .chip.on{background:linear-gradient(135deg,#C89B62,#B0854E)!important;color:#fff!important;border-color:transparent!important}
+body[data-theme=latte] .grid>*{background:#FFFBF5!important;border:1px solid #EFE0CB!important;box-shadow:0 6px 16px #B0854E26!important}
+body[data-theme=latte] .ph{background:#F5EBDC!important;border-bottom:1px solid #EFE0CB}
+body[data-theme=latte] .nm{color:#3A2E24!important}
+body[data-theme=latte] .pr b{color:#B97F45!important}
+body[data-theme=latte] .pr span{color:#A08D77!important}
+body[data-theme=latte] #sh{background:#FFFBF5!important}
+body[data-theme=latte] #snm{color:#3A2E24!important}
+body[data-theme=latte] #sds{color:#8C7A64!important}
+body[data-theme=latte] #spr{color:#B97F45!important}`;
+document.head.appendChild(st);
+(async()=>{try{
+ const sb=supabase.createClient('https://dkmgewadohmnspkueodi.supabase.co','sb_publishable_1IKt1YXof1LUaVeM5VDgpQ_vb8QqjnJ');
+ const r=await sb.from('site_config').select('v').eq('k','theme').maybeSingle();
+ const th=r&&r.data?r.data.v:null;
+ if(th==='stone'||th==='latte')document.body.setAttribute('data-theme',th);
+}catch(_){}})();
+})();
+</script>
