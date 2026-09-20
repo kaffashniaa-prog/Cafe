@@ -401,3 +401,71 @@ window.saveProd=function(){
  prods=(await sb.from('site_products').select('*').order('id')).data||[];closeMd();renderProds();toast('💾 ذخیره شد');})();};
 })();
 </script>
+<script>
+/* ===== پچ ادمین v8: جابه‌جایی ترتیب محصولات و دسته‌ها (▲▼) ===== */
+(function(){
+const tM=m=>{try{toast(m)}catch(_){alert(m)}};
+/* ---- محصولات ---- */
+window._swapProd=async function(idA,idB){
+ const a=prods.find(x=>x.id===idA),b=prods.find(x=>x.id===idB);
+ if(!a||!b)return;
+ const A={name:a.name,descr:a.descr,price:a.price,cat:a.cat,img:a.img};
+ const B={name:b.name,descr:b.descr,price:b.price,cat:b.cat,img:b.img};
+ await sb.from('site_products').update(B).eq('id',a.id);
+ await sb.from('site_products').update(A).eq('id',b.id);
+ prods=(await sb.from('site_products').select('*').order('id')).data||[];
+ renderProds();tM('↕️ جابه‌جا شد');
+};
+window._pMove=async function(id,dir){
+ const cur=prods.find(x=>x.id===id);if(!cur)return;
+ const sib=prods.filter(x=>x.cat===cur.cat).sort((a,b)=>a.id-b.id);
+ const i=sib.findIndex(x=>x.id===id),j=i+dir;
+ if(j<0||j>=sib.length){tM(dir<0?'☝️ این اولین آیتم دسته است':'👇 این آخرین آیتم دسته است');return;}
+ tM('⏳');
+ await window._swapProd(id,sib[j].id);
+};
+function addProdArrows(){
+ document.querySelectorAll('#v-prods [onclick*="openProd"]').forEach(b=>{
+  const m=(b.getAttribute('onclick')||'').match(/openProd\((\d+)\)/);if(!m)return;
+  const row=b.parentElement;if(!row||row.querySelector('.mvup'))return;
+  const id=+m[1];
+  const up=document.createElement('button');up.className='b mvup';up.textContent='▲';up.onclick=()=>window._pMove(id,-1);
+  const dn=document.createElement('button');dn.className='b mvdn';dn.textContent='▼';dn.onclick=()=>window._pMove(id,1);
+  row.insertBefore(dn,b);row.insertBefore(up,dn);
+ });
+}
+/* ---- دسته‌ها ---- */
+window._cMove=function(row,dir){
+ const rows=Array.from(document.querySelectorAll('#v-cats .row')).filter(r=>r.textContent.includes('🗑️'));
+ const k=rows.indexOf(row);if(k<0)return;
+ const disp=[];groups.forEach(g=>cats.forEach(c=>{if(c.grp===g.id)disp.push(c);}));
+ const cur=disp[k];if(!cur)return;
+ let j=k+dir;
+ while(j>=0&&j<disp.length&&disp[j].grp!==cur.grp)j+=dir;
+ if(j<0||j>=disp.length){tM(dir<0?'☝️ این اولین دسته‌ی گروهش است':'👇 این آخرین دسته‌ی گروهش است');return;}
+ const iA=cats.indexOf(cur),iB=cats.indexOf(disp[j]);
+ const tmp=cats[iA];cats[iA]=cats[iB];cats[iB]=tmp;
+ saveCfg('cats',cats).then(()=>{renderCats();tM('↕️ جابه‌جا شد');});
+};
+function addCatArrows(){
+ const rows=Array.from(document.querySelectorAll('#v-cats .row')).filter(r=>r.textContent.includes('🗑️'));
+ rows.forEach(row=>{
+  if(row.querySelector('.mvup'))return;
+  const ed=Array.from(row.querySelectorAll('button')).find(b=>b.textContent==='✏️');
+  const up=document.createElement('button');up.className='b mvup';up.textContent='▲';up.onclick=()=>window._cMove(row,-1);
+  const dn=document.createElement('button');dn.className='b mvdn';dn.textContent='▼';dn.onclick=()=>window._cMove(row,1);
+  if(ed){row.insertBefore(dn,ed);row.insertBefore(up,dn);}
+  else{row.appendChild(up);row.appendChild(dn);}
+ });
+}
+/* ---- هوک روی رندرها ---- */
+const _rp=window.renderProds;
+window.renderProds=function(){_rp.apply(this,arguments);setTimeout(addProdArrows,80);};
+const _rc=window.renderCats;
+window.renderCats=function(){_rc.apply(this,arguments);setTimeout(addCatArrows,80);};
+const st=document.createElement('style');
+st.textContent='.mvup,.mvdn{min-width:34px;font-size:12px;line-height:1}';
+document.head.appendChild(st);
+setTimeout(()=>{addProdArrows();addCatArrows();},400);
+})();
+</script>
