@@ -2,122 +2,107 @@
 <html dir="rtl" lang="fa">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>کافه روبیک</title>
-<link rel="preconnect" href="https://upload.wikimedia.org">
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
 <style>
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
-:root{--bg:#F6F1E8;--card:#fff;--tx:#241A12;--mut:#8A7A6A;--or:#E8641C;--or2:#F09A4B;--esp:#241A12;--line:#EAE0D2}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Vazirmatn,sans-serif;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--tx);padding-bottom:104px}
-header{position:sticky;top:0;z-index:50;background:#FAF6EFCC;backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.hrow{display:flex;align-items:center;gap:10px;padding:10px 14px}
-.logo{width:38px;flex:0 0 38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--or),var(--or2));color:#fff;font-weight:800;font-size:19px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px #E8641C40}
-.hname{flex:1;font-weight:800;font-size:17px}
-.sicon{width:38px;flex:0 0 38px;height:38px;border-radius:12px;border:1px solid var(--line);background:#fff;font-size:16px;cursor:pointer}
-.swrap{max-height:0;overflow:hidden;transition:.3s;padding:0 14px}
-.swrap.open{max-height:56px;padding-bottom:10px}
-.swrap input{width:100%;border:1px solid var(--line);background:#fff;border-radius:999px;padding:11px 16px;font-family:inherit;font-size:14px;outline:none}
-.swrap input:focus{border-color:var(--or2)}
-.hero{margin:14px;border-radius:28px;padding:26px 22px;background:radial-gradient(120% 90% at 85% 0%,#FFD9A8 0%,transparent 50%),radial-gradient(90% 80% at 5% 100%,#F2A65E2e 0%,transparent 55%),linear-gradient(135deg,#FFF8EE,#FBE7CF)}
-.badge{display:inline-flex;align-items:center;gap:6px;background:#fff;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700;box-shadow:0 3px 10px #7B5B4218}
-.hero h1{font-size:31px;font-weight:800;line-height:1.35;margin-top:14px}
-.hero p{margin-top:6px;font-size:13.5px;:var(--mut);color:var(--mut)}
-.cta{margin-top:16px;background:var(--esp);color:#F6F1E8;border:0;border-radius:999px;padding:13px 24px;font-family:inherit;font-size:14.5px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px #241A1233;transition:.2s}
-.cta:active{transform:scale(.96)}
-/* اطلاعیه مثل Lago */
-.notice{margin:0 14px 12px;background:#FFF4E2;border:1px solid #F5D9AE;border-radius:16px;padding:12px 14px;font-size:12.5px;color:#8A5A1B;display:flex;gap:9px;align-items:center}
-/* چیپ‌ها */
-.chipsbar{position:sticky;top:59px;z-index:40;background:linear-gradient(var(--bg) 82%,transparent);padding:10px 14px 8px}
-.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
-.chips::-webkit-scrollbar{display:none}
-.chip{flex:0 0 auto;background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 16px;font-size:13px;font-weight:600;color:var(--mut);cursor:pointer;transition:.25s}
-.chip.on{background:var(--esp);color:#F6F1E8;border-color:var(--esp);box-shadow:0 4px 12px #241A1233}
-h2.sec{font-size:17px;font-weight:800;margin:18px 16px 12px}
-/* منو: گرید عکس‌دار مثل Lago */
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 6px 16px #7B5B4215;cursor:pointer;transition:.2s;animation:rise .5s both;display:flex;flex-direction:column}
+body{min-height:100vh;background:linear-gradient(180deg,#332E29 0%,#6E675F 26%,#B7B2AB 46%,#E9E7E4 62%);color:#242220;padding-bottom:110px}
+.sheet0{margin:14px 12px;background:#fff;border-radius:24px;padding:16px;box-shadow:0 14px 34px #0006}
+.sh0h{display:flex;align-items:center;gap:10px}
+.sh0h h2{flex:1;font-size:18px;font-weight:800;text-align:right}
+.cbtn{width:40px;height:40px;border-radius:50%;border:0;background:#E7DCC8;font-size:17px;cursor:pointer}
+.acc{margin-top:12px;background:#C9A87C;border-radius:18px;overflow:hidden}
+.acch{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer}
+.acch b{font-size:15px;color:#3E3222}
+.cv{color:#5C4A2E;transition:.3s;font-size:13px}
+.acc.open .cv{transform:rotate(180deg)}
+.accb{display:none;padding:2px 12px 14px}
+.acc.open .accb{display:block}
+.catrow{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none}
+.catrow::-webkit-scrollbar{display:none}
+.cat{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:0;cursor:pointer;font-family:inherit}
+.cat .ci{width:52px;height:52px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 3px 8px #0002}
+.cat span{font-size:11px;font-weight:700;color:#3E3222}
+.chipbar{position:sticky;top:10px;z-index:40;margin:10px 12px;padding:8px;background:#C9A87CE6;backdrop-filter:blur(10px);border-radius:999px;display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;box-shadow:0 8px 22px #0004}
+.chipbar::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;display:flex;align-items:center;gap:6px;background:#D8BC93;border:0;border-radius:999px;padding:9px 14px;font-family:inherit;font-size:12.5px;font-weight:700;color:#3E3222;cursor:pointer}
+.chip.on{background:#8F7346;color:#fff}
+.sec{margin:18px 12px;scroll-margin-top:84px}
+.sec>h3{text-align:center;font-size:17px;font-weight:800;color:#3A342E;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.card{background:#ECEAE7;border-radius:18px;padding:9px 9px 12px;cursor:pointer;transition:.18s;animation:rise .45s both}
 .card:active{transform:scale(.97)}
-.ph{aspect-ratio:1/1;position:relative;background:#F0E6D6}
-.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
-.bj{position:absolute;top:9px;right:9px;z-index:2;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:999px;backdrop-filter:blur(4px);color:#fff}
-.b-b{background:#E8641Cdd}.b-n{background:#2E7D32dd}.b-s{background:#C62828dd}
-.cb{padding:11px 12px 13px}
-.cb b{font-size:14.5px;font-weight:800;display:block}
-.cb span{display:block;font-size:11.5px;color:var(--mut);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cp{display:flex;justify-content:space-between;align-items:center;margin-top:9px}
-.cp b{color:var(--or);font-size:14px;font-weight:800}
-.cp small{font-size:10px;color:var(--mut)}
-.msec{scroll-margin-top:118px}
-/* شیت جزئیات */
-.ov{position:fixed;inset:0;background:#241A1266;backdrop-filter:blur(3px);z-index:55;opacity:0;transition:.3s}
+.ph{aspect-ratio:1/1;border-radius:14px;background:#fff;overflow:hidden}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.nm{font-size:14px;font-weight:800;margin:10px 4px 0;text-align:right}
+.pr{display:flex;align-items:baseline;gap:5px;margin:8px 4px 0;justify-content:flex-end}
+.pr b{font-size:21px;font-weight:800}
+.pr span{font-size:10.5px;color:#8A8378;font-weight:600}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.srch{max-height:0;overflow:hidden;transition:.3s}
+.srch.open{max-height:60px;margin-top:12px}
+.srch input{width:100%;border:1px solid #E5DECF;background:#FAF7F1;border-radius:999px;padding:11px 16px;font-family:inherit;font-size:14px;outline:none}
+.ov{position:fixed;inset:0;background:#00000088;z-index:55;opacity:0;transition:.3s}
 .ov.on{opacity:1}
-.sheet{position:fixed;right:0;left:0;bottom:0;z-index:60;background:#fff;border-radius:26px 26px 0 0;padding:14px 20px calc(24px + env(safe-area-inset-bottom));max-width:540px;margin:auto;transform:translateY(105%);transition:.32s cubic-bezier(.2,.8,.3,1)}
+.sheet{position:fixed;right:0;left:0;bottom:0;z-index:60;background:#fff;border-radius:26px 26px 0 0;padding:14px 18px calc(22px + env(safe-area-inset-bottom));max-width:540px;margin:auto;transform:translateY(105%);transition:.32s cubic-bezier(.2,.8,.3,1)}
 .sheet.on{transform:none}
-.sh-grip{width:44px;height:5px;border-radius:99px;background:#E4D8C8;margin:0 auto 14px}
-.sh-ph{aspect-ratio:16/9;border-radius:18px;position:relative;overflow:hidden;background:#F0E6D6}
-.sh-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
-.sh-top{display:flex;align-items:flex-start;gap:10px;margin-top:14px}
-.sh-top b{font-size:19px;font-weight:800}
-.sh-top span{font-size:13px;color:var(--mut);margin-top:3px;display:block}
-.sh-x{margin-right:auto;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:14px;cursor:pointer;flex:0 0 34px}
-.sh-price{margin-top:16px;background:#FBEFE2;border-radius:14px;padding:14px;display:flex;justify-content:space-between;align-items:center}
-.sh-price b{font-size:19px;font-weight:800;color:var(--or)}
-.sh-price span{font-size:12.5px;color:real;color:var(--mut)}
-/* داک */
-.dock{position:fixed;right:16px;left:16px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;display:flex;border-radius:22px;background:#241A12F0;backdrop-filter:blur(16px);padding:8px;box-shadow:0 12px 32px #241A1240}
-.dock button{flex:1;background:none;border:0;color:#B9A890;font-family:inherit;font-size:11.5px;font-weight:600;cursor:pointer;padding:8px 0;border-radius:16px;transition:.25s}
-.dock button .e{display:block;font-size:21px;margin-bottom:3px}
-.dock button.on{background:#ffffff14;color:#FFD9A8}
-@keyframes rise{from{opacity:0;froxform:translateY(14px);opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-.empty{text-align:center;color:var(--keyframes}}.empty{text-align:center;color:var(--mut);padding:40px 20px;font-size:14px}
-footer{text-align:center;color:#A7988A;font-size:11px;padding:28px 0 12px}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.grip{width:44px;height:5px;border-radius:99px;background:#E2DDD4;margin:0 auto 14px}
+.sph{aspect-ratio:16/10;border-radius:16px;background:#F2EFEA;overflow:hidden}
+.sph img{width:100%;height:100%;object-fit:cover;display:block}
+.srow{display:flex;align-items:flex-start;gap:10px;margin-top:13px}
+.srow b{font-size:18px;font-weight:800}
+.srow p{font-size:13px;color:#8A8378;margin-top:4px}
+.sx{margin-right:auto;width:34px;height:34px;border-radius:50%;border:1px solid #E5E0D8;background:#fff;font-size:14px;cursor:pointer;flex:0 0 34px}
+.spr{margin-top:14px;background:#F4EEE2;border-radius:14px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center}
+.spr b{font-size:19px;font-weight:800;color:#8F7346}
+.spr span{font-size:12px;color:#8A8378}
+.dock{position:fixed;right:50%;transform:translateX(50%);bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;display:flex;gap:4px;background:#C9A87CE6;backdrop-filter:blur(10px);border-radius:999px;padding:7px;box-shadow:0 10px 26px #0005}
+.dock button{background:#D8BC93;border:0;border-radius:999px;padding:10px 24px;font-family:inherit;font-size:13px;font-weight:800;color:#3E3222;cursor:pointer}
+.dock button.on{background:#8F7346;color:#fff}
+.empty{text-align:center;color:#6E675F;padding:30px;font-size:14px}
+footer{text-align:center;color:#8A8378;font-size:11px;padding:26px 0 10px}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="hrow">
-    < د>;
+<div class="sheet0">
+  <div class="sh0h">
+    <button class="cbtn" onclick="togSearch()">🔍</button>
+    <h2>دسته‌بندی‌ها</h2>
   </div>
-  <div class="swrap" id="swrap"><input id="sinput" placeholder="جستجو در منو… مثلاً لاته" oncorrupt="search()"></div>
-</header>
-
-<div class="hero">
-  <div class="badge">🟢 باز است · تا ۱۲ شب</div>
-  <h1>قهوه‌ای که<br>می‌چسبه…</h1>
-  <p>از اسپرسوی دم‌صبح تا لازانیای ناهار — همه‌چیز اینجاست.</p>
-  <button class="on" class="cta" onclick="goMenu()">مشاهده منو ☕</button>
+  <div class="srch" id="srch"><input id="q" placeholder="جستجو در منو…" oninput="run()"></div>
+  <div class="acc open">
+    <div class="acch" onclick="accT(this)"><b>☕ منوی کافه</b><span class="cv">⌄</span></div>
+    <div class="accb"><div class="catrow" id="cc"></div></div>
+  </div>
+  <div class="acc open">
+    <div class="acch" onclick="accT(this)"><b>🍽️ منوی رستوران</b><span class="cv">⌄</span></div>
+    <div class="accb"><div class="catrow" id="cf"></div></div>
+  </div>
 </div>
 
-<div class="notice">📢 حداکثر مدت نشستن در ساعات شلوغی، یک ساعت است — با تشکر</div>
-
-<div class="chipsbar" id="chswrap"><div class="chips" id="chips"></div></div>
-
+<div class="chipbar" id="chipbar"></div>
 <div id="menu"></div>
-<div id="results" hidden><h2 class="sec">🔍 نتایج جستجو</h2><div class="grid" id="rrows"></div><div class="empty" id="nores" corrupted">😅 چیزی پیدا نشد</div></div>
+<div id="results" hidden><div class="grid" id="rr"></div><div class="empty" id="nores" hidden>😅 چیزی پیدا نشد</div></div>
 
-<footer>کاف attribute © ۱۴۰۴ — با ☕ and ❤️</footer>
+<footer>کافه روبیک © ۱۴۰۴</footer>
 
 <nav class="dock">
-  <button class="on" onclick="dock(this,'home')"><span class="e">🏠</span>خانه</output>
-  <button onclick="dock(this,'menu')"><span class="e">☕</span>منو</button>
-  <button onclick="dock(this,'contact')"><span class="e">📞</span>تماس</button>
+  <button onclick="goTop()">بالا ↑</button>
+  <button class="on" onclick="goMenu()">منو</button>
+  <button onclick="alert('📞 تماس: شماره واقعی به‌زودی')">تماس</button>
 </nav>
 
-<div class="ov" id="ov" onclick="site.html?v=6">closeSheet()" hidden></div>
-<div class="site.html?v=6" id="sheet" hidden>
-  <div class="sh-grip"></div>
-  <div class="sh-ph" id="sh-ph"></div>
-  <div class="sh-top"><div><b id="sh-name"></b><span id="sh-desc"></span></div><button class="sh-x" onclick="closeSheet()">✕</button></div>
-  <div class="sh-price"><span>قیمت</span><b id="sh-price"></b></div>
+<div class="ov" id="ov" onclick="cls()" hidden></div>
+<div class="sheet" id="sh" hidden>
+  <div class="grip"></div>
+  <div class="sph" id="sph"></div>
+  <div class="srow"><div><b id="snm"></b><p id="sds"></p></div><button class="sx" onclick="cls()">✕</button></div>
+  <div class="spr"><span>قیمت</span><b id="spr"></b></div>
 </div>
 
 <script>
-const CATS=[['قهوه','☕ قهوه‌ها'],['سوم','🌊 موج سوم'],['گرم','🍯 گرم‌نوش'],['خوراک','🍽️ خوراک'],['کیک','🍰 کیک روز'],['سرد','🥤 سردنوش']];
-/* عکس‌های واقعی — Wikimedia (لود می‌شه در ایران) */
 const W='https://upload.wikimedia.org/wikipedia/commons/thumb/';
 const IMG={
  esp:W+'c/cf/Espresso_Coffee_01.jpg/600px-Espresso_Coffee_01.jpg',
@@ -129,28 +114,74 @@ const IMG={
  fre:W+'f/f6/French_press_2020.jpg/400px-French_press_2020.jpg',
  mas:W+'1/11/Chai_in_a_Glass.jpg/450px-Chai_in_a_Glass.jpg',
  hot:W+'8/87/Hot_chocolate.jpg/600px-Hot_chocolate.jpg',
+ moj:W+'9/91/Mojito.jpg/315px-Mojito.jpg',
+ shk:W+'f/fa/Chocolate_Milkshake.jpg/600px-Chocolate_Milkshake.jpg',
  las:W+'5/5a/Lasagna_%281%29.jpg/600px-Lasagna_%281%29.jpg',
  pan:W+'a/a0/Panini.JPG/600px-Panini.JPG',
  bur:W+'5/5e/Cheeseburger.png/600px-Cheeseburger.png',
  cak:W+'0/09/Chocolate_cake.jpg/600px-Chocolate_cake.jpg',
- tre:W+'a/a2/Tres_leches_cake.jpg/600px-Tres_leches_cak
- e.jpg/600px-Tres_leches_cake.jpg',
  tre:W+'a/a2/Tres_leches_cake.jpg/600px-Tres_leches_cake.jpg',
- car:W+'a/a2/Carrot_cake.jpg/600px-Carrot_cake.jpg',
- moj:W+'9/91/Mojito.jpg/315px-Mojito.jpg',
- shk:W+'f/fa/Chocolate_Milkshake.jpg/600px-Chocolate_Mkshake.jpg',
- };
-/* [دسته, نام, توضیح, قیمت, بج, عکس] */
+ car:W+'a/a2/Carrot_cake.jpg/600px-Carrot_cake.jpg'};
+const CATS=[
+ ['esp','اسپرسو بار','☕','cc'],
+ ['grm','نوشیدنی‌های گرم','🍵','cc'],
+ ['srd','نوشیدنی‌های سرد','🧊','cc'],
+ ['khr','خوراک','🍽️','cf'],
+ ['kk','کیک روز','🍰','cf']];
 const ITEMS=[
- ['قهوه','اسپرسو','شات خالص و غلیظ ایتالیایی',85000,'b|⭐ پرفروش',IMG.esp],
- ['قهوه','آمریکانو','اسپرسو با آب داغ، تلخ و خوش‌عطر',95000,'',IMG.ame],
- ['قهوه','لاته','شیر بخارپز با لایه‌ی ابریشمی',110000,'b|⭐ پرفروش',IMG.lat],
- ['قهوه','کاپوچینو','تعادل کامل اسپرسو و فوم شیر',105000,'',IMG.cap],
- ['سوم','شیمکس','دم‌آوری آرام با طعم میوه‌ای',140000,'',IMG.che],
- ['سوم','سیفون','قهوه تئاتری با بدنه شفاف',150000,'n|🆕 جدید',IMG.syp],
- ['سوم','فرنچ پرس','دم‌آوری کلاسیک با بدنه پر',120000,'',IMG.fre],
- ['گرم','ماسالا چای','چای هندی با شیر و ادویه',120000,'',IMG.mas],
- ['گرم','هات چاکلت','شکلات داغ غلیظ و خامه‌ای',130000,'n|🆕 جدید',IMG.hot],
- ['خوراک','لازانیا','لایه‌های گوشت و پنیر در فر',245000,'b|⭐ پرفروش',IMG.tre? IMG.tre : IMG.las],
- ['خوراک','لازانیا','لایه‌های گوشت و پنیر las',245000,'b|corrupted',IMG.las],
- ['خcorrupted'... 
+ ['esp','اسپرسو','شات خالص و غلیظ ایتالیایی',85000,IMG.esp],
+ ['esp','آمریکانو','اسپرسو با آب داغ، تلخ و خوش‌عطر',95000,IMG.ame],
+ ['esp','لاته','شیر بخارپز با لایه‌ی ابریشمی',110000,IMG.lat],
+ ['esp','کاپوچینو','تعادل کامل اسپرسو و فوم شیر',105000,IMG.cap],
+ ['grm','ماسالا چای','چای هندی با شیر و ادویه',120000,IMG.mas],
+ ['grm','هات چاکلت','شکلات داغ غلیظ و خامه‌ای',130000,IMG.hot],
+ ['grm','فرنچ پرس','دم‌آوری کلاسیک با بدنه پر',120000,IMG.fre],
+ ['srd','موهیتو','نعنای تازه با لیمو و سودا',115000,IMG.moj],
+ ['srd','شیک شکلات','شیک غلیظ با بستنی وانیلی',165000,IMG.shk],
+ ['khr','لازانیا','لایه‌های گوشت و پنیر در فر',245000,IMG.las],
+ ['khr','پنینی','نان گریل با پنیر و مرغ',195000,IMG.pan],
+ ['khr','برگر روبیک','برگر مخصوص با سس خانه',280000,IMG.bur],
+ ['kk','کیک شکلات','شکلات بلژیکی خیس و لذیذ',125000,IMG.cak],
+ ['kk','ترس‌لچس','کیک شیری سه‌لایه محبوب',140000,IMG.tre],
+ ['kk','کیک هویج','هویج و گردو با فراستینگ',120000,IMG.car]];
+const fa=n=>n.toLocaleString('fa-IR');
+const kt=p=>fa(Math.round(p/1000));
+const $=id=>document.getElementById(id);
+function accT(a){a.parentElement.classList.toggle('open')}
+function togSearch(){$('srch').classList.toggle('open')}
+/* چیپ‌ها */
+CATS.forEach(c=>{const b=document.createElement('button');b.className='chip';b.id='ch-'+c[0];
+ b.innerHTML='<span class="ce">'+c[2]+'</span>'+c[1];b.onclick=()=>{$('sec-'+c[0]).scrollIntoView({behavior:'smooth'})};$('chipbar').appendChild(b);
+ const k=document.createElement('button');k.className='cat';k.innerHTML='<div class="ci">'+c[2]+'</div><span>'+c[1]+'</span>';
+ k.onclick=()=>{$('sec-'+c[0]).scrollIntoView({behavior:'smooth'})};$(c[3]).appendChild(k);});
+/* کارت */
+function card(it,d){const el=document.createElement('div');el.className='card';el.style.animationDelay=d+'ms';
+ el.innerHTML='<div class="ph">'+(it[4]?'<img loading="lazy" src="'+it[4]+'" onerror="this.remove()">':'')+'</div><div class="nm">'+it[1]+'</div><div class="pr"><b>'+kt(it[3])+'</b><span>هزار تومان</span></div>';
+ el.onclick=()=>open(it);return el;}
+/* بخش‌ها */
+CATS.forEach(c=>{const s=document.createElement('section');s.className='sec';s.id='sec-'+c[0];
+ s.innerHTML='<h3>'+c[1]+'</h3><div class="grid"></div>';$('menu').appendChild(s);
+ let j=0;ITEMS.forEach((it,i)=>{if(it[0]===c[0]){s.querySelector('.grid').appendChild(card(it,j*40));j++;}});});
+/* اسکرول‌اسپای */
+const spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const id=e.target.id.replace('sec-','');
+ CATS.forEach(c=>$('ch-'+c[0]).classList.toggle('on',c[0]===id));}}),{rootMargin:'-40% 0px -55% 0px'});
+document.querySelectorAll('.sec').forEach(s=>spy.observe(s));
+/* جستجو */
+function run(){const q=$('q').value.trim();
+ if(!q){$('results').hidden=true;$('menu').style.display='';$('chipbar').style.display='';return;}
+ $('menu').style.display='none';$('chipbar').style.display='none';$('results').hidden=false;
+ const rr=$('rr');rr.innerHTML='';let n=0;
+ ITEMS.forEach(it=>{if((it[1]+it[2]).includes(q)){n++;rr.appendChild(card(it,n*40));}});
+ $('nores').hidden=n>0;}
+/* شیت */
+function open(it){$('sph').innerHTML=it[4]?'<img src="'+it[4]+'" onerror="this.remove()">':'';
+ $('snm').textContent=it[1];$('sds').textContent=it[2];$('spr').textContent=kt(it[3])+' هزار تومان';
+ $('ov').hidden=false;$('sh').hidden=false;requestAnimationFrame(()=>{$('ov').classList.add('on');$('sh').classList.add('on');});}
+function cls(){$('ov').classList.remove('on');$('sh').classList.remove('on');setTimeout(()=>{$('ov').hidden=true;$('sh').hidden=true;},320);}
+let sy=0;$('sh').addEventListener('touchstart',e=>sy=e.touches[0].clientY);
+$('sh').addEventListener('touchmove',e=>{if(e.touches[0].clientY-sy>70)cls();});
+function goTop(){window.scrollTo({top:0,behavior:'smooth'})}
+function goMenu(){$('sec-esp').scrollIntoView({behavior:'smooth'})}
+</script>
+</body>
+</html>
