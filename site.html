@@ -449,3 +449,38 @@ document.head.appendChild(st);
 }catch(_){}})();
 })();
 </script>
+<script>
+/* ===== پچ سایت v5: تم ماکیاتو (جایگزین طوسی) ===== */
+(function(){
+const st=document.createElement('style');
+st.textContent=`
+body[data-theme=mach]{background:radial-gradient(85% 35% at 80% 0%,#8C5A3320 0%,transparent 55%),linear-gradient(180deg,#FBF7F0,#F4ECE1 50%,#F0E6D8)!important;color:#33261C!important}
+body[data-theme=mach] .sheet0{background:#FFFDF9!important;border:1px solid #E7D8C4!important;box-shadow:0 12px 30px #8C5A3324!important}
+body[data-theme=mach] .sh0h h2,body[data-theme=mach] .sec>h3{color:#4A3323!important}
+body[data-theme=mach] .cbtn{background:#F2E7D7!important;border:1px solid #E7D8C4!important;color:#6B4E35!important}
+body[data-theme=mach] .acc{background:linear-gradient(135deg,#EFE0CC,#E2CDB0)!important;border:1px solid #D4BB96!important}
+body[data-theme=mach] .acch b{color:#5C4128!important}
+body[data-theme=mach] .cv{color:#A1835F!important}
+body[data-theme=mach] .cat .ci{background:#FFFDF9!important;border:1px solid #EADCC8!important;box-shadow:0 4px 12px #8C5A331F!important}
+body[data-theme=mach] .cat span{color:#6B4E35!important}
+body[data-theme=mach] .chipbar{background:#FFFDF9E6!important;border:1px solid #E7D8C4!important}
+body[data-theme=mach] .chip{background:#F2E7D7!important;color:#5C4128!important;border:1px solid #E7D8C4!important}
+body[data-theme=mach] .chip.on{background:linear-gradient(135deg,#7C4A2A,#96613A)!important;color:#fff!important;border-color:transparent!important}
+body[data-theme=mach] .grid>*{background:#FFFDF9!important;border:1px solid #EFE1CE!important;box-shadow:0 6px 16px #8C5A3326!important}
+body[data-theme=mach] .ph{background:#F6EDDF!important;border-bottom:1px solid #EFE1CE}
+body[data-theme=mach] .nm{color:#33261C!important}
+body[data-theme=mach] .pr b{color:#9C5F2E!important}
+body[data-theme=mach] .pr span{color:#A79479!important}
+body[data-theme=mach] #sh{background:#FFFDF9!important}
+body[data-theme=mach] #snm{color:#33261C!important}
+body[data-theme=mach] #sds{color:#8C7A64!important}
+body[data-theme=mach] #spr{color:#9C5F2E!important}`;
+document.head.appendChild(st);
+(async()=>{try{
+ const sb=supabase.createClient('https://dkmgewadohmnspkueodi.supabase.co','sb_publishable_1IKt1YXof1LUaVeM5VDgpQ_vb8QqjnJ');
+ const r=await sb.from('site_config').select('v').eq('k','theme').maybeSingle();
+ const th=r&&r.data?r.data.v:null;
+ if(th==='mach')document.body.setAttribute('data-theme','mach');
+}catch(_){}})();
+})();
+</script>
