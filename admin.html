@@ -236,3 +236,32 @@ window._emojiFindIdx=function(row){const all=Array.from(document.querySelectorAl
  if(ci>=0)window._emojiPick(ci);};
 })();
 </script>
+<script>
+/* ===== پچ ادمین v3: انتخاب‌گر ایموجی کامل دسته‌ها ===== */
+(function(){
+const CATS_ICON={
+ '☕ قهوه‌ها':['☕️','☕','🥃','🖤','🔥'],
+ '🥛 شیر و لاته‌ها':['🥛','🧋','🤍','☁️'],
+ '🍫 موکا و کارامل':['🍫','🍮','🥃','🍯','🤎'],
+ '🍵 دم‌نوش‌ها':['🍵','🌿','🫖','🍃','💐'],
+ '🍯 گرم‌نوش‌ها':['🍯','🧉','🥃','♨️','🫖'],
+ '🍨 بستنی و شیک':['🍨','🍦','🥤','🧊','🍸'],
+ '🧊 سردنوش‌ها':['🧊','🥤','🧃','💧','🥶'],
+ '🍹 کوکتل و موهیتو':['🍹','🍸','🥂','🍊','🍋'],
+ '🥞 کرپ و پنکیک':['🥞','🧇','🍯','🥄'],
+ '🍽️ خوراک':['🍽️','🍝','🥘','🍳','🥪'],
+ '🍰 کیک روز':['🍰','🎂','🧁','🥮','🍮'],
+ '🥤 متفرقه':['🥤','💧','🍾','🫗','🧃']};
+let idx=-1;
+window._ep=function(i){idx=i;let h='<div id="_ov2" style="position:fixed;inset:0;z-index:98;background:#2A262099" onclick="document.getElementById(\'_ov2\').remove();document.getElementById(\'_pn2\').remove()"></div>';
+ h+='<div id="_pn2" style="position:fixed;right:0;left:0;bottom:0;z-index:99;background:#fff;border-radius:24px 24px 0 0;padding:16px 14px calc(20px + env(safe-area-inset-bottom));max-width:540px;margin:auto;max-height:72vh;overflow:auto">';
+ h+='<div style="font-size:15px;font-weight:800;margin-bottom:10px;text-align:center">🎨 ایموجی دسته را انتخاب کن</div>';
+ Object.keys(CATS_ICON).forEach(k=>{h+='<div style="font-size:11px;font-weight:800;color:#9A9182;margin:9px 2px 5px">'+k+'</div><div style="display:flex;flex-wrap:wrap;gap:7px">';
+ CATS_ICON[k].forEach(e=>{h+='<button onclick="window._es(\''+e+'\')" style="width:46px;height:46px;border-radius:13px;border:1.5px solid #E8DCC4;background:linear-gradient(145deg,#FAF7F1,#F0E8D8);font-size:24px;cursor:pointer;box-shadow:0 2px 6px #B99A5B22">'+e+'</button>';});
+ h+='</div>';});
+ h+='</div>';
+ const d=document.createElement('div');d.innerHTML=h;document.body.appendChild(d);};
+window._es=function(e){if(idx>=0&&cats[idx]){cats[idx].icon=e;saveCfg('cats',cats).then(()=>{renderCats();toast('✨ شد: '+e);});}
+ const a=document.getElementById('_ov2'),b=document.getElementById('_pn2');if(a)a.remove();if(b)b.remove();idx=-1;};
+})();
+</script>
