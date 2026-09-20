@@ -7,61 +7,61 @@
 <style>
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
 *{box-sizing:border-box;margin:0;padding:0;font-family:Vazirmatn,sans-serif;-webkit-tap-highlight-color:transparent}
-body{min-height:100vh;background:radial-gradient(130% 55% at 50% 0%,#6B4423 0%,transparent 55%),linear-gradient(180deg,#241B12 0%,#3E2E1E 16%,#7A5C3C 38%,#C9AC83 60%,#F1E7D6 80%,#F6F0E4 100%);color:#242220;padding-bottom:110px}
-.sheet0{margin:14px 12px;background:#fff;border-radius:22px;padding:13px;box-shadow:0 14px 34px #0006}
+body{min-height:100vh;background:radial-gradient(90% 40% at 80% 0%,#F3E4C880 0%,transparent 60%),radial-gradient(80% 35% at 10% 100%,#EFE0C566 0%,transparent 60%),linear-gradient(180deg,#FDFBF7 0%,#F8F2E8 50%,#F3ECDD 100%);color:#2A2620;padding-bottom:110px}
+.sheet0{margin:14px 12px;background:#fff;border-radius:22px;padding:13px;box-shadow:0 12px 30px #B99A5B26;border:1px solid #F0E7D6}
 .sh0h{display:flex;align-items:center;gap:10px}
 .sh0h h2{flex:1;font-size:16.5px;font-weight:800;text-align:right}
-.cbtn{width:36px;height:36px;border-radius:50%;border:0;background:#E7DCC8;font-size:15px;cursor:pointer}
-.acc{margin-top:10px;background:#C9A87C;border-radius:15px;overflow:hidden}
+.cbtn{width:36px;height:36px;border-radius:50%;border:0;background:#F2E9D8;font-size:15px;cursor:pointer}
+.acc{margin-top:10px;background:linear-gradient(135deg,#E9D9BC,#DFC9A0);border:1px solid #D3BA8E;border-radius:15px;overflow:hidden}
 .acch{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;cursor:pointer}
-.acch b{font-size:13.5px;color:#3E3222}
-.cv{color:#5C4A2E;transition:.3s;font-size:12px}
+.acch b{font-size:13.5px;color:#4A3A22}
+.cv{color:#6E5A38;transition:.3s;font-size:12px}
 .acc.open .cv{transform:rotate(180deg)}
 .accb{display:none;padding:2px 10px 11px}
 .acc.open .accb{display:block}
 .catrow{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
 .catrow::-webkit-scrollbar{display:none}
 .cat{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;cursor:pointer;font-family:inherit}
-.cat .ci{width:42px;height:42px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 3px 8px #0002}
-.cat span{font-size:10.5px;font-weight:700;color:#3E3222}
-.chipbar{position:sticky;top:10px;z-index:40;margin:10px 12px;padding:8px;background:#C9A87CE6;backdrop-filter:blur(10px);border-radius:999px;display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;box-shadow:0 8px 22px #0004}
+.cat .ci{width:42px;height:42px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 3px 8px #00000018}
+.cat span{font-size:10.5px;font-weight:700;color:#4A3A22}
+.chipbar{position:sticky;top:10px;z-index:40;margin:10px 12px;padding:8px;background:#FFFFFFE6;border:1px solid #F0E7D6;backdrop-filter:blur(10px);border-radius:999px;display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;box-shadow:0 8px 22px #B99A5B2e}
 .chipbar::-webkit-scrollbar{display:none}
-.chip{flex:0 0 auto;display:flex;align-items:center;gap:6px;background:#D8BC93;border:0;border-radius:999px;padding:9px 14px;font-family:inherit;font-size:12.5px;font-weight:700;color:#3E3222;cursor:pointer}
-.chip.on{background:#8F7346;color:#fff}
+.chip{flex:0 0 auto;display:flex;align-items:center;gap:6px;background:#F2E9D8;border:1px solid #E8DCC4;border-radius:999px;padding:9px 14px;font-family:inherit;font-size:12.5px;font-weight:700;color:#4A3A22;cursor:pointer}
+.chip.on{background:linear-gradient(135deg,#B99A5B,#D4B87C);color:#fff;border-color:transparent}
 .sec{margin:18px 12px;scroll-margin-top:84px}
-.sec>h3{text-align:center;font-size:17px;font-weight:800;color:#3A342E;margin-bottom:12px}
+.sec>h3{text-align:center;font-size:17px;font-weight:800;color:#3A3428;margin-bottom:12px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.card{background:#ECEAE7;border-radius:18px;padding:9px 9px 12px;cursor:pointer;transition:.18s;animation:rise .45s both}
+.card{background:#fff;border:1px solid #F0E9DB;border-radius:18px;padding:9px 9px 12px;cursor:pointer;transition:.18s;animation:rise .45s both;box-shadow:0 5px 16px #B99A5B1a}
 .card:active{transform:scale(.97)}
-.ph{aspect-ratio:1/1;border-radius:14px;background:#fff;overflow:hidden}
+.ph{aspect-ratio:1/1;border-radius:14px;background:#FAF7F1;overflow:hidden}
 .ph img{width:100%;height:100%;object-fit:cover;display:block}
 .nm{font-size:14px;font-weight:800;margin:10px 4px 0;text-align:right}
 .pr{display:flex;align-items:baseline;gap:5px;margin:8px 4px 0;justify-content:flex-end}
-.pr b{font-size:21px;font-weight:800}
-.pr span{font-size:10.5px;color:#8A8378;font-weight:600}
+.pr b{font-size:21px;font-weight:800;color:#A5823E}
+.pr span{font-size:10.5px;color:#9A9182;font-weight:600}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .srch{max-height:0;overflow:hidden;transition:.3s}
 .srch.open{max-height:60px;margin-top:12px}
-.srch input{width:100%;border:1px solid #E5DECF;background:#FAF7F1;border-radius:999px;padding:11px 16px;font-family:inherit;font-size:14px;outline:none}
-.ov{position:fixed;inset:0;background:#00000088;z-index:55;opacity:0;transition:.3s}
+.srch input{width:100%;border:1px solid #E8DCC4;background:#FAF7F1;border-radius:999px;padding:11px 16px;font-family:inherit;font-size:14px;outline:none}
+.ov{position:fixed;inset:0;background:#2A262066;z-index:55;opacity:0;transition:.3s}
 .ov.on{opacity:1}
 .sheet{position:fixed;right:0;left:0;bottom:0;z-index:60;background:#fff;border-radius:26px 26px 0 0;padding:14px 18px calc(22px + env(safe-area-inset-bottom));max-width:540px;margin:auto;transform:translateY(105%);transition:.32s cubic-bezier(.2,.8,.3,1)}
 .sheet.on{transform:none}
-.grip{width:44px;height:5px;border-radius:99px;background:#E2DDD4;margin:0 auto 14px}
-.sph{aspect-ratio:16/10;border-radius:16px;background:#F2EFEA;overflow:hidden}
+.grip{width:44px;height:5px;border-radius:99px;background:#E8E1D4;margin:0 auto 14px}
+.sph{aspect-ratio:16/10;border-radius:16px;background:#F6F2EA;overflow:hidden}
 .sph img{width:100%;height:100%;object-fit:cover;display:block}
 .srow{display:flex;align-items:flex-start;gap:10px;margin-top:13px}
 .srow b{font-size:18px;font-weight:800}
-.srow p{font-size:13px;color:#8A8378;margin-top:4px}
-.sx{margin-right:auto;width:34px;height:34px;border-radius:50%;border:1px solid #E5E0D8;background:#fff;font-size:14px;cursor:pointer;flex:0 0 34px}
-.spr{margin-top:14px;background:#F4EEE2;border-radius:14px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center}
-.spr b{font-size:19px;font-weight:800;color:#8F7346}
-.spr span{font-size:12px;color:#8A8378}
-.dock{position:fixed;right:50%;transform:translateX(50%);bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;display:flex;gap:4px;background:#C9A87CE6;backdrop-filter:blur(10px);border-radius:999px;padding:7px;box-shadow:0 10px 26px #0005}
-.dock button{background:#D8BC93;border:0;border-radius:999px;padding:9px 18px;font-family:inherit;font-size:13px;font-weight:800;color:#3E3222;cursor:pointer}
-.dock button.on{background:#8F7346;color:#fff}
-.empty{text-align:center;color:#6E675F;padding:30px;font-size:14px}
-footer{text-align:center;color:#8A8378;font-size:11px;padding:26px 0 10px}
+.srow p{font-size:13px;color:#9A9182;margin-top:4px}
+.sx{margin-right:auto;width:34px;height:34px;border-radius:50%;border:1px solid #E8E1D4;background:#fff;font-size:14px;cursor:pointer;flex:0 0 34px}
+.spr{margin-top:14px;background:#F7F0E2;border:1px solid #EFE4CC;border-radius:14px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center}
+.spr b{font-size:19px;font-weight:800;color:#A5823E}
+.spr span{font-size:12px;color:#9A9182}
+.dock{position:fixed;right:50%;transform:translateX(50%);bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;display:flex;gap:4px;background:#FFFFFFF0;border:1px solid #F0E7D6;backdrop-filter:blur(10px);border-radius:999px;padding:7px;box-shadow:0 10px 26px #B99A5B33}
+.dock button{background:#F2E9D8;border:1px solid #E8DCC4;border-radius:999px;padding:9px 18px;font-family:inherit;font-size:13px;font-weight:800;color:#4A3A22;cursor:pointer}
+.dock button.on{background:linear-gradient(135deg,#B99A5B,#D4B87C);color:#fff;border-color:transparent}
+.empty{text-align:center;color:#8A8272;padding:30px;font-size:14px}
+footer{text-align:center;color:#A79E8C;font-size:11px;padding:26px 0 10px}
 </style>
 </head>
 <body>
@@ -77,7 +77,7 @@ footer{text-align:center;color:#8A8378;font-size:11px;padding:26px 0 10px}
     <div class="accb"><div class="catrow" id="cc"></div></div>
   </div>
   <div class="acc open">
-    <div class="acch" onclick="accT(this)"><b>🍽️ منوی رستوران</b><span class="cv">⌄</span></div>
+    <div class="acch" onclick="accT(this)"><b>🍽️ خوراک، میان‌وعده و صبحانه</b><span class="cv">⌄</span></div>
     <div class="accb"><div class="catrow" id="cf"></div></div>
   </div>
 </div>
@@ -121,13 +121,13 @@ const IMG={
  bur:W+'5/5e/Cheeseburger.png/600px-Cheeseburger.png',
  cak:W+'0/09/Chocolate_cake.jpg/600px-Chocolate_cake.jpg',
  tre:W+'a/a2/Tres_leches_cake.jpg/600px-Tres_leches_cake.jpg',
- car:W+'a/a2/Carrot_cake.jpg/600px-Carrot_cake.jpg'};
+ car:W+'a/a2/Carrot_cake.jpg/600px-Carrot_cake.jpg};
 const CATS=[
  ['esp','اسپرسو بار','☕','cc'],
  ['grm','نوشیدنی‌های گرم','🍵','cc'],
  ['srd','نوشیدنی‌های سرد','🧊','cc'],
- ['khr','خوراک','🍽️','cf'],
- ['kk','کیک روز','🍰','cf']];
+ ['kk','کیک روز','🍰','cc'],
+ ['khr','خوراک','🍽️','cf']];
 const ITEMS=[
  ['esp','اسپرسو','شات خالص و غلیظ ایتالیایی',85000,IMG.esp],
  ['esp','آمریکانو','اسپرسو با آب داغ، تلخ و خوش‌عطر',95000,IMG.ame],
@@ -138,12 +138,12 @@ const ITEMS=[
  ['grm','فرنچ پرس','دم‌آوری کلاسیک با بدنه پر',120000,IMG.fre],
  ['srd','موهیتو','نعنای تازه با لیمو و سودا',115000,IMG.moj],
  ['srd','شیک شکلات','شیک غلیظ با بستنی وانیلی',165000,IMG.shk],
- ['khr','لازانیا','لایه‌های گوشت و پنیر در فر',245000,IMG.las],
- ['khr','پنینی','نان گریل با پنیر و مرغ',195000,IMG.pan],
- ['khr','برگر روبیک','برگر مخصوص با سس خانه',280000,IMG.bur],
  ['kk','کیک شکلات','شکلات بلژیکی خیس و لذیذ',125000,IMG.cak],
  ['kk','ترس‌لچس','کیک شیری سه‌لایه محبوب',140000,IMG.tre],
- ['kk','کیک هویج','هویج و گردو با فراستینگ',120000,IMG.car]];
+ ['kk','کیک هویج','هویج و گردو با فراستینگ',120000,IMG.car],
+ ['khr','لازانیا','لایه‌های گوشت و پنیر در فر',245000,IMG.las],
+ ['khr','پنینی','نان گریل با پنیر و مرغ',195000,IMG.pan],
+ ['khr','برگر روبیک','برگر مخصوص با سس خانه',280000,IMG.bur]];
 const fa=n=>n.toLocaleString('fa-IR');
 const kt=p=>fa(Math.round(p/1000));
 const $=id=>document.getElementById(id);
