@@ -304,3 +304,43 @@ window._emojiFindIdx=function(row){
  if(ci>=0)window._emojiPick(ci);};
 })();
 </script>
+<script>
+/* ===== پچ ادمین v5: آیکون‌های تک‌رنگ طلایی (جایگزین ایموجی) ===== */
+(function(){
+const s=document.createElement('script');
+s.src='https://cdn.jsdelivr.net/npm/iconify-icon@2/dist/iconify-icon.min.js';
+document.head.appendChild(s);
+const ICONS=[
+ ['ph:coffee','اسپرسو/قهوه'],['ph:coffee-bean','قهوه دانه'],['ph:tea-bag','دم‌نوش'],
+ ['ph:fire','گرم‌نوش'],['ph:snowflake','سردنوش'],['ph:cup-soda','نوشابه/سرد'],
+ ['ph:drop','آب معدنی'],['ph:martini','کوکتل'],['ph:wine','نوشیدنی خاص'],
+ ['ph:beer-stein','دلستر/ماگو'],['ph:ice-cream','بستنی'],['ph:cake','کیک'],
+ ['ph:cookie','بیسکویت'],['ph:candy','شیرینی'],['ph:cherry','دسر میوه'],
+ ['ph:croissant','کرپ/صبحانه'],['ph:hamburger','فست‌فود'],['ph:pizza','پیتزا'],
+ ['ph:cooking-pot','خوراک'],['ph:fork-knife','غذا'],['ph:star','ویژه'],
+ ['ph:basket','متفرقه'],['ph:heart','محبوب'],['ph:crown','لاکچری']];
+window._emojiPick=function(i){window._emojiTarget=i;
+ let h='<div id="_ov2" style="position:fixed;inset:0;z-index:98;background:#2A262099" onclick="document.getElementById(\'_ov2\').remove();document.getElementById(\'_pn2\').remove()"></div>';
+ h+='<div id="_pn2" style="position:fixed;right:0;left:0;bottom:0;z-index:99;background:#fff;border-radius:24px 24px 0 0;padding:16px 12px calc(20px + env(safe-area-inset-bottom));max-width:540px;margin:auto;max-height:72vh;overflow:auto">';
+ h+='<div style="font-size:15px;font-weight:800;text-align:center">🎨 آیکون دسته را انتخاب کن</div>';
+ h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px">';
+ ICONS.forEach(([ic,lbl])=>{h+='<button onclick="window._es(\''+ic+'\')" style="border:1.5px solid #E8DCC4;border-radius:14px;background:linear-gradient(145deg,#FAF7F1,#F0E8D8);padding:10px 2px;cursor:pointer;box-shadow:0 2px 6px #B99A5B22">'+
+ '<iconify-icon icon="'+ic+'" style="font-size:28px;color:#B99A5B;display:block"></iconify-icon>'+
+ '<span style="display:block;font-size:9.5px;font-weight:700;color:#4A3A22;margin-top:4px">'+lbl+'</span></button>';});
+ h+='</div><div style="height:8px"></div></div>';
+ const d=document.createElement('div');d.innerHTML=h;document.body.appendChild(d);};
+window._es=function(ic){
+ if(typeof window._emojiTarget==='number'&&cats[window._emojiTarget]){
+  cats[window._emojiTarget].icon=ic;saveCfg('cats',cats).then(()=>{renderCats();toast('✨ آیکون شد');});}
+ const a=document.getElementById('_ov2'),b=document.getElementById('_pn2');
+ if(a)a.remove();if(b)b.remove();};
+/* نمایش آیکون طلایی در لیست دسته‌ها */
+setInterval(()=>{document.querySelectorAll('#v-cats .thumb').forEach(t=>{
+ if(t.dataset.done)return;
+ const row=t.closest('.row');if(!row)return;
+ const c=cats.find(x=>row.textContent.includes(x.name));
+ if(c&&c.icon&&c.icon.indexOf('ph:')===0){t.dataset.done='1';
+  t.style.display='flex';t.style.alignItems='center';t.style.justifyContent='center';
+  t.innerHTML='<iconify-icon icon="'+c.icon+'" style="font-size:22px;color:#B99A5B"></iconify-icon>';}});},600);
+})();
+</script>
