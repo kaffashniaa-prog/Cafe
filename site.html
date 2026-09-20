@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>کافه روبیک</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://images.unsplash.com">
 <style>
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
 :root{--bg:#F6F1E8;--card:#fff;--tx:#241A12;--mut:#8A7A6A;--or:#E8641C;--or2:#F09A4B;--esp:#241A12;--line:#EAE0D2}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Vazirmatn,sans-serif;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:var(--tx);padding-bottom:104px}
-/* هدر شیشه‌ای */
 header{position:sticky;top:0;z-index:50;background:#FAF6EFCC;backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .hrow{display:flex;align-items:center;gap:10px;padding:10px 14px}
 .logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--or),var(--or2));color:#fff;font-weight:800;font-size:19px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px #E8641C40}
@@ -20,13 +20,22 @@ header{position:sticky;top:0;z-index:50;background:#FAF6EFCC;backdrop-filter:blu
 .swrap.open{max-height:56px;padding-bottom:10px}
 .swrap input{width:100%;border:1px solid var(--line);background:#fff;border-radius:999px;padding:11px 16px;font-family:inherit;font-size:14px;outline:none}
 .swrap input:focus{border-color:var(--or2)}
-/* هیرو */
 .hero{margin:14px;border-radius:28px;padding:26px 22px;background:radial-gradient(120% 90% at 85% 0%,#FFD9A8 0%,transparent 50%),radial-gradient(90% 80% at 5% 100%,#F2A65E2e 0%,transparent 55%),linear-gradient(135deg,#FFF8EE,#FBE7CF)}
 .badge{display:inline-flex;align-items:center;gap:6px;background:#fff;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700;box-shadow:0 3px 10px #7B5B4218}
 .hero h1{font-size:31px;font-weight:800;line-height:1.35;margin-top:14px}
 .hero p{margin-top:6px;font-size:13.5px;color:var(--mut)}
 .cta{margin-top:16px;background:var(--esp);color:#F6F1E8;border:0;border-radius:999px;padding:13px 24px;font-family:inherit;font-size:14.5px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px #241A1233;transition:.2s}
 .cta:active{transform:scale(.96)}
+/* بنرهای چرخشی */
+.bwrap{margin:0 14px;border-radius:22px;overflow:hidden;position:relative;box-shadow:0 8px 22px #7B5B4218}
+.btrack{display:flex;transition:transform .45s cubic-bezier(.2,.8,.3,1)}
+.bslide{flex:0 0 100%;padding:18px 20px;color:#fff;min-height:96px;display:flex;flex-direction:column;justify-content:center}
+.bslide b{font-size:16.5px;font-weight:800}
+.bslide span{font-size:12.5px;opacity:.92;margin-top:4px}
+.be{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:40px;opacity:.9}
+.bdots{position:absolute;bottom:9px;right:0;left:0;display:flex;gap:5px;justify-content:center}
+.bdots i{width:6px;height:6px;border-radius:99px;background:#ffffff66;transition:.3s}
+.bdots i.on{width:16px;background:#fff}
 /* دسته‌ها */
 .chipsbar{position:sticky;top:59px;z-index:40;background:linear-gradient(var(--bg) 82%,transparent);padding:10px 14px 8px}
 .chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
@@ -37,22 +46,39 @@ header{position:sticky;top:0;z-index:50;background:#FAF6EFCC;backdrop-filter:blu
 h2.sec{font-size:17px;font-weight:800;margin:18px 16px 10px}
 .feat{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 14px 10px;scrollbar-width:none}
 .feat::-webkit-scrollbar{display:none}
-.fcard{flex:0 0 190px;scroll-snap-align:start;border-radius:22px;padding:16px;color:#fff;background:linear-gradient(150deg,#E8641C,#F09A4B);position:relative;cursor:pointer;box-shadow:0 10px 24px #E8641C33;transition:.2s}
+.fcard{flex:0 0 190px;scroll-snap-align:start;border-radius:22px;padding:16px;color:#fff;background:linear-gradient(150deg,#E8641C,#F09A4B);position:relative;cursor:pointer;box-shadow:0 10px 24px #E8641C33;transition:.2s;overflow:hidden}
 .fcard:active{transform:scale(.97)}
-.fb{position:absolute;top:12px;left:12px;background:#ffffff30;backdrop-filter:blur(6px);border-radius:999px;padding:4px 10px;font-size:11px;font-weight:700}
-.fe{font-size:42px;margin-top:14px}
+.fcard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35}
+.fcard .fbody{position:relative;z-index:2}
+.fb{display:inline-block;background:#ffffff38;backdrop-filter:blur(6px);border-radius:999px;padding:4px 10px;font-size:11px;font-weight:700}
+.fe{font-size:42px;margin-top:12px}
 .fcard b{display:block;font-size:16px;margin-top:8px}
-.fcard span{font-size:12.5px;opacity:.9}
+.fcard span{font-size:12.5px;opacity:.95}
+/* بج‌ها */
+.bj{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;margin-right:5px;vertical-align:2px}
+.b-hot{background:#FFE8D6;color:#C2500E}.b-new{background:#E3F4E4;color:#2E7D32}.b-spec{background:#FDE3E3;color:#C62828}
 /* ردیف‌های منو */
 .row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 14px;margin:0 14px 10px;box-shadow:0 4px 14px #7B5B420d;cursor:pointer;transition:.2s}
 .row:active{transform:scale(.98)}
-.tile{flex:0 0 48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#F6E3CC,#FBF0DF);display:flex;align-items:center;justify-content:center;font-size:24px}
+.tile{flex:0 0 48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#F6E3CC,#FBF0DF);display:flex;align-items:center;justify-content:center;font-size:24px;position:relative;overflow:hidden}
+.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2}
+.tile span{z-index:1}
 .mid{flex:1;min-width:0}
 .mid b{font-size:14.5px;font-weight:700}
 .mid span{display:block;font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
 .pr{text-align:left}
 .pr b{font-size:14.5px;font-weight:800}
 .pr small{display:block;font-size:10px;color:var(--mut);font-weight:400}
+/* کارت‌های کیک */
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px 6px}
+.ccard{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 4px 14px #7B5B420d;cursor:pointer;transition:.2s}
+.ccard:active{transform:scale(.97)}
+.cimg{aspect-ratio:4/3;background:linear-gradient(135deg,#F6E3CC,#FBF0DF);display:flex;align-items:center;justify-content:center;font-size:36px;position:relative;overflow:hidden}
+.cimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2}
+.cimg span{z-index:1}
+.cb{padding:10px 12px}
+.cb b{font-size:13.5px}
+.cb .cp{display:block;margin-top:5px;color:var(--or);font-weight:800;font-size:13px}
 .msec{scroll-margin-top:118px}
 /* پنجره جزئیات */
 .ov{position:fixed;inset:0;background:#241A1266;backdrop-filter:blur(3px);z-index:55;opacity:0;transition:.3s}
@@ -61,7 +87,9 @@ h2.sec{font-size:17px;font-weight:800;margin:18px 16px 10px}
 .sheet.on{transform:none}
 .sh-grip{width:44px;height:5px;border-radius:99px;background:#E4D8C8;margin:0 auto 16px}
 .sh-top{display:flex;align-items:center;gap:14px}
-.sh-tile{width:62px;height:62px;border-radius:18px;background:linear-gradient(135deg,#F6E3CC,#FBF0DF);display:flex;align-items:center;justify-content:center;font-size:32px}
+.sh-tile{width:62px;height:62px;border-radius:18px;background:linear-gradient(135deg,#F6E3CC,#FBF0DF);display:flex;align-items:center;justify-content:center;font-size:32px;position:relative;overflow:hidden;flex:0 0 62px}
+.sh-tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2}
+.sh-tile span{z-index:1}
 .sh-top b{font-size:18px;font-weight:800;display:block}
 .sh-top span{font-size:13px;color:var(--mut)}
 .sh-x{margin-right:auto;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:14px;cursor:pointer}
@@ -73,7 +101,6 @@ h2.sec{font-size:17px;font-weight:800;margin:18px 16px 10px}
 .dock button{flex:1;background:none;border:0;color:#B9A890;font-family:inherit;font-size:11.5px;font-weight:600;cursor:pointer;padding:8px 0;border-radius:16px;transition:.25s}
 .dock button .e{display:block;font-size:21px;margin-bottom:3px}
 .dock button.on{background:#ffffff14;color:#FFD9A8}
-/* انیمیشن */
 .reveal{opacity:0;transform:translateY(14px)}
 .reveal.in{opacity:1;transform:none;transition:.5s ease}
 .empty{text-align:center;color:var(--mut);padding:40px 20px;font-size:14px}
@@ -98,6 +125,8 @@ footer{text-align:center;color:#A7988A;font-size:11px;padding:28px 0 12px}
   <p>از اسپرسوی دم‌صبح تا لازانیای ناهار — همه‌چیز اینجاست.</p>
   <button class="cta" onclick="goMenu()">مشاهده منو ☕</button>
 </div>
+
+<div class="bwrap" id="bwrap"><div class="btrack" id="btrack"></div><div class="bdots" id="bdots"></div></div>
 
 <div class="chipsbar" id="chipsbar"><div class="chips" id="chips"></div></div>
 
@@ -130,64 +159,94 @@ footer{text-align:center;color:#A7988A;font-size:11px;padding:28px 0 12px}
 
 <script>
 const CATS=[['قهوه','☕ قهوه‌ها'],['سوم','🌊 موج سوم'],['گرم','🍯 گرم‌نوش'],['خوراک','🍽️ خوراک'],['کیک','🍰 کیک روز'],['سرد','🥤 سردنوش']];
+const IMG={
+ esp:'https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=300&q=70',
+ latte:'https://images.unsplash.com/photo-1541167760496-1628856ab772?w=300&q=70',
+ burg:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&q=70',
+ cake:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&q=70',
+ cake2:'https://images.unsplash.com/photo-1587314168485-3236d6710814?w=400&q=70',
+ las:'https://images.unsplash.com/photo-1619895092538-128341789043?w=300&q=70',
+ moj:'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=300&q=70'};
+/* [دسته, ایموجی, نام, توضیح, قیمت, بج, عکس(اختیاری)] */
 const ITEMS=[
- ['قهوه','☕','اسپرسو','شات خالص و غلیظ ایتالیایی',85000,'⭐ محبوب'],
+ ['قهوه','☕','اسپرسو','شات خالص و غلیظ ایتالیایی',85000,'⭐|ب|پرفروش',IMG.esp],
  ['قهوه','☕','آمریکانو','اسپرسو با آب داغ، تلخ و خوش‌عطر',95000],
- ['قهوه','🥛','لاته','شیر بخارپز با لایه‌ی ابریشمی',110000,'⭐ محبوب'],
+ ['قهوه','🥛','لاته','شیر بخارپز با لایه‌ی ابریشمی',110000,'⭐|ب|پرفروش',IMG.latte],
  ['قهوه','🧋','کاپوچینو','تعادل کامل اسپرسو و فوم شیر',105000],
  ['سوم','🌊','شیمکس','دم‌آوری آرام با طعم میوه‌ای',140000],
  ['سوم','⚗️','سیفون','قهوه تئاتری با بدنه شفاف',150000],
  ['سوم','🫖','فرنچ پرس','دم‌آوری کلاسیک با بدنه پر',120000],
  ['گرم','🍯','ماسالا چای','چای هندی با شیر و ادویه',120000],
- ['گرم','🍫','هات چاکلت','شکلات داغ غلیظ و خامه‌ای',130000,'🎁 جدید'],
- ['خوراک','🍝','لازانیا','لایه‌های گوشت و پنیر در فر',245000,'⭐ محبوب'],
+ ['گرم','🍫','هات چاکلت','شکلات داغ غلیظ و خامه‌ای',130000,'🆕|ن|جدید'],
+ ['خوراک','🍝','لازانیا','لایه‌های گوشت و پنیر در فر',245000,'⭐|ب|پرفروش',IMG.las],
  ['خوراک','🥪','پنینی','نان گریل با پنیر و مرغ',195000],
- ['خوراک','🍔','برگر روبیک','برگر مخصوص با سس خانه',280000,'🔥 ویژه'],
- ['کیک','🍰','کیک شکلات','شکلات بلژیکی خیس و لذیذ',125000],
- ['کیک','🍮','ترس‌لچس','کیک شیری سه‌لایه محبوب',140000,'⭐ محبوب'],
- ['سرد','🍹','موهیتو','نعنای تازه با لیمو و سودا',115000],
+ ['خوراک','🍔','برگر روبیک','برگر مخصوص با سس خانه',280000,'🔥|ق|ویژه',IMG.burg],
+ ['کیک','🍰','کیک شکلات','شکلات بلژیکی خیس و لذیذ',125000,'🔥|ق|ویژه',IMG.cake],
+ ['کیک','🍮','ترس‌لچس','کیک شیری سه‌لایه محبوب',140000,'⭐|ب|پرفروش',IMG.cake2],
+ ['کیک','🧁','کیک هویج','هویج و گردو با فراستینگ',120000],
+ ['سرد','🍹','موهیتو','نعنای تازه با لیمو و سودا',115000,'⭐|ب|پرفروش',IMG.moj],
  ['سرد','🥤','شیک شکلات','شیک غلیظ با بستنی وانیلی',165000]];
-const fa=n=>n.toLocaleString('fa-IR');
-const $=id=>document.getElementById(id);
+const BANNERS=[
+ ['☕','صبحانه تا ۱۱ صبح','با تخفیف ویژه صبحانه‌خورها','linear-gradient(135deg,#E8641C,#F09A4B)'],
+ ['🎉','قهوه دوم نصف‌قیمت','هر روز از ۴ تا ۶ عصر','linear-gradient(135deg,#7A4A21,#C77B3E)'],
+ ['🥐','کیک تازه امروز','از فر مخصوص دسرها — محدود!','linear-gradient(135deg,#8C2F39,#C25B4E)']];
+const fa=n=>n.toLocaleString('fa-IR');const $=id=>document.getElementById(id);
+const badge=t=>{if(!t)return'';const[c,k,l]=t.split('|');return `<i class="bj b-${k}">${c} ${l}</i>`;};
+const tile=it=>`<div class="tile"><span>${it[1]}</span>${it[6]?`<img src="${it[6]}" onerror="this.remove()" loading="lazy">`:''}</div>`;
+/* بنرها */
+const bt=$('btrack'),bd=$('bdots');let bi=0,bTimer;
+BANNERS.forEach((b,i)=>{const s=document.createElement('div');s.className='bslide';s.style.background=b[3];
+ s.innerHTML=`<b>${b[0]} ${b[1]}</b><span>${b[2]}</span><div class="be">${b[0]}</div>`;bt.appendChild(s);
+ const d=document.createElement('i');if(!i)d.className='on';d.onclick=()=>{showB(i);reArm();};bd.appendChild(d);});
+function showB(n){bi=(n+BANNERS.length)%BANNERS.length;bt.style.transform=`translateX(${bi*100}%)`;
+ [...bd.children].forEach((d,i)=>d.classList.toggle('on',i===bi));}
+function reArm(){clearInterval(bTimer);bTimer=setInterval(()=>showB(bi+1),4000);}
+reArm();let bx=0;$('bwrap').addEventListener('touchstart',e=>bx=e.touches[0].clientY);
+$('bwrap').addEventListener('touchmove',e=>{if(e.touches[0].clientY-bx>70)closeSheet();});
+$('bwrap').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-bx;if(Math.abs(dx)>40){showB(bi+(dx>0?1:-1));reArm();}});
 /* چیپ‌ها */
-const chips=$('chips');
 CATS.forEach(([id,lbl])=>{const c=document.createElement('div');c.className='chip';c.textContent=lbl;
- c.onclick=()=>{$('sec-'+id).scrollIntoView({behavior:'smooth'});};chips.appendChild(c);});
+ c.onclick=()=>{$('sec-'+id).scrollIntoView({behavior:'smooth'});};$('chips').appendChild(c);});
 /* منو */
-const menu=$('menu');
 CATS.forEach(([id,lbl])=>{const s=document.createElement('section');s.className='msec';s.id='sec-'+id;
- s.innerHTML='<h2 class="sec">'+lbl+'</h2><div class="rows"></div>';menu.appendChild(s);
- ITEMS.forEach((it,i)=>{if(it[0]!==id)return;const r=document.createElement('div');r.className='row reveal';
-  r.innerHTML='<div class="tile">'+it[1]+'</div><div class="mid"><b>'+it[2]+'</b><span>'+it[3]+'</span></div><div class="pr"><b>'+fa(it[4])+'</b><small>تومان</small></div>';
-  r.onclick=()=>openItem(i);s.querySelector('.rows').appendChild(r);});});
+ const isCake=id==='کیک';
+ s.innerHTML='<h2 class="sec">'+lbl+'</h2>'+(isCake?'<div class="cgrid"></div>':'<div class="rows"></div>');
+ $('menu').appendChild(s);const box=s.querySelector(isCake?'.cgrid':'.rows');
+ ITEMS.forEach((it,i)=>{if(it[0]!==id)return;
+  if(isCake){const c=document.createElement('div');c.className='ccard reveal';
+   c.innerHTML=`<div class="cimg"><span>${it[1]}</span>${it[6]?`<img src="${it[6]}" onerror="this.remove()" loading="lazy">`:''}</div><div class="cb"><b>${it[2]}</b>${badge(it[5])}<span class="cp">${fa(it[4])} تومان</span></div>`;
+   c.onclick=()=>openItem(i);box.appendChild(c);}
+  else{const r=document.createElement('div');r.className='row reveal';
+   r.innerHTML=tile(it)+'<div class="mid"><b>'+it[2]+'</b>'+badge(it[5])+'<span>'+it[3]+'</span></div><div class="pr"><b>'+fa(it[4])+'</b><small>تومان</small></div>';
+   r.onclick=()=>openItem(i);box.appendChild(r);}});});
 /* ویژه */
-[2,9,13].forEach(i=>{const it=ITEMS[i];const f=document.createElement('div');f.className='fcard';
- f.innerHTML='<span class="fb">'+(it[5]||'⭐ پیشنهاد')+'</span><div class="fe">'+it[1]+'</div><b>'+it[2]+'</b><span>'+fa(it[4])+' تومان</span>';
+[0,9,13].forEach(i=>{const it=ITEMS[i];const f=document.createElement('div');f.className='fcard';
+ f.innerHTML=`${it[6]?`<img src="${it[6]}" onerror="this.remove()" loading="lazy">`:''}<div class="fbody"><span class="fb">${(it[5]||'⭐|ب|پرفروش').split('|')[2]}</span><div class="fe">${it[1]}</div><b>${it[2]}</b><span>${fa(it[4])} تومان</span></div>`;
  f.onclick=()=>openItem(i);$('feat').appendChild(f);});
 /* جستجو */
 function togSearch(){const w=$('swrap');w.classList.toggle('open');if(w.classList.contains('open'))$('sinput').focus();else{$('sinput').value='';search();}}
 function search(){const q=$('sinput').value.trim();
- if(!q){$('results').hidden=true;$('feat-wrap').hidden=false;menu.querySelectorAll('.msec').forEach(s=>s.hidden=false);$('chipsbar').style.display='';return;}
- $('feat-wrap').hidden=true;$('chipsbar').style.display='none';menu.querySelectorAll('.msec').forEach(s=>s.hidden=true);
+ if(!q){$('results').hidden=true;$('feat-wrap').hidden=false;$('bwrap').style.display='';$('menu').querySelectorAll('.msec').forEach(s=>s.hidden=false);$('chipsbar').style.display='';return;}
+ $('feat-wrap').hidden=true;$('bwrap').style.display='none';$('chipsbar').style.display='none';$('menu').querySelectorAll('.msec').forEach(s=>s.hidden=true);
  $('results').hidden=false;const rr=$('rrows');rr.innerHTML='';let n=0;
  ITEMS.forEach((it,i)=>{if((it[2]+it[3]).includes(q)){n++;const r=document.createElement('div');r.className='row';
-  r.innerHTML='<div class="tile">'+it[1]+'</div><div class="mid"><b>'+it[2]+'</b><span>'+it[3]+'</span></div><div class="pr"><b>'+fa(it[4])+'</b><small>تومان</small></div>';
+  r.innerHTML=tile(it)+'<div class="mid"><b>'+it[2]+'</b>'+badge(it[5])+'<span>'+it[3]+'</span></div><div class="pr"><b>'+fa(it[4])+'</b><small>تومان</small></div>';
   r.onclick=()=>openItem(i);rr.appendChild(r);}});
  $('nores').hidden=n>0;}
 /* پنجره جزئیات */
-function openItem(i){const it=ITEMS[i];$('sh-ico').textContent=it[1];$('sh-name').textContent=it[2];
- $('sh-desc').textContent=it[3];$('sh-price').textContent=fa(it[4])+' تومان';
+function openItem(i){const it=ITEMS[i];
+ $('sh-ico').innerHTML=`<span>${it[1]}</span>${it[6]?`<img src="${it[6]}" onerror="this.remove()">`:''}`;
+ $('sh-name').textContent=it[2];$('sh-desc').textContent=it[3];$('sh-price').textContent=fa(it[4])+' تومان';
  $('ov').hidden=false;$('sheet').hidden=false;requestAnimationFrame(()=>{$('ov').classList.add('on');$('sheet').classList.add('on');});}
 function closeSheet(){$('ov').classList.remove('on');$('sheet').classList.remove('on');setTimeout(()=>{$('ov').hidden=true;$('sheet').hidden=true;},320);}
 let sy=0;$('sheet').addEventListener('touchstart',e=>sy=e.touches[0].clientY);
 $('sheet').addEventListener('touchmove',e=>{if(e.touches[0].clientY-sy>70)closeSheet();});
-/* اسکرول‌اسپای + reveal */
+/* reveal + اسکرول‌اسپای */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.08});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 const spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const id=e.target.id.replace('sec-','');
  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.textContent===CATS.find(x=>x[0]===id)[1]));}}),{rootMargin:'-40% 0px -55% 0px'});
 document.querySelectorAll('#menu .msec').forEach(s=>spy.observe(s));
-/* داک و ناوبری */
 function dock(b,w){document.querySelectorAll('.dock button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
  if(w==='home')window.scrollTo({top:0,behavior:'smooth'});
  if(w==='menu')$('feat-wrap').scrollIntoView({behavior:'smooth'});
