@@ -203,3 +203,36 @@ function saveBrand(){brand.name=$('b-name').value.trim();brand.tagline=$('b-tag'
 </script>
 </body>
 </html>
+<script>
+/* ===== پچ ادمین v2: انتخاب‌گر ایموجی ===== */
+(function(){
+const EMOJI={'قهوه و نوشیدنی':['☕','🍵','🧋','🥤','🧊','🥛','🍫','🍯','🫖','🍺','🍹','🍸','🥤','☕️'],
+ 'غذا و خوراک':['🍔','🍕','🍝','🍜','🥪','🌮','🍟','🥗','🍳','🥐','🥞','🧇','🥙'],
+ 'دسر و کیک':['🍰','🎂','🧁','🍮','🍪','🍩','🍦','🍨','🥧','🍫'],
+ 'سایر':['🛒','🎁','⭐','🔥','💡','📦','🥡','🍽️','🥄','🍴']};
+let catIdx=-1;
+window._emojiPick=function(i){catIdx=i;let h='<div style="position:fixed;inset:0;z-index:98;background:#2A262099" onclick="this.remove()"></div>';
+ h+='<div style="position:fixed;right:0;left:0;bottom:0;z-index:99;background:#fff;border-radius:24px 24px 0 0;padding:16px;max-width:540px;margin:auto;max-height:70vh;overflow:auto">';
+ Object.keys(EMOJI).forEach(k=>{h+='<div style="font-size:11.5px;font-weight:800;color:#9A9182;margin:10px 0 6px">'+k+'</div><div style="display:flex;flex-wrap:wrap;gap:6px">';
+ EMOJI[k].forEach(e=>{h+='<button onclick="window._emojiSet(\''+e+'\')" style="width:44px;height:44px;border-radius:12px;border:1px solid #E8DCC4;background:#FAF7F1;font-size:22px;cursor:pointer">'+e+'</button>';});
+ h+='</div>';});
+ h+='<div style="height:10px"></div></div>';
+ const d=document.createElement('div');d.innerHTML=h;document.body.appendChild(d);};
+window._emojiSet=function(e){if(catIdx>=0&&cats[catIdx]){cats[catIdx].icon=e;saveCfg('cats',cats).then(()=>{renderCats();toast('ایموجی شد: '+e);});}
+ document.querySelectorAll('[style*="z-index:9"]').forEach(d=>{if(d.parentElement===document.body)d.remove();});
+ document.querySelectorAll('[style*="z-index:98"],[style*="z-index:99"]').forEach(d=>{if(d.parentElement===document.body&&d!==document.querySelector('#toast'))d.remove();});
+ catIdx=-1;};
+/* دکمه ایموجی کنار هر دسته */
+const _rc=window.renderCats;
+window.renderCats=function(){_rc.apply(this,arguments);
+ setTimeout(()=>{const rows=document.querySelectorAll('#v-cats .row');
+ rows.forEach(r=>{const btns=r.querySelectorAll('button');const ed=Array.from(btns).find(b=>b.textContent==='✏️');
+ if(ed&&!r.querySelector('.emj')){const b=document.createElement('button');b.className='b emj';b.textContent='😀';
+ b.onclick=()=>{const idx=Array.from(document.querySelectorAll('#v-cats')).length;window._emojiFindIdx(r);};r.insertBefore(b,ed);}});},50);};
+window._emojiFindIdx=function(row){const all=Array.from(document.querySelectorAll('#v-cats .row'));
+ const items=[];cats.forEach((c,ci)=>{const match=all.findIndex(r=>r.textContent.includes(c.name)&&r.textContent.includes('✏️')&&r.textContent.includes('🗑️'));items.push(match);});
+ const idx=all.indexOf(row);let ci=-1;
+ for(let k=0;k<items.length;k++)if(items[k]===idx){ci=k;break;}
+ if(ci>=0)window._emojiPick(ci);};
+})();
+</script>
