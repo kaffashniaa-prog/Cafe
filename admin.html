@@ -383,3 +383,21 @@ setInterval(()=>{document.querySelectorAll('#v-cats .thumb').forEach(t=>{
   t.innerHTML='<iconify-icon icon="'+c.icon+'" style="font-size:22px;color:#B99A5B"></iconify-icon>';}});},600);
 })();
 </script>
+<script>
+/* ===== پچ ادمین v7: قیمت به هزار تومان ===== */
+(function(){
+const _op=window.openProd;
+window.openProd=function(id){_op(id);
+ const p=id?prods.find(x=>x.id===id):null;
+ $('e-price').placeholder='قیمت (هزار تومان) مثلاً 260';
+ $('e-price').value=p?String(Math.round(p.price/1000)):'';};
+const _sp=window.saveProd;
+window.saveProd=function(){
+ const n=$('e-name').value.trim();
+ const t=parseInt(($('e-price').value+'').replace(/\D/g,''))||0;
+ if(!n){toast('نام را وارد کن');return;}
+ const row={name:n,price:t*1000,descr:$('e-descr').value.trim(),cat:$('e-cat').value,img:eimg};
+ (async()=>{if(editing)await sb.from('site_products').update(row).eq('id',editing);else await sb.from('site_products').insert(row);
+ prods=(await sb.from('site_products').select('*').order('id')).data||[];closeMd();renderProds();toast('💾 ذخیره شد');})();};
+})();
+</script>
