@@ -484,3 +484,39 @@ document.head.appendChild(st);
 }catch(_){}})();
 })();
 </script>
+<script>
+/* ===== پچ سایت v6: طوسی زنده + حذف ماکیاتو ===== */
+(function(){
+const st=document.createElement('style');
+st.textContent=`
+body[data-theme=stone]{background:radial-gradient(85% 35% at 85% 0%,#C9A26838 0%,transparent 55%),radial-gradient(75% 30% at 5% 100%,#B0834826 0%,transparent 60%),linear-gradient(180deg,#F5F3EF,#ECE8E1 48%,#E6E1D8)!important;color:#332F28!important}
+body[data-theme=stone] .sheet0{position:relative;background:#FFFDF9!important;border:1px solid #E7E1D4!important;box-shadow:0 12px 30px #A38B5E33!important}
+body[data-theme=stone] .sheet0::before{content:'';position:absolute;top:0;left:16px;right:16px;height:3px;border-radius:0 0 6px 6px;background:linear-gradient(90deg,transparent,#C2A04E99,transparent)}
+body[data-theme=stone] .sh0h h2,body[data-theme=stone] .sec>h3{color:#3B362C!important}
+body[data-theme=stone] .cbtn{background:#F4EEE2!important;border:1px solid #E7DFCC!important;color:#6E5A33!important}
+body[data-theme=stone] .acc{background:linear-gradient(135deg,#F2E9D8,#E6D8BC)!important;border:1px solid #D8C49B!important}
+body[data-theme=stone] .acch b{color:#57431F!important}
+body[data-theme=stone] .cv{color:#9A8354!important}
+body[data-theme=stone] .cat .ci{background:#FFFDF9!important;border:1px solid #E4D6B4!important;box-shadow:0 4px 12px #00000014!important}
+body[data-theme=stone] .cat span{color:#57431F!important}
+body[data-theme=stone] .chipbar{background:#FFFDF9E6!important;border:1px solid #E7E1D4!important}
+body[data-theme=stone] .chip{background:#F4EEE2!important;color:#57431F!important;border:1px solid #E7DFCC!important}
+body[data-theme=stone] .chip.on{background:linear-gradient(135deg,#C2A04E,#A8863D)!important;color:#fff!important;border-color:transparent!important}
+body[data-theme=stone] .grid>*{background:#FFFDF9!important;border:1px solid #EBE3D2!important;box-shadow:0 6px 16px #A38B5E2B!important}
+body[data-theme=stone] .ph{background:#F4EDDF!important;border-bottom:1px solid #EBE3D2}
+body[data-theme=stone] .nm{color:#332F28!important}
+body[data-theme=stone] .pr b{color:#A0791F!important}
+body[data-theme=stone] .pr span{color:#9C917C!important}
+body[data-theme=stone] #sh{background:#FFFDF9!important}
+body[data-theme=stone] #snm{color:#332F28!important}
+body[data-theme=stone] #sds{color:#7E7561!important}
+body[data-theme=stone] #spr{color:#A0791F!important}`;
+document.head.appendChild(st);
+(async()=>{try{
+ const sb=supabase.createClient('https://dkmgewadohmnspkueodi.supabase.co','sb_publishable_1IKt1YXof1LUaVeM5VDgpQ_vb8QqjnJ');
+ const r=await sb.from('site_config').select('v').eq('k','theme').maybeSingle();
+ const th=r&&r.data?r.data.v:null;
+ if(th==='stone'||th==='mach')document.body.setAttribute('data-theme','stone');
+}catch(_){}})();
+})();
+</script>
