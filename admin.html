@@ -469,3 +469,19 @@ document.head.appendChild(st);
 setTimeout(()=>{addProdArrows();addCatArrows();},400);
 })();
 </script>
+<script>
+/* ===== پچ ادمین v9: انتخاب تم سایت (۳ تم) ===== */
+(function(){
+function mk(){
+ const vb=document.getElementById('v-brand');if(!vb||vb.querySelector('#thmCard'))return;
+ const c=document.createElement('div');c.className='card';c.id='thmCard';
+ c.innerHTML='<h3>🎨 تم سایت</h3><div style="display:flex;gap:8px;flex-wrap:wrap">'+
+ '<button class="b gold" onclick="window._setTh(\'lux\')">☀️ لوکس کرم</button>'+
+ '<button class="b" onclick="window._setTh(\'noir\')">🌙 مشکی طلایی</button>'+
+ '<button class="b" onclick="window._setTh(\'emerald\')">💎 زمردی</button></div>'+
+ '<div style="font-size:11px;color:#9A9182;margin-top:7px">بعد از انتخاب، سایت رو ریفرش کن تا تم عوض شه</div>';
+ vb.appendChild(c);}
+window._setTh=function(t){saveCfg('theme',t).then(()=>toast('🎨 تم ذخیره شد — سایت رو ریفرش کن'));};
+setInterval(mk,800);
+})();
+</script>
