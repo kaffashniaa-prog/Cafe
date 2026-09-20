@@ -313,3 +313,83 @@ document.head.appendChild(st);
 }catch(_){}})();
 })();
 </script>
+<script>
+/* ===== پچ سایت v3: بازطراحی تم مشکی + تم شرابی ===== */
+(function(){
+const st=document.createElement('style');
+st.textContent=`
+body[data-theme=noir]{background:linear-gradient(180deg,#100C07,#181207 45%,#0B0805)!important;color:#F2E8D2!important}
+body[data-theme=noir] .brandbar span{color:#B8A67C!important}
+body[data-theme=noir] .sheet0{background:#18120A!important;border:1px solid #3B2E16!important;box-shadow:0 14px 34px #000b!important}
+body[data-theme=noir] .sh0h h2,body[data-theme=noir] .sec>h3{color:#F2E8D2!important}
+body[data-theme=noir] .cbtn{background:#231B0D!important;color:#D9BC7A!important;border:1px solid #3B2E16!important}
+body[data-theme=noir] .acc{background:linear-gradient(135deg,#2E2210,#1C150A)!important;border:1px solid #4C3B1D!important}
+body[data-theme=noir] .acch b{color:#EDDCA8!important}
+body[data-theme=noir] .cv{color:#A6915F!important}
+body[data-theme=noir] .cat .ci{background:#251C0D!important;border:1px solid #4C3B1D!important;box-shadow:0 4px 12px #000a!important}
+body[data-theme=noir] .cat span{color:#DCC99A!important}
+body[data-theme=noir] .chipbar{background:#18120AE6!important;border:1px solid #3B2E16!important}
+body[data-theme=noir] .chip{background:#251C0D!important;color:#DCC99A!important;border:1px solid #3B2E16!important}
+body[data-theme=noir] .chip.on{background:linear-gradient(135deg,#E2C67E,#C4A65A)!important;color:#1C1305!important;border-color:transparent!important}
+body[data-theme=noir] .grid>*{background:#18120A!important;border:1px solid #3B2E16!important;box-shadow:0 6px 18px #000b!important}
+body[data-theme=noir] .ph{background:linear-gradient(145deg,#2B2010,#1D160B)!important;border-bottom:1px solid #3B2E16}
+body[data-theme=noir] .nm{color:#F2E8D2!important}
+body[data-theme=noir] .pr b{color:#DDBE76!important}
+body[data-theme=noir] .pr span{color:#93805A!important}
+body[data-theme=noir] #sh{background:#18120A!important;border-top:1px solid #3B2E16!important}
+body[data-theme=noir] #snm{color:#F2E8D2!important}
+body[data-theme=noir] #sds{color:#B6A479!important}
+body[data-theme=noir] #spr{color:#DDBE76!important}
+body[data-theme=noir] .sugbar{background:linear-gradient(135deg,#7E6227,#5F4A1D)!important}
+body[data-theme=noir] .dkpill{background:#18120AF2!important;border:1px solid #3B2E16!important;box-shadow:0 10px 26px #000d!important}
+body[data-theme=noir] .dkpill button,body[data-theme=noir] .dkpill a{background:#251C0D!important;color:#DCC99A!important}
+body[data-theme=noir] .dkpill .keepgold{background:linear-gradient(135deg,#E2C67E,#C4A65A)!important;color:#1C1305!important}
+body[data-theme=royal]{background:linear-gradient(180deg,#170A0E,#241019 45%,#120709)!important;color:#F6EADD!important}
+body[data-theme=royal] .brandbar span{color:#C9A98F!important}
+body[data-theme=royal] .sheet0{background:#22101A!important;border:1px solid #4E2A38!important;box-shadow:0 14px 34px #000a!important}
+body[data-theme=royal] .sh0h h2,body[data-theme=royal] .sec>h3{color:#F6EADD!important}
+body[data-theme=royal] .cbtn{background:#301722!important;color:#E3C07E!important;border:1px solid #4E2A38!important}
+body[data-theme=royal] .acc{background:linear-gradient(135deg,#3B1B2A,#26101B)!important;border:1px solid #5E3444!important}
+body[data-theme=royal] .acch b{color:#F2DCC0!important}
+body[data-theme=royal] .cv{color:#B08E86!important}
+body[data-theme=royal] .cat .ci{background:#2E1420!important;border:1px solid #5E3444!important;box-shadow:0 4px 12px #000a!important}
+body[data-theme=royal] .cat span{color:#EBC9A4!important}
+body[data-theme=royal] .chipbar{background:#22101AE6!important;border:1px solid #4E2A38!important}
+body[data-theme=royal] .chip{background:#301722!important;color:#EBC9A4!important;border:1px solid #4E2A38!important}
+body[data-theme=royal] .chip.on{background:linear-gradient(135deg,#E2C67E,#C4A65A)!important;color:#241005!important;border-color:transparent!important}
+body[data-theme=royal] .grid>*{background:#22101A!important;border:1px solid #4E2A38!important;box-shadow:0 6px 18px #000a!important}
+body[data-theme=royal] .ph{background:linear-gradient(145deg,#33161F,#251119)!important;border-bottom:1px solid #4E2A38}
+body[data-theme=royal] .nm{color:#F6EADD!important}
+body[data-theme=royal] .pr b{color:#E3C07E!important}
+body[data-theme=royal] .pr span{color:#A98A78!important}
+body[data-theme=royal] #sh{background:#22101A!important;border-top:1px solid #4E2A38!important}
+body[data-theme=royal] #snm{color:#F6EADD!important}
+body[data-theme=royal] #sds{color:#CBA795!important}
+body[data-theme=royal] #spr{color:#E3C07E!important}
+body[data-theme=royal] .dkpill{background:#22101AF2!important;border:1px solid #4E2A38!important;box-shadow:0 10px 26px #000d!important}
+body[data-theme=royal] .dkpill button,body[data-theme=royal] .dkpill a{background:#301722!important;color:#EBC9A4!important}
+body[data-theme=royal] .dkpill .keepgold{background:linear-gradient(135deg,#E2C67E,#C4A65A)!important;color:#241005!important}`;
+document.head.appendChild(st);
+(async()=>{try{
+ const sb=supabase.createClient('https://dkmgewadohmnspkueodi.supabase.co','sb_publishable_1IKt1YXof1LUaVeM5VDgpQ_vb8QqjnJ');
+ const r=await sb.from('site_config').select('v').eq('k','theme').maybeSingle();
+ const th=r&&r.data?r.data.v:null;
+ if(th==='noir'||th==='royal')document.body.setAttribute('data-theme',th);
+}catch(_){}})();
+setTimeout(function(){try{
+ document.querySelectorAll('body *').forEach(function(el){
+  var cs=getComputedStyle(el);
+  if(cs.position!=='fixed'&&cs.position!=='sticky')return;
+  var rc=el.getBoundingClientRect();
+  if(rc.width<140||el.children.length<2)return;
+  if(rc.top<window.innerHeight-170)return;
+  if(el.id==='ov'||el.id==='sh'||el.classList.contains('dkpill'))return;
+  el.classList.add('dkpill');
+  el.querySelectorAll('button,a').forEach(function(b){
+   var s=(b.getAttribute('style')||'')+' '+(b.className||'');
+   if(/B99A5B|D4B87C|E9D9BC|gold/i.test(s))b.classList.add('keepgold');
+  });
+ });
+}catch(_){}},1500);
+})();
+</script>
