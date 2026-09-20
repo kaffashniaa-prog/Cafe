@@ -344,3 +344,42 @@ setInterval(()=>{document.querySelectorAll('#v-cats .thumb').forEach(t=>{
   t.innerHTML='<iconify-icon icon="'+c.icon+'" style="font-size:22px;color:#B99A5B"></iconify-icon>';}});},600);
 })();
 </script>
+<script>
+/* ===== پچ ادمین v6: آیکون‌های کامل (۴۵+) ===== */
+(function(){
+const G={
+ '☕ قهوه':[['ph:coffee','اسپرسو/قهوه'],['ph:coffee-bean','دانه قهوه'],['ph:mug-hot','موکا/ماکیاتو'],['lucide:milk','لاته/شیر']],
+ '🍵 دم‌نوش و گرم‌نوش':[['ph:tea-bag','دم‌نوش'],['lucide:leaf','دم‌نوش گیاهی'],['ph:fire','گرم‌نوش']],
+ '🧊 سردنوش و آب':[['ph:snowflake','سردنوش'],['lucide:cup-soda','نوشابه/سرد'],['ph:drop','آب معدنی'],['ph:beer-stein','دلستر/ماگو']],
+ '🍹 کوکتل و بار':[['ph:martini','کوکتل'],['lucide:cocktail','کوکتل میوه'],['ph:wine','نوشیدنی خاص']],
+ '🍨 بستنی و شیک':[['ph:ice-cream','بستنی'],['lucide:ice-cream-cone','بستنی قیف'],['lucide:blender','شیک']],
+ '🍰 دسر و شیرینی':[['ph:cake','کیک'],['lucide:cake-slice','برش کیک'],['ph:cookie','بیسکویت'],['lucide:donut','دونات'],['lucide:candy','شیرینی'],['lucide:lollipop','آبنبات'],['ph:cherry','دسر میوه']],
+ '🥞 کرپ و صبحانه':[['lucide:croissant','کرپ/صبحانه'],['lucide:wheat','نان/وافل'],['lucide:egg-fried','املت'],['lucide:egg','تخم‌مرغ'],['lucide:bacon','صبحانه']],
+ '🍽️ غذا و خوراک':[['ph:fork-knife','غذا'],['ph:cooking-pot','خوراک'],['ph:hamburger','برگر'],['ph:pizza','پیتزا'],['lucide:sandwich','ساندویج'],['lucide:salad','سالاد'],['lucide:soup','سوپ'],['lucide:fish','ماهی'],['lucide:chef-hat','آشپز']],
+ '🍎 میوه':[['lucide:apple','سیب'],['lucide:banana','موز'],['lucide:grapes','انگور'],['lucide:citrus','لیمو/پرتقال'],['lucide:carrot','هویج'],['lucide:flower','گل']],
+ '⭐ ویژه':[['ph:star','ویژه'],['ph:heart','محبوب'],['ph:crown','لاکچری'],['lucide:sparkles','پیشنهاد'],['ph:basket','متفرقه'],['lucide:gift','هدیه']]};
+window._emojiPick=function(i){window._emojiTarget=i;
+ let h='<div id="_ov2" style="position:fixed;inset:0;z-index:98;background:#2A262099" onclick="document.getElementById(\'_ov2\').remove();document.getElementById(\'_pn2\').remove()"></div>';
+ h+='<div id="_pn2" style="position:fixed;right:0;left:0;bottom:0;z-index:99;background:#fff;border-radius:24px 24px 0 0;padding:16px 12px calc(20px + env(safe-area-inset-bottom));max-width:540px;margin:auto;max-height:74vh;overflow:auto">';
+ h+='<div style="font-size:15px;font-weight:800;text-align:center">🎨 آیکون دسته را انتخاب کن</div>';
+ Object.keys(G).forEach(k=>{h+='<div style="font-size:11px;font-weight:800;color:#9A9182;margin:10px 2px 5px">'+k+'</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">';
+ G[k].forEach(a=>{h+='<button onclick="window._es(\''+a[0]+'\')" style="border:1.5px solid #E8DCC4;border-radius:14px;background:linear-gradient(145deg,#FAF7F1,#F0E8D8);padding:9px 2px;cursor:pointer;box-shadow:0 2px 6px #B99A5B22">'+
+ '<iconify-icon icon="'+a[0]+'" style="font-size:26px;color:#B99A5B;display:block"></iconify-icon>'+
+ '<span style="display:block;font-size:9px;font-weight:700;color:#4A3A22;margin-top:3px">'+a[1]+'</span></button>';});
+ h+='</div>';});
+ h+='<div style="height:8px"></div></div>';
+ const d=document.createElement('div');d.innerHTML=h;document.body.appendChild(d);};
+window._es=function(ic){
+ if(typeof window._emojiTarget==='number'&&cats[window._emojiTarget]){
+  cats[window._emojiTarget].icon=ic;saveCfg('cats',cats).then(()=>{renderCats();toast('✨ آیکون شد');});}
+ const a=document.getElementById('_ov2'),b=document.getElementById('_pn2');
+ if(a)a.remove();if(b)b.remove();};
+/* نمایش آیکون در لیست */
+setInterval(()=>{document.querySelectorAll('#v-cats .thumb').forEach(t=>{
+ if(t.dataset.done)return;const row=t.closest('.row');if(!row)return;
+ const c=cats.find(x=>row.textContent.includes(x.name));
+ if(c&&c.icon&&c.icon.indexOf(':')>-1){t.dataset.done='1';
+  t.style.display='flex';t.style.alignItems='center';t.style.justifyContent='center';
+  t.innerHTML='<iconify-icon icon="'+c.icon+'" style="font-size:22px;color:#B99A5B"></iconify-icon>';}});},600);
+})();
+</script>
