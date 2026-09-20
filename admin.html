@@ -499,3 +499,19 @@ setInterval(function(){
 },1000);
 })();
 </script>
+<script>
+/* ===== پچ ادمین v11: منوی ۵ تم ===== */
+(function(){
+setInterval(function(){
+ var c=document.getElementById('thmCard');
+ if(c&&!c.dataset.v11){c.dataset.v11='1';
+  c.innerHTML='<h3>🎨 تم سایت</h3><div style="display:flex;gap:8px;flex-wrap:wrap">'+
+  '<button class="b gold" onclick="window._setTh(\'lux\')">☀️ لوکس کرم</button>'+
+  '<button class="b" onclick="window._setTh(\'stone\')">🩶 طوسی لاکچری</button>'+
+  '<button class="b" onclick="window._setTh(\'latte\')">☕ لاته کاراملی</button>'+
+  '<button class="b" onclick="window._setTh(\'noir\')">🌙 مشکی طلایی</button>'+
+  '<button class="b" onclick="window._setTh(\'royal\')">🍷 شرابی لوکس</button></div>'+
+  '<div style="font-size:11px;color:#9A9182;margin-top:7px">بعد از انتخاب، سایت رو ریفرش کن تا تم عوض شه</div>';}
+},1000);
+})();
+</script>
