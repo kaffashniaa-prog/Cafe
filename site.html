@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>کافه روبیک</title>
+<style>
+@import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
+:root{--bg:#0c0a08;--card:#181310;--line:#2b221a;--tx:#f5ede2;--mut:#a5988a;--or:#ff8a2a;--or2:#ffb35c}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Vazirmatn,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--tx);padding-bottom:92px}
+.note{background:#3a2413;color:var(--or2);text-align:center;font-size:12px;padding:7px 12px}
+header{padding:44px 20px 26px;text-align:center;background:radial-gradient(130% 100% at 50% 0%,#452a12 0%,#1a1109 55%,var(--bg) 100%)}
+header .beans{font-size:20px;letter-spacing:8px;opacity:.7}
+header h1{font-size:34px;margin-top:6px;background:linear-gradient(90deg,var(--or),var(--or2));-webkit-background-clip:text;background-clip:text;color:transparent}
+header p{color:var(--mut);margin-top:6px;font-size:14px}
+section{display:none;padding:18px 14px}
+section.on{display:block}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 12px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;background:var(--card);border:1px solid var(--line);color:var(--mut);border-radius:30px;padding:9px 16px;font-size:13px;cursor:pointer}
+.chip.on{background:linear-gradient(90deg,var(--or),var(--or2));color:#1a0e02;font-weight:700;border-color:transparent}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 12px;text-align:center}
+.card .ico{width:52px;height:52px;margin:0 auto 9px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;background:radial-gradient(circle at 30% 25%,#4a2c12,#241505);border:1px solid #3d2812}
+.card h3{font-size:14.5px;font-weight:600}
+.card .pr{display:inline-block;margin-top:8px;background:rgba(255,138,42,.12);color:var(--or2);border:1px solid rgba(255,138,42,.3);border-radius:20px;padding:3px 11px;font-size:12.5px;font-weight:700}
+h2.sec{font-size:17px;margin:4px 2px 12px;border-right:3px solid var(--or);padding-right:9px}
+.rule{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;display:flex;gap:11px;align-items:flex-start;margin-bottom:10px}
+.rule .n{flex:0 0 30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));color:#1a0e02;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px}
+.rule p{font-size:13.5px;color:#ddd2c4;line-height:1.9}
+.cbtn{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--line);border-radius:15px;padding:15px;margin-bottom:11px;text-decoration:none;color:var(--tx)}
+.cbtn .i{flex:0 0 46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:22px;background:linear-gradient(135deg,var(--or),var(--or2))}
+.cbtn b{font-size:14px;display:block}
+.cbtn span{font-size:12.5px;color:var(--mut)}
+nav{position:fixed;bottom:0;right:0;left:0;display:flex;background:rgba(16,12,9,.96);border-top:1px solid var(--line);backdrop-filter:blur(10px);padding:9px 8px calc(9px + env(safe-area-inset-bottom))}
+nav button{flex:1;background:none;border:0;color:var(--mut);font-family:inherit;font-size:11.5px;cursor:pointer;padding:5px 0}
+nav button .e{display:block;font-size:21px;margin-bottom:3px;filter:grayscale(1);opacity:.65}
+nav button.on{color:var(--or);font-weight:700}
+nav button.on .e{filter:none;opacity:1}
+footer{text-align:center;color:#6d6154;font-size:11px;padding:26px 0 10px}
+</style>
+</head>
+<body>
+<div class="note">📌 پیش‌نمایش طرح — قیمت‌ها و اطلاعات تماس نمونه‌ان، بعد از تأیید واقعی می‌شن</div>
+
+<header>
+  <div class="beans">☕ 🫘 ☕</div>
+  <h1>کافه روبیک</h1>
+  <p>قهوه‌ای که می‌چسبه…</p>
+</header>
+
+<section id="v-menu" class="on">
+  <div class="chips" id="chips"></div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section id="v-rules">
+  <h2 class="sec">📜 قوانین کافه</h2>
+  <div class="rule"><div class="n">۱</div><p>حداقل سفارش به ازای هر نفر الزامی است.</p></div>
+  <div class="rule"><div class="n">۲</div><p>مدت مجاز نشستن در ساعات شلوغی، یک ساعت است.</p></div>
+  <div class="rule"><div class="n">۳</div><p>آوردن کیک و شیرینی بیرونی فقط با هماهنگی قبلی امکان‌پذیر است.</p></div>
+  <div class="rule"><div class="n">۴</div><p>تغییر میز فقط با هماهنگی پرسنل انجام می‌شود.</p></div>
+  <div class="rule"><div class="n">۵</div><p>استفاده از سیگار و قلیان فقط در فضای تعیین‌شده مجاز است.</p></div>
+</section>
+
+<section id="v-contact">
+  <h2 class="sec">📞 ارتباط با ما</h2>
+  <a class="cbtn" href="tel:09120000000"><div class="i">📱</div><div><b>تماس با کافه</b><span>۰۹۱۲ ۰۰۰ ۰۰۰۰ (نمونه)</span></div></a>
+  <a class="cbtn" href="https://instagram.com/caferubik" target="_blank"><div class="i">📷</div><div><b>اینستاگرام</b><span>@caferubik (نمونه)</span></div></a>
+  <div class="cbtn"><div class="i">📍</div><div><b>آدرس کافه</b><span>[آدرس دقیق اینجا قرار می‌گیره]</span></div></div>
+  <div class="cbtn"><div class="i">🕐</div><div><b>ساعت کاری</b><span>همه روزه ۸ صبح تا ۱۲ شب (نمونه)</span></div></div>
+</section>
+
+<footer>کافه روبیک © ۱۴۰۴ — با ☕ و ❤️</footer>
+
+<nav>
+  <button class="on" onclick="tab(this,'v-menu')"><span class="e">☕</span>منو</button>
+  <button onclick="tab(this,'v-rules')"><span class="e">📜</span>قوانین</button>
+  <button onclick="tab(this,'v-contact')"><span class="e">📞</span>تماس</button>
+</nav>
+
+<script>
+const CATS=[['all','همه'],['قهوه','☕ قهوه‌ها'],['سوم','🌊 موج سوم'],['گرم','🍯 گرم‌نوش'],['خوراک','🍽️ خوراک'],['کیک','🍰 کیک روز'],['سرد','🥤 سردنوش']];
+const ITEMS=[
+ ['قهوه','☕','اسپرسو','۸۵٬۰۰۰'],['قهوه','☕','آمریکانو','۹۵٬۰۰۰'],['قهوه','🥛','لاته','۱۱۰٬۰۰۰'],['قهوه','🧋','کاپوچینو','۱۰۵٬۰۰۰'],
+ ['سوم','🌊','شیمکس','۱۴۰٬۰۰۰'],['سوم','⚗️','سیفون','۱۵۰٬۰۰۰'],['سوم','🫖','فرنچ پرس','۱۲۰٬۰۰۰'],
+ ['گرم','🍯','ماسالا چای','۱۲۰٬۰۰۰'],['گرم','🍫','هات چاکلت','۱۳۰٬۰۰۰'],
+ ['خوراک','🍝','لازانیا','۲۴۵٬۰۰۰'],['خوراک','🥪','پنینی','۱۹۵٬۰۰۰'],['خوراک','🍔','برگر روبیک','۲۸۰٬۰۰۰'],
+ ['کیک','🍰','کیک شکلات','۱۲۵٬۰۰۰'],['کیک','🍮','ترس‌لچس','۱۴۰٬۰۰۰'],
+ ['سرد','🍹','موهیتو','۱۱۵٬۰۰۰'],['سرد','🥤','شیک شکلات','۱۶۵٬۰۰۰']];
+const chips=document.getElementById('chips'),grid=document.getElementById('grid');
+CATS.forEach(([id,lbl],i)=>{const c=document.createElement('div');c.className='chip'+(i?'':' on');c.textContent=lbl;c.onclick=()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');draw(id);};chips.appendChild(c);});
+function draw(cat){grid.innerHTML=ITEMS.filter(it=>cat==='all'||it[0]===cat).map(it=>`<div class="card"><div class="ico">${it[1]}</div><h3>${it[2]}</h3><div class="pr">${it[3]} تومان</div></div>`).join('');}
+draw('all');
+function tab(btn,id){document.querySelectorAll('nav button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.querySelectorAll('section').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo(0,0);}
+</script>
+</body>
+</html>
