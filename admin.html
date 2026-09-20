@@ -515,3 +515,23 @@ setInterval(function(){
 },1000);
 })();
 </script>
+<script>
+/* ===== پچ ادمین v12: یه کارت تم + لیست نهایی ۵ تم ===== */
+(function(){
+if(!window._setTh)window._setTh=function(){};
+const BTNS=[['lux','☀️ لوکس کرم'],['latte','☕ لاته کاراملی'],['mach','🌰 ماکیاتو'],['noir','🌙 مشکی طلایی'],['royal','🍷 شرابی لوکس']];
+setInterval(function(){try{
+ const cards=Array.prototype.filter.call(document.querySelectorAll('.card'),function(c){
+  const h=c.querySelector('h3');return h&&h.textContent.indexOf('تم سایت')>-1;});
+ if(!cards.length)return;
+ const keep=cards[cards.length-1];
+ cards.forEach(function(c){if(c!==keep)c.remove();});
+ if(keep.dataset.v12)return;
+ keep.dataset.v12='1';
+ let h='<h3>🎨 تم سایت</h3><div style="display:flex;gap:8px;flex-wrap:wrap">';
+ BTNS.forEach(function(b){h+='<button class="b'+(b[0]==='latte'?' gold':'')+'" onclick="window._setTh(\''+b[0]+'\')">'+b[1]+'</button>';});
+ h+='</div><div style="font-size:11px;color:#9A9182;margin-top:7px">☕ لاته کاراملی تم اصلیه — بعد از انتخاب، سایت رو ریفرش کن</div>';
+ keep.innerHTML=h;
+}catch(_){}},1200);
+})();
+</script>
