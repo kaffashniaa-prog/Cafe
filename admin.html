@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ادمین — کافه روبیک</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+@import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
+*{box-sizing:border-box;margin:0;padding:0;font-family:Vazirmatn,sans-serif;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;background:radial-gradient(90% 40% at 80% 0%,#F3E4C880 0%,transparent 60%),linear-gradient(180deg,#FDFBF7,#F8F2E8 50%,#F3ECDD);color:#2A2620;padding-bottom:40px}
+#gate{position:fixed;inset:0;background:linear-gradient(160deg,#2B2118,#14100C);display:flex;align-items:center;justify-content:center;z-index:99}
+.gbox{background:#fff;border-radius:22px;padding:28px 24px;width:88%;max-width:340px;text-align:center;box-shadow:0 20px 50px #0008}
+.gbox .lg{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#B99A5B,#D4B87C);color:#fff;font-weight:800;font-size:26px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.gbox h1{font-size:17px;font-weight:800}
+.gbox p{font-size:12.5px;color:#9A9182;margin:6px 0 16px}
+.gbox input{width:100%;text-align:center;font-size:22px;letter-spacing:8px;border:1px solid #E8DCC4;border-radius:14px;padding:12px;font-family:inherit;outline:none}
+.gbox button{width:100%;margin-top:12px;background:linear-gradient(135deg,#B99A5B,#D4B87C);color:#fff;border:0;border-radius:14px;padding:13px;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer}
+header{background:#FFFFFFE6;border-bottom:1px solid #F0E7D6;backdrop-filter:blur(10px);padding:12px 16px;display:flex;align-items:center;gap:10px}
+header b{flex:1;font-size:16px;font-weight:800}
+header button{background:#F2E9D8;border:1px solid #E8DCC4;border-radius:999px;padding:7px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer}
+nav{display:flex;gap:6px;padding:12px}
+nav button{flex:1;background:#fff;border:1px solid #E8DCC4;border-radius:14px;padding:11px 4px;font-family:inherit;font-size:12px;font-weight:700;color:#4A3A22;cursor:pointer}
+nav button.on{background:linear-gradient(135deg,#B99A5B,#D4B87C);color:#fff;border-color:transparent}
+.view{padding:0 12px}
+.card{background:#fff;border:1px solid #F0E7D6;border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 5px 16px #B99A5B1a}
+.card h3{font-size:14px;font-weight:800;margin-bottom:10px}
+.row{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.row input[type=text]{flex:1;min-width:100px;border:1px solid #E8DCC4;border-radius:12px;padding:9px 12px;font-family:inherit;font-size:13px;outline:none;background:#FAF7F1}
+.row input.icn{flex:0 0 52px;text-align:center;font-size:18px}
+.b{background:#F2E9D8;border:1px solid #E8DCC4;border-radius:10px;padding:8px 11px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;color:#4A3A22}
+.b.gold{background:linear-gradient(135deg,#B99A5B,#D4B87C);color:#fff;border:0}
+.b.red{background:#FDE3E3;color:#C62828;border:1px solid #F2C7C7}
+.bgimg{width:100%;height:60px;border-radius:12px;object-fit:cover;margin:6px 0}
+.thumb{width:44px;height:44px;border-radius:10px;object-fit:cover;background:#F6F2EA;flex:0 0 44px}
+.pill{flex:0 0 auto;background:#F2E9D8;border:1px solid #E8DCC4;border-radius:999px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;color:#4A3A22}
+.pill.on{background:linear-gradient(135deg,#B99A5B,#D4B87C);color:#fff;border-color:transparent}
+.empty{color:#A79E8C;text-align:center;padding:30px;font-size:13px}
+#ov{position:fixed;inset:0;background:#2A262088;z-index:60}
+#md{position:fixed;right:0;left:0;bottom:0;z-index:61;background:#fff;border-radius:24px 24px 0 0;padding:18px 16px calc(22px + env(safe-area-inset-bottom));max-width:540px;margin:auto;transform:translateY(105%);transition:.3s cubic-bezier(.2,.8,.3,1)}
+#md.on{transform:none}
+#md h3{font-size:16px;font-weight:800;margin-bottom:12px}
+#md input,#md select,#md textarea{width:100%;border:1px solid #E8DCC4;border-radius:12px;padding:11px 13px;font-family:inherit;font-size:14px;outline:none;background:#FAF7F1;margin-bottom:9px}
+#md textarea{height:60px;resize:none}
+.mimg{width:100%;height:120px;border-radius:14px;object-fit:cover;background:#F6F2EA;margin-bottom:9px}
+#toast{position:fixed;bottom:calc(80px + env(safe-area-inset-bottom));right:50%;transform:translateX(50%);background:#2A2620;color:#fff;border-radius:999px;padding:11px 20px;font-size:13px;z-index:99;opacity:0;transition:.3s;pointer-events:none;max-width:88%;text-align:center}
+#toast.on{opacity:1}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gbox">
+    <div class="lg">R</div>
+    <h1>پنل مدیریت کافه روبیک</h1>
+    <p>کد مدیریت را وارد کنید</p>
+    <input id="gcode" type="tel" maxlength="6" inputmode="numeric" placeholder="••••">
+    <button onclick="tryLogin()">ورود 🔐</button>
+  </div>
+</div>
+
+<div id="app" hidden>
+  <header><b>⚙️ ادمین کافه روبیک</b><button onclick="logout()">خروج</button></header>
+  <nav>
+    <button class="on" id="t-cats" onclick="tab('cats')">🗂️ دسته‌ها</button>
+    <button id="t-prods" onclick="tab('prods')">📦 محصولات</button>
+    <button id="t-sugg" onclick="tab('sugg')">⭐ پیشنهاد</button>
+    <button id="t-brand" onclick="tab('brand')">🎨 تم</button>
+  </nav>
+  <div class="view" id="v-cats"></div>
+  <div class="view" id="v-prods" hidden></div>
+  <div class="view" id="v-sugg" hidden></div>
+  <div class="view" id="v-brand" hidden></div>
+</div>
+
+<div id="ov" hidden onclick="closeMd()"></div>
+<div id="md" hidden>
+  <h3 id="mdt">محصول</h3>
+  <div class="mimg" id="e-imgprev" onclick="pickEImg()" style="display:flex;align-items:center;justify-content:center;color:#A79E8C;font-size:13px;cursor:pointer">🖼 برای انتخاب عکس لمس کنید</div>
+  <input id="e-name" type="text" placeholder="نام محصول">
+  <input id="e-price" type="tel" inputmode="numeric" placeholder="قیمت (تومان) مثلاً 85000">
+  <textarea id="e-descr" placeholder="توضیح کوتاه (اختیاری)"></textarea>
+  <select id="e-cat"></select>
+  <div class="row">
+    <button class="b gold" style="flex:1" onclick="saveProd()">💾 ذخیره</button>
+    <button class="b" onclick="closeMd()">لغو</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+window.onerror=function(m){try{alert('⚠️ خطا: '+m)}catch(_){}};
+const sb=supabase.createClient('https://dkmgewadohmnspkueodi.supabase.co','sb_publishable_1IKt1YXof1LUaVeM5VDgpQ_vb8QqjnJ');
+let groups=[],cats=[],prods=[],sugg=null,brand={},theme='lux',filter='all',editing=null,eimg='',simg='',cur='cats';
+const $=id=>document.getElementById(id);
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200);}
+function tab(t){cur=t;['cats','prods','sugg','brand'].forEach(x=>{$('v-'+x).hidden=x!==t;$('t-'+x).classList.toggle('on',x===t);});render();}
+function render(){if(cur==='cats')renderCats();else if(cur==='prods')renderProds();else if(cur==='sugg')renderSugg();else renderBrand();}
+async function saveCfg(k,v){const r=await sb.from('site_config').upsert({k,v});if(r.error)toast('⚠️ '+r.error.message);}
+async function loadAll(){
+ const g=async k=>{const r=await sb.from('site_config').select('v').eq('k',k).maybeSingle();return r.data?r.data.v:null;};
+ groups=await g('groups')||[];cats=await g('cats')||[];sugg=await g('suggestion');
+ theme=await g('theme')||'lux';brand=await g('brand')||{};
+ const p=await sb.from('site_products').select('*').order('id');prods=p.data||[];
+ render();toast('✅ ادمین آماده است');}
+function tryLogin(){if($('gcode').value.trim()==='1396'){$('gate').style.display='none';$('app').hidden=false;loadAll();}else toast('کد اشتباه است');}
+$('gcode').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
+function logout(){location.reload();}
+/* ---- آپلود عکس با فشرده‌سازی ---- */
+async function upImg(file){const d=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(file);});
+ const im=await new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.src=d;});
+ const s=Math.min(1,900/Math.max(im.width,im.height));
+ const cv=document.createElement('canvas');cv.width=im.width*s;cv.height=im.height*s;
+ cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);
+ const bl=await new Promise(r=>cv.toBlob(r,'image/jpeg',.78));
+ const p='m'+Date.now()+'.jpg';
+ const up=await sb.storage.from('menuimg').upload(p,bl,{contentType:'image/jpeg',upsert:true});
+ if(up.error)throw up.error;
+ return sb.storage.from('menuimg').getPublicUrl(p).data.publicUrl;}
+function pickImg(cb){const i=document.createElement('input');i.type='file';i.accept='image/*';
+ i.onchange=async()=>{if(!i.files[0])return;toast('⏳ در حال آپلود…');
+ try{cb(await upImg(i.files[0]));}catch(e){toast('⚠️ خطا در آپلود عکس');}};i.click();}
+/* ---- دسته‌ها و گروه‌ها ---- */
+function renderCats(){let h='';
+ groups.forEach((g,gi)=>{h+='<div class="card"><div class="row"><b style="flex:1;font-size:14px">'+g.icon+' '+g.name+'</b><button class="b" onclick="renGroup('+gi+')">✏️</button><button class="b" onclick="pickImg(u=>setGroupBg('+gi+',u))">🖼️ پس‌زمینه</button></div>';
+ if(g.bg)h+='<img class="bgimg" src="'+g.bg+'">';
+ cats.forEach((c,ci)=>{if(c.grp!==g.id)return;
+  h+='<div class="row">'+(c.img?'<img class="thumb" src="'+c.img+'">':'<div class="thumb" style="display:flex;align-items:center;justify-content:center;font-size:20px">'+c.icon+'</div>')+'<b style="flex:1;font-size:13.5px">'+c.name+'</b><button class="b" onclick="pickImg(u=>setCatImg('+ci+',u))">🖼️</button><button class="b" onclick="editCat('+ci+')">✏️</button><button class="b red" onclick="delCat('+ci+')">🗑️</button></div>';});
+ h+='<div class="row"><button class="b" style="width:100%" onclick="addCat('+gi+')">➕ دسته جدید در «'+g.name+'»</button></div></div>';});
+ h+='<div class="row"><button class="b gold" style="width:100%;padding:12px" onclick="addGroup()">➕ گروه جدید (مثل منوی کافه)</button></div>';
+ $('v-cats').innerHTML=h;}
+function setGroupBg(i,u){groups[i].bg=u;saveCfg('groups',groups).then(renderCats);toast('🖼️ پس‌زمینه ثبت شد');}
+function setCatImg(i,u){cats[i].img=u;saveCfg('cats',cats).then(renderCats);toast('🖼️ عکس دسته ثبت شد');}
+function editCat(i){const n=prompt('اسم دسته:',cats[i].name);if(n===null)return;const ic=prompt('ایموجی دسته:',cats[i].icon);if(ic===null)return;
+ cats[i].name=n.trim()||cats[i].name;cats[i].icon=ic.trim()||cats[i].icon;saveCfg('cats',cats).then(renderCats);toast('💾 شد');}
+function addCat(gi){const n=prompt('اسم دسته جدید:');if(!n)return;const ic=prompt('ایموجی دسته:','☕');
+ cats.push({id:'c'+Date.now(),name:n.trim(),icon:(ic||'📁').trim(),grp:groups[gi].id,img:''});
+ saveCfg('cats',cats).then(renderCats);toast('✅ اضافه شد');}
+function delCat(i){if(!confirm('حذف دسته «'+cats[i].name+'»؟ (محصولاتش حذف نمی‌شن)'))return;
+ cats.splice(i,1);saveCfg('cats',cats).then(renderCats);}
+function renGroup(i){const n=prompt('اسم گروه:',groups[i].name);if(!n)return;
+ groups[i].name=n.trim();saveCfg('groups',groups).then(renderCats);}
+function addGroup(){const n=prompt('اسم گروه جدید (مثلاً منوی صبحانه):');if(!n)return;
+ groups.push({id:'g'+Date.now(),name:n.trim(),icon:'📁',bg:''});saveCfg('groups',groups).then(renderCats);}
+/* ---- محصولات ---- */
+function renderProds(){let h='<div class="row" style="flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px">';
+ h+='<button class="pill'+(filter==='all'?' on':'')+'" onclick="setF(\'all\')">همه</button>';
+ cats.forEach(c=>{h+='<button class="pill'+(filter===c.id?' on':'')+'" onclick="setF(\''+c.id+'\')">'+c.icon+' '+c.name+'</button>';});
+ h+='</div><div class="row"><button class="b gold" style="width:100%;padding:12px" onclick="openProd()">➕ افزودن محصول</button></div>';
+ const list=prods.filter(p=>filter==='all'||p.cat===filter);
+ if(!list.length)h+='<div class="empty">محصولی نیست — از دکمه بالا اضافه کن</div>';
+ list.forEach(p=>{const c=cats.find(x=>x.id===p.cat);
+  h+='<div class="card"><div class="row">'+(p.img?'<img class="thumb" src="'+p.img+'">':'<div class="thumb"></div>')+
+  '<div style="flex:1"><b style="font-size:14px">'+p.name+'</b><div style="font-size:11.5px;color:#9A9182">'+(c?c.name:'')+' · '+Math.round(p.price/1000).toLocaleString('fa-IR')+' هزار تومان</div></div>'+
+  '<button class="b" onclick="openProd('+p.id+')">✏️</button><button class="b red" onclick="delProd('+p.id+')">🗑️</button></div></div>';});
+ $('v-prods').innerHTML=h;}
+function setF(f){filter=f;renderProds();}
+function openProd(id){editing=id||null;const p=id?prods.find(x=>x.id===id):null;eimg=p?(p.img||''):'';
+ $('mdt').textContent=p?'✏️ ویرایش محصول':'➕ محصول جدید';
+ $('e-imgprev').innerHTML=p&&p.img?'<img src="'+p.img+'" style="width:100%;height:120px;object-fit:cover;border-radius:14px">':'🖼 برای انتخاب عکس لمس کنید';
+ $('e-name').value=p?p.name:'';$('e-price').value=p?String(Math.round(p.price)):'';
+ $('e-descr').value=p?(p.descr||''):'';
+ $('e-cat').innerHTML=cats.map(c=>'<option value="'+c.id+'"'+(p&&p.cat===c.id?' selected':'')+'>'+c.icon+' '+c.name+'</option>').join('');
+ $('ov').hidden=false;$('md').hidden=false;requestAnimationFrame(()=>$('md').classList.add('on'));}
+function closeMd(){$('md').classList.remove('on');setTimeout(()=>{$('md').hidden=true;$('ov').hidden=true;},300);}
+function pickEImg(){pickImg(u=>{eimg=u;$('e-imgprev').innerHTML='<img src="'+u+'" style="width:100%;height:120px;object-fit:cover;border-radius:14px">';});}
+function saveProd(){const n=$('e-name').value.trim(),pr=parseInt(($('e-price').value+'').replace(/\D/g,''))||0;
+ if(!n){toast('نام را وارد کن');return;}
+ const row={name:n,price:pr,descr:$('e-descr').value.trim(),cat:$('e-cat').value,img:eimg};
+ (async()=>{if(editing)await sb.from('site_products').update(row).eq('id',editing);else await sb.from('site_products').insert(row);
+ prods=(await sb.from('site_products').select('*').order('id')).data||[];closeMd();renderProds();toast('💾 ذخیره شد');})();}
+function delProd(id){if(!confirm('حذف این محصول؟'))return;
+ sb.from('site_products').delete().eq('id',id).then(async()=>{prods=(await sb.from('site_products').select('*').order('id')).data||[];renderProds();toast('🗑️ حذف شد');});}
+/* ---- پیشنهاد روز ---- */
+function renderSugg(){const s=sugg&&sugg.title?sugg:null;simg=s?(s.img||''):'';
+ let h='<div class="card"><h3>⭐ پیشنهاد روز</h3>';
+ if(s)h+='<div style="font-size:13px;margin-bottom:8px"><b>'+s.title+'</b><br><span style="color:#9A9182">'+(s.desc||'')+'</span></div>'+(s.img?'<img class="bgimg" src="'+s.img+'">':'');
+ h+='<div class="row"><input type="text" id="s-title" placeholder="عنوان (مثلاً لاته + کیک شکلات)" value="'+(s?s.title.replace(/"/g,'&quot;'):'')+'"></div>';
+ h+='<div class="row"><input type="text" id="s-desc" placeholder="توضیح (مثلاً ۲۰٪ تخفیف — فقط امروز)" value="'+(s?(s.desc||'').replace(/"/g,'&quot;'):'')+'"></div>';
+ h+='<div class="mimg" id="s-imgprev" onclick="pickSImg()" style="display:flex;align-items:center;justify-content:center;color:#A79E8C;font-size:13px;cursor:pointer">🖼 برای انتخاب عکس لمس کنید</div>';
+ h+='<div class="row"><button class="b gold" style="flex:1" onclick="saveSugg()">💾 ذخیره روی سایت</button>'+(s?'<button class="b red" onclick="delSugg()">🗑️ حذف</button>':'')+'</div></div>';
+ $('v-sugg').innerHTML=h;}
+function pickSImg(){pickImg(u=>{simg=u;$('s-imgprev').innerHTML='<img src="'+u+'" style="width:100%;height:120px;object-fit:cover;border-radius:14px">';});}
+function saveSugg(){const t=$('s-title').value.trim();if(!t){toast('عنوان را وارد کن');return;}
+ sugg={title:t,desc:$('s-desc').value.trim(),img:simg||''};
+ saveCfg('suggestion',sugg).then(()=>{toast('⭐ روی سایت رفت');renderSugg();});}
+function delSugg(){sugg=null;simg='';saveCfg('suggestion',null).then(()=>{toast('حذف شد');renderSugg();});}
+/* ---- تم و هویت ---- */
+function renderBrand(){let h='<div class="card"><h3>🎨 تم سایت</h3><div class="row" style="flex-wrap:nowrap;overflow-x:auto">';
+ h+='<button class="pill'+(theme==='lux'?' on':'')+'" onclick="setTheme(\'lux\')">👑 لاکچری طلایی</button>';
+ h+='<button class="pill'+(theme==='cream'?' on':'')+'" onclick="setTheme(\'cream\')">☀️ کرم روشن</button></div>';
+ h+='<p style="font-size:11.5px;color:#9A9182;margin-top:6px">بعد از اتصال سایت، با هر تم ذخیره‌شده باز می‌شود</p></div>';
+ h+='<div class="card"><h3>🏷️ هویت کافه</h3>';
+ h+='<div class="row"><input type="text" id="b-name" placeholder="اسم کافه" value="'+(brand.name||'').replace(/"/g,'&quot;')+'"></div>';
+ h+='<div class="row"><input type="text" id="b-tag" placeholder="شعار زیر اسم" value="'+(brand.tagline||'').replace(/"/g,'&quot;')+'"></div>';
+ h+='<div class="row">'+(brand.logo?'<img class="thumb" src="'+brand.logo+'">':'')+'<button class="b" onclick="pickImg(u=>{brand.logo=u;saveCfg(\'brand\',brand).then(renderBrand);toast(\'🖼️ لوگو ثبت شد\');})">🖼️ انتخاب لوگو</button></div>';
+ h+='<div class="row"><button class="b gold" style="width:100%;padding:12px" onclick="saveBrand()">💾 ذخیره</button></div></div>';
+ $('v-brand').innerHTML=h;}
+function setTheme(t){theme=t;saveCfg('theme',theme);renderBrand();toast('🎨 تم ذخیره شد');}
+function saveBrand(){brand.name=$('b-name').value.trim();brand.tagline=$('b-tag').value.trim();
+ saveCfg('brand',brand).then(()=>toast('💾 ذخیره شد'));}
+</script>
+</body>
+</html>
