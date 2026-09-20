@@ -7,7 +7,7 @@
 <style>
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
 *{box-sizing:border-box;margin:0;padding:0;font-family:Vazirmatn,sans-serif;-webkit-tap-highlight-color:transparent}
-body{min-height:100vh;background:radial-gradient(90% 40% at 80% 0%,#F3E4C880 0%,transparent 60%),radial-gradient(80% 35% at 10% 100%,#EFE0C566 0%,transparent 60%),linear-gradient(180deg,#FDFBF7 0%,#F8F2E8 50%,#F3ECDD 100%);color:#2A2620;padding-bottom:110px}
+body{min-height:100vh;background:radial-gradient(90% 40% at 80% 0%,#F3E4C880 0%,transparent 60%),radial-gradient(80% 35% at 10% 100%,#EFE0C566 0%,transparent 60%),linear-gradient(180deg,#FDFBF7,#F8F2E8 50%,#F3ECDD);color:#2A2620;padding-bottom:110px}
 .sheet0{margin:14px 12px;background:#fff;border-radius:22px;padding:13px;box-shadow:0 12px 30px #B99A5B26;border:1px solid #F0E7D6}
 .sh0h{display:flex;align-items:center;gap:10px}
 .sh0h h2{flex:1;font-size:16.5px;font-weight:800;text-align:right}
@@ -65,7 +65,6 @@ footer{text-align:center;color:#A79E8C;font-size:11px;padding:26px 0 10px}
 </style>
 </head>
 <body>
-
 <div class="sheet0">
   <div class="sh0h">
     <button class="cbtn" onclick="togSearch()">🔍</button>
@@ -81,19 +80,15 @@ footer{text-align:center;color:#A79E8C;font-size:11px;padding:26px 0 10px}
     <div class="accb"><div class="catrow" id="cf"></div></div>
   </div>
 </div>
-
 <div class="chipbar" id="chipbar"></div>
 <div id="menu"></div>
 <div id="results" hidden><div class="grid" id="rr"></div><div class="empty" id="nores" hidden>😅 چیزی پیدا نشد</div></div>
-
 <footer>کافه روبیک © ۱۴۰۴</footer>
-
 <nav class="dock">
   <button onclick="goTop()">↑</button>
   <button class="on" onclick="goMenu()">منو</button>
   <button onclick="alert('📞 تماس: شماره واقعی به‌زودی')">تماس</button>
 </nav>
-
 <div class="ov" id="ov" onclick="cls()" hidden></div>
 <div class="sheet" id="sh" hidden>
   <div class="grip"></div>
@@ -101,16 +96,14 @@ footer{text-align:center;color:#A79E8C;font-size:11px;padding:26px 0 10px}
   <div class="srow"><div><b id="snm"></b><p id="sds"></p></div><button class="sx" onclick="cls()">✕</button></div>
   <div class="spr"><span>قیمت</span><b id="spr"></b></div>
 </div>
-
 <script>
+window.onerror=function(m){try{alert('⚠️ خطا: '+m)}catch(_){}};
 const W='https://upload.wikimedia.org/wikipedia/commons/thumb/';
 const IMG={
  esp:W+'c/cf/Espresso_Coffee_01.jpg/600px-Espresso_Coffee_01.jpg',
  ame:W+'d/d4/Americano_Coffee_%2816608533770%29.jpg/600px-Americano_Coffee_%2816608533770%29.jpg',
  lat:W+'9/91/Caffe_Latte_Special.jpg/400px-Caffe_Latte_Special.jpg',
  cap:W+'9/96/Cappuccino.jpg/600px-Cappuccino.jpg',
- che:W+'2/23/Chemex_coffeemaker_with_filter.jpg/450px-Chemex_coffeemaker_with_filter.jpg',
- syp:W+'1/1b/Vacuum_coffee_maker_with_coffee_in_Brno%2C_Brno-City_District.jpg/600px-Vacuum_coffee_maker_with_coffee_in_Brno%2C_Brno-City_District.jpg',
  fre:W+'f/f6/French_press_2020.jpg/400px-French_press_2020.jpg',
  mas:W+'1/11/Chai_in_a_Glass.jpg/450px-Chai_in_a_Glass.jpg',
  hot:W+'8/87/Hot_chocolate.jpg/600px-Hot_chocolate.jpg',
@@ -121,7 +114,7 @@ const IMG={
  bur:W+'5/5e/Cheeseburger.png/600px-Cheeseburger.png',
  cak:W+'0/09/Chocolate_cake.jpg/600px-Chocolate_cake.jpg',
  tre:W+'a/a2/Tres_leches_cake.jpg/600px-Tres_leches_cake.jpg',
- car:W+'a/a2/Carrot_cake.jpg/600px-Carrot_cake.jpg};
+ car:W+'a/a2/Carrot_cake.jpg/600px-Carrot_cake.jpg'};
 const CATS=[
  ['esp','اسپرسو بار','☕','cc'],
  ['grm','نوشیدنی‌های گرم','🍵','cc'],
@@ -149,33 +142,33 @@ const kt=p=>fa(Math.round(p/1000));
 const $=id=>document.getElementById(id);
 function accT(a){a.parentElement.classList.toggle('open')}
 function togSearch(){$('srch').classList.toggle('open')}
-CATS.forEach(c=>{const b=document.createElement('button');b.className='chip';b.id='ch-'+c[0];
- b.innerHTML='<span class="ce">'+c[2]+'</span>'+c[1];b.onclick=()=>{$('sec-'+c[0]).scrollIntoView({behavior:'smooth'})};$('chipbar').appendChild(b);
- const k=document.createElement('button');k.className='cat';k.innerHTML='<div class="ci">'+c[2]+'</div><span>'+c[1]+'</span>';
- k.onclick=()=>{$('sec-'+c[0]).scrollIntoView({behavior:'smooth'})};$(c[3]).appendChild(k);});
 function card(it,d){const el=document.createElement('div');el.className='card';el.style.animationDelay=d+'ms';
  el.innerHTML='<div class="ph">'+(it[4]?'<img loading="lazy" src="'+it[4]+'" onerror="this.remove()">':'')+'</div><div class="nm">'+it[1]+'</div><div class="pr"><b>'+kt(it[3])+'</b><span>هزار تومان</span></div>';
- el.onclick=()=>open(it);return el;}
-CATS.forEach(c=>{const s=document.createElement('section');s.className='sec';s.id='sec-'+c[0];
- s.innerHTML='<h3>'+c[1]+'</h3><div class="grid"></div>';$('menu').appendChild(s);
- let j=0;ITEMS.forEach((it,i)=>{if(it[0]===c[0]){s.querySelector('.grid').appendChild(card(it,j*40));j++;}});});
-const spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const id=e.target.id.replace('sec-','');
- CATS.forEach(c=>$('ch-'+c[0]).classList.toggle('on',c[0]===id));}}),{rootMargin:'-40% 0px -55% 0px'});
-document.querySelectorAll('.sec').forEach(s=>spy.observe(s));
+ el.onclick=()=>openIt(it);return el;}
+function openIt(it){$('sph').innerHTML=it[4]?'<img src="'+it[4]+'" onerror="this.remove()">':'';
+ $('snm').textContent=it[1];$('sds').textContent=it[2];$('spr').textContent=kt(it[3])+' هزار تومان';
+ $('ov').hidden=false;$('sh').hidden=false;requestAnimationFrame(()=>{$('ov').classList.add('on');$('sh').classList.add('on');});}
+function cls(){$('ov').classList.remove('on');$('sh').classList.remove('on');setTimeout(()=>{$('ov').hidden=true;$('sh').hidden=true;},320);}
 function run(){const q=$('q').value.trim();
  if(!q){$('results').hidden=true;$('menu').style.display='';$('chipbar').style.display='';return;}
  $('menu').style.display='none';$('chipbar').style.display='none';$('results').hidden=false;
  const rr=$('rr');rr.innerHTML='';let n=0;
  ITEMS.forEach(it=>{if((it[1]+it[2]).includes(q)){n++;rr.appendChild(card(it,n*40));}});
  $('nores').hidden=n>0;}
-function open(it){$('sph').innerHTML=it[4]?'<img src="'+it[4]+'" onerror="this.remove()">':'';
- $('snm').textContent=it[1];$('sds').textContent=it[2];$('spr').textContent=kt(it[3])+' هزار تومان';
- $('ov').hidden=false;$('sh').hidden=false;requestAnimationFrame(()=>{$('ov').classList.add('on');$('sh').classList.add('on');});}
-function cls(){$('ov').classList.remove('on');$('sh').classList.remove('on');setTimeout(()=>{$('ov').hidden=true;$('sh').hidden=true;},320);}
-let sy=0;$('sh').addEventListener('touchstart',e=>sy=e.touches[0].clientY);
-$('sh').addEventListener('touchmove',e=>{if(e.touches[0].clientY-sy>70)cls();});
 function goTop(){window.scrollTo({top:0,behavior:'smooth'})}
 function goMenu(){$('sec-esp').scrollIntoView({behavior:'smooth'})}
+CATS.forEach(c=>{const b=document.createElement('button');b.className='chip';b.id='ch-'+c[0];
+ b.innerHTML=c[2]+' '+c[1];b.onclick=()=>{$('sec-'+c[0]).scrollIntoView({behavior:'smooth'})};$('chipbar').appendChild(b);
+ const k=document.createElement('button');k.className='cat';k.innerHTML='<div class="ci">'+c[2]+'</div><span>'+c[1]+'</span>';
+ k.onclick=()=>{$('sec-'+c[0]).scrollIntoView({behavior:'smooth'})};$(c[3]).appendChild(k);});
+CATS.forEach(c=>{const s=document.createElement('section');s.className='sec';s.id='sec-'+c[0];
+ s.innerHTML='<h3>'+c[1]+'</h3><div class="grid"></div>';$('menu').appendChild(s);
+ let j=0;ITEMS.forEach((it,i)=>{if(it[0]===c[0]){s.querySelector('.grid').appendChild(card(it,j*40));j++;}});});
+const spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const id=e.target.id.replace('sec-','');
+ CATS.forEach(c=>$('ch-'+c[0]).classList.toggle('on',c[0]===id));}}),{rootMargin:'-40% 0px -55% 0px'});
+document.querySelectorAll('.sec').forEach(s=>spy.observe(s));
+let sy=0;$('sh').addEventListener('touchstart',e=>sy=e.touches[0].clientY);
+$('sh').addEventListener('touchmove',e=>{if(e.touches[0].clientY-sy>70)cls();});
 </script>
 </body>
 </html>
