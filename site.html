@@ -172,3 +172,84 @@ $('sh').addEventListener('touchmove',e=>{if(e.touches[0].clientY-sy>70)cls();});
 </script>
 </body>
 </html>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/iconify-icon@2/dist/iconify-icon.min.js"></script>
+<style>
+.brandbar{display:flex;align-items:center;gap:10px;margin:14px 12px 0;padding:4px 6px}
+.brandbar img,.brandbar .blg{width:42px;height:42px;border-radius:13px;object-fit:cover}
+.brandbar .blg{background:linear-gradient(135deg,#B99A5B,#D4B87C);color:#fff;font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center}
+.brandbar b{display:block;font-size:16px;font-weight:800}
+.brandbar span{display:block;font-size:11.5px;color:#9A9182}
+.sugbar{margin:10px 12px;background:linear-gradient(135deg,#B99A5B,#D4B87C);color:#fff;border-radius:16px;padding:13px 15px;box-shadow:0 8px 22px #B99A5B33}
+.sugbar b{font-size:13.5px}
+.sugbar .sugt{font-size:12.5px;opacity:.95;margin-top:4px}
+.sugbar img{width:100%;height:90px;object-fit:cover;border-radius:12px;margin-top:8px}
+</style>
+<script>
+/* ===== پچ سایت v1: اتصال به دیتابیس ادمین ===== */
+(function(){
+const sb=supabase.createClient('https://dkmgewadohmnspkueodi.supabase.co','sb_publishable_1IKt1YXof1LUaVeM5VDgpQ_vb8QqjnJ');
+const $=id=>document.getElementById(id);
+let G=[],C=[],P=[],SUG=null,BR={},TH='lux';
+const fa=n=>n.toLocaleString('fa-IR');
+const ico=(ic,sz)=>ic&&ic.indexOf(':')>-1?'<iconify-icon icon="'+ic+'" style="font-size:'+sz+';color:#B99A5B"></iconify-icon>':(ic||'📁');
+const kt=p=>fa(Math.round(p/1000));
+const cardHTML=p=>'<div class="ph">'+(p.img?'<img loading="lazy" src="'+p.img+'" onerror="this.remove()">':'')+'</div><div class="nm">'+p.name+'</div><div class="pr"><b>'+kt(p.price)+'</b><span>هزار تومان</span></div>';
+function openCard(p){
+ $('sph').innerHTML=p.img?'<img src="'+p.img+'" onerror="this.remove()">':'';
+ $('snm').textContent=p.name;$('sds').textContent=p.descr||'';$('spr').textContent=kt(p.price)+' هزار تومان';
+ $('ov').hidden=false;$('sh').hidden=false;requestAnimationFrame(()=>{$('ov').classList.add('on');$('sh').classList.add('on');});}
+window.cls=function(){$('ov').classList.remove('on');$('sh').classList.remove('on');setTimeout(()=>{$('ov').hidden=true;$('sh').hidden=true;},300);};
+window.togSearch=function(){$('srch').classList.toggle('open');if($('srch').classList.contains('open'))$('q').focus();else{$('q').value='';window.run();}};
+window.accT=function(a){a.parentElement.classList.toggle('open')};
+window.goTop=function(){window.scrollTo({top:0,behavior:'smooth'})};
+window.goMenu=function(){const s=document.querySelector('.sec');if(s)s.scrollIntoView({behavior:'smooth'})};
+window.run=function(){const q=$('q').value.trim();
+ if(!q){$('results').hidden=true;$('menu').style.display='';$('chipbar').style.display='';return;}
+ $('menu').style.display='none';$('chipbar').style.display='none';$('results').hidden=false;
+ const rr=$('rr');rr.innerHTML='';let n=0;
+ P.forEach(p=>{if((p.name+(p.descr||'')).indexOf(q)>-1){n++;const c=document.createElement('div');c.className='card';c.innerHTML=cardHTML(p);c.onclick=()=>openCard(p);rr.appendChild(c);}});
+ $('nores').hidden=n>0;};
+function build(){
+ let br=document.querySelector('.brandbar');
+ if(!br){br=document.createElement('div');br.className='brandbar';document.body.insertBefore(br,document.querySelector('.sheet0'));}
+ br.innerHTML=(BR.logo?'<img src="'+BR.logo+'">':'<div class="blg">R</div>')+'<div><b>'+(BR.name||'کافه روبیک')+'</b>'+(BR.tagline?'<span>'+BR.tagline+'</span>':'')+'</div>';
+ document.querySelectorAll('.acc').forEach(a=>a.remove());
+ const sh0=document.querySelector('.sheet0'),srch=document.querySelector('.srch');
+ G.forEach(g=>{
+  const acc=document.createElement('div');acc.className='acc open';
+  if(g.bg)acc.style.cssText='background-image:linear-gradient(#C9A87CD9,#C9A87CD9),url('+g.bg+');background-size:cover;background-position:center;';
+  let h='<div class="acch" onclick="accT(this)"><b>'+ico(g.icon,'18px')+' '+g.name+'</b><span class="cv">⌄</span></div><div class="accb"><div class="catrow">';
+  C.forEach(c=>{if(c.grp!==g.id)return;
+   h+='<button class="cat" onclick="document.getElementById(\'sec-'+c.id+'\').scrollIntoView({behavior:\'smooth\'})">'+(c.img?'<div class="ci"><img src="'+c.img+'" style="width:100%;height:100%;object-fit:cover;border-radius:12px"></div>':'<div class="ci">'+ico(c.icon,'21px')+'</div>')+'<span>'+c.name+'</span></button>';});
+  h+='</div></div>';acc.innerHTML=h;sh0.insertBefore(acc,srch.nextSibling);});
+ const cb=$('chipbar');cb.innerHTML='';
+ C.forEach(c=>{const b=document.createElement('button');b.className='chip';b.id='ch-'+c.id;
+  b.innerHTML=ico(c.icon,'15px')+' '+c.name;
+  b.onclick=()=>{const s=$('sec-'+c.id);if(s)s.scrollIntoView({behavior:'smooth'})};cb.appendChild(b);});
+ const mn=$('menu');mn.innerHTML='';
+ C.forEach(c=>{const s=document.createElement('section');s.className='sec';s.id='sec-'+c.id;
+  s.innerHTML='<h3>'+c.name+'</h3><div class="grid"></div>';mn.appendChild(s);
+  P.filter(p=>p.cat===c.id).forEach(p=>{const el=document.createElement('div');el.className='card';el.innerHTML=cardHTML(p);el.onclick=()=>openCard(p);s.querySelector('.grid').appendChild(el);});});
+ let sg=document.querySelector('.sugbar');
+ if(!sg){sg=document.createElement('div');sg.className='sugbar';sh0.parentNode.insertBefore(sg,$('chipbar'));}
+ if(SUG&&SUG.title){sg.style.display='';sg.innerHTML='<b>⭐ پیشنهاد امروز</b><div class="sugt">'+SUG.title+(SUG.desc?'<span> — '+SUG.desc+'</span>':'')+'</div>'+(SUG.img?'<img src="'+SUG.img+'">':'');}
+ else sg.style.display='none';
+ const spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const id=e.target.id.replace('sec-','');
+  C.forEach(c=>{const ch=$('ch-'+c.id);if(ch)ch.classList.toggle('on',c.id===id);});}}),{rootMargin:'-40% 0px -55% 0px'});
+ document.querySelectorAll('.sec').forEach(s=>spy.observe(s));
+}
+function applyTheme(){let st=document.getElementById('thmst');if(!st){st=document.createElement('style');st.id='thmst';document.head.appendChild(st);}
+ if(TH==='cream')st.textContent='body{background:radial-gradient(90% 40% at 80% 0%,#FFE3C280 0%,transparent 60%),linear-gradient(180deg,#FFFDF9,#FBF3E6 50%,#F7EDDC)}'+
+ '.acc{background:linear-gradient(135deg,#F6DCC0,#ECC79E);border-color:#E2B888}'+
+ '.chip.on,.dock button.on{background:linear-gradient(135deg,#E8641C,#F09A4B);border-color:transparent}'+
+ '.pr b,.spr b{color:#C2500E}.brandbar .blg{background:linear-gradient(135deg,#E8641C,#F09A4B)}';}
+(async()=>{try{
+ const g=async k=>{const r=await sb.from('site_config').select('v').eq('k',k).maybeSingle();return r.data?r.data.v:null;};
+ G=await g('groups')||[];C=await g('cats')||[];SUG=await g('suggestion');TH=await g('theme')||'lux';BR=await g('brand')||{};
+ const pr=await sb.from('site_products').select('*').order('id');P=pr.data||[];
+ C.sort((a,b)=>{const ga=G.findIndex(x=>x.id===a.grp),gb=G.findIndex(x=>x.id===b.grp);return (ga<0?99:ga)-(gb<0?99:gb);});
+ build();applyTheme();if(BR.name)document.title=BR.name;
+}catch(e){try{alert('⚠️ خطا در اتصال: '+e.message)}catch(_){}}})();
+})();
+</script>
