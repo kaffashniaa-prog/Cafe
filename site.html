@@ -643,7 +643,7 @@ document.head.appendChild(st);
 })();
 </script>
 <script>
-/* ===== پچ سایت v16: چیدمان خوش‌آمد از ادمین (شامل لوگو) ===== */
+/* ===== پچ سایت v18: دکمه همیشه پایین + چیدمان ادمین ===== */
 (function(){
 (async()=>{try{
  const sb=supabase.createClient('https://dkmgewadohmnspkueodi.supabase.co','sb_publishable_1IKt1YXof1LUaVeM5VDgpQ_vb8QqjnJ');
@@ -653,31 +653,23 @@ document.head.appendChild(st);
   const d=document.getElementById('splash');if(!d)return;
   const c=d.querySelector('.spc');if(!c)return;
   const h1=d.querySelector('h1'),p=d.querySelector('p'),b=d.querySelector('.spb'),lg=d.querySelector('.spl');
-  if(s.pos==='vtop'||s.pos==='top'){
-   c.style.setProperty('justify-content','flex-start','important');
-   c.style.setProperty('padding-top',(s.pos==='vtop'?'5vh':'13vh'),'important');
-   c.style.setProperty('padding-bottom','0','important');
-   if(b){if(b.parentNode!==c)c.appendChild(b);
-    b.style.setProperty('margin-top','auto','important');
-    b.style.setProperty('margin-bottom','6vh','important');}
-  }else{
-   c.style.setProperty('justify-content','center','important');
-   c.style.setProperty('padding-top','24px','important');
-  }
+  c.style.setProperty('height','100%','important');
+  c.style.setProperty('justify-content','flex-start','important');
+  c.style.setProperty('padding-top',(s.pos==='vtop'?'5vh':s.pos==='top'?'13vh':'20vh'),'important');
+  if(b){if(b.parentNode!==c)c.appendChild(b);
+   b.style.setProperty('margin-top','auto','important');
+   b.style.setProperty('margin-bottom','6vh','important');}
   if(h1&&s.tsz)h1.style.setProperty('font-size',s.tsz+'px','important');
   if(p&&s.ssz)p.style.setProperty('font-size',s.ssz+'px','important');
   if(b&&s.bsz)b.style.setProperty('font-size',s.bsz+'px','important');
   if(lg){
    if(s.lpos==='none'){lg.style.setProperty('display','none','important');}
-   else{
-    lg.style.setProperty('display','flex','important');
-    if(s.lsz){lg.style.setProperty('width',s.lsz+'px','important');
-     lg.style.setProperty('height',s.lsz+'px','important');}
-    if(s.lpos==='below'&&p)c.insertBefore(lg,p);
-    else if(h1&&c.firstElementChild!==lg)c.insertBefore(lg,c.firstChild);
-   }
+   else{lg.style.setProperty('display','block','important');
+    if(s.lsz){lg.style.setProperty('width',s.lsz+'px','important');lg.style.setProperty('height',s.lsz+'px','important');}
+    if(s.lpos==='below'&&p&&lg.nextElementSibling!==p)c.insertBefore(lg,p);
+    else if(s.lpos!=='below'&&c.firstElementChild!==lg)c.insertBefore(lg,c.firstChild);}
   }
- }catch(e){}},600);
+ }catch(e){}},500);
 }catch(_){}})();
 })();
 </script>
