@@ -707,4 +707,59 @@ window.renderSugg=async function(){await ld();render();};
 setTimeout(()=>{if(cur==='sugg')render();},600);
 })();
 </script>
+<script>
+/* ===== پچ ادمین v18: صفحه خوش‌آمد ===== */
+(function(){
+try{toast('✅ پچ v18 فعال')}catch(_){}
+let SP={media:'',title:'کافه روبیک',sub:'اینجا هیچ‌کس غریبه نیست',btn:'ورود به منو'},ld=false;
+window._spUp=function(){
+ const i=document.createElement('input');i.type='file';i.accept='image/*,video/*';
+ i.onchange=async()=>{const f=i.files[0];if(!f)return;toast('⏳ در حال آپلود…');
+  try{let blob=f;const t=f.type||'';
+   if(t!=='image/gif'&&t.indexOf('video')!==0)blob=await _spCmp(f);
+   const ext=t.indexOf('video')===0?'mp4':(t==='image/gif'?'gif':'jpg');
+   const p='splash'+Date.now()+'.'+ext;
+   const up=await sb.storage.from('menuimg').upload(p,blob,{contentType:t||'application/octet-stream',upsert:true});
+   if(up.error){toast('⚠️ '+up.error.message);return;}
+   SP.media=sb.storage.from('menuimg').getPublicUrl(p).data.publicUrl;
+   _spR();toast('✅ آپلود شد — 💾 ذخیره کن');}catch(e){toast('⚠️ خطا در آپلود');}};
+ i.click();};
+window._spCmp=f=>new Promise((ok,no)=>{const fr=new FileReader();
+ fr.onload=()=>{const im=new Image();im.onload=()=>{
+  const s=Math.min(1,1200/Math.max(im.width,im.height));
+  const cv=document.createElement('canvas');cv.width=im.width*s;cv.height=im.height*s;
+  cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);
+  cv.toBlob(b=>b?ok(b):no(),'image/jpeg',.82);};im.onerror=no;im.src=fr.result;};
+ fr.onerror=no;fr.readAsDataURL(f);});
+window._spClr=function(){SP.media='';_spR();toast('رسانه حذف شد — 💾 ذخیره کن');};
+window._spSave=async function(){
+ SP.title=document.getElementById('sp-t').value.trim();
+ SP.sub=document.getElementById('sp-s').value.trim();
+ SP.btn=document.getElementById('sp-b').value.trim();
+ await saveCfg('splash',SP);toast('💾 ذخیره شد — سایت رو ریفرش کن');};
+window._spR=function(){
+ const c=document.getElementById('splashCard');if(!c)return;
+ let m;
+ if(SP.media){const v=SP.media.indexOf('mp4')>-1;
+  m='<div style="border-radius:12px;overflow:hidden;margin-bottom:8px">'+
+  (v?'<video src="'+SP.media+'" style="width:100%;max-height:190px;object-fit:cover" muted loop autoplay playsinline></video>':'<img src="'+SP.media+'" style="width:100%;max-height:190px;object-fit:cover">')+'</div>'+
+  '<button class="b" onclick="window._spClr()">🗑️ حذف رسانه</button>';}
+ else m='<div class="mimg" onclick="window._spUp()" style="cursor:pointer">🖼🎬 انتخاب عکس / گیف / فیلم</div>';
+ c.innerHTML='<h3>🎬 صفحه خوش‌آمد</h3>'+m+
+  '<input id="sp-t" type="text" placeholder="عنوان"><input id="sp-s" type="text" placeholder="متن زیر عنوان">'+
+  '<input id="sp-b" type="text" placeholder="نوشته دکمه">'+
+  '<button class="b gold" style="width:100%" onclick="window._spSave()">💾 ذخیره</button>'+
+  '<div style="font-size:11px;color:#9A9182;margin-top:7px">هر بار سایت باز شه این صفحه اول میاد؛ مشتری دکمه رو بزنه تا منو بیاد. گیف/فیلم بدون فشرده‌سازی آپلود می‌شن.</div>';
+ document.getElementById('sp-t').value=SP.title||'';
+ document.getElementById('sp-s').value=SP.sub||'';
+ document.getElementById('sp-b').value=SP.btn||'';};
+setInterval(async function(){
+ if(!ld){ld=true;try{const r=await sb.from('site_config').select('v').eq('k','splash').maybeSingle();
+  if(r&&r.data&&r.data.v)SP=Object.assign(SP,r.data.v);}catch(e){}}
+ const vb=document.getElementById('v-brand');if(!vb)return;
+ if(!document.getElementById('splashCard')){
+  const c=document.createElement('div');c.className='card';c.id='splashCard';vb.appendChild(c);_spR();}
+},1200);
+})();
+</script>
 
