@@ -915,4 +915,42 @@ window._lyS2=async function(){
   await saveCfg('splash',s);toast('💾 ذخیره شد — سایت رو ریفرش کن');}catch(e){toast('⚠️ خطا');}};
 })();
 </script>
+<script>
+/* ===== پچ ادمین v24: لوگو + عنوان + زیرنویس هرکدوم جای مستقل ===== */
+(function(){
+try{toast('✅ پچ v24 فعال')}catch(_){}
+const sty='border:1px solid #E8DCC4;border-radius:10px;padding:9px;font-family:inherit';
+const LO=[['above','لوگو: بالای عنوان'],['below','لوگو: زیر متن'],['top','لوگو: بالای صفحه (جدا)'],['mid','لوگو: وسط صفحه (جدا)'],['none','لوگو: نمایش نده']];
+const TO=[['def','عنوان: همراه بقیه متن'],['top','عنوان: بالای صفحه (جدا)'],['mid','عنوان: وسط صفحه (جدا)'],['bot','عنوان: پایین، بالای دکمه'],['none','عنوان: نمایش نده']];
+const SO=[['def','زیرنویس: همراه عنوان'],['top','زیرنویس: بالای صفحه (جدا)'],['mid','زیرنویس: وسط صفحه (جدا)'],['bot','زیرنویس: پایین، بالای دکمه'],['none','زیرنویس: نمایش نده']];
+let saved={};
+(async()=>{try{const r=await sb.from('site_config').select('v').eq('k','splash').maybeSingle();saved=(r&&r.data&&r.data.v)||{};}catch(e){}})();
+setInterval(function(){try{
+ const c=document.getElementById('layCard');if(!c)return;
+ if(document.getElementById('ly-lp2'))return;
+ const btn=c.querySelector('button');if(!btn)return;
+ function mk(id,opts,cur){
+  const d=document.createElement('div');d.className='row';
+  d.innerHTML='<select id="'+id+'" style="'+sty+'">'+opts.map(o=>'<option value="'+o[0]+'">'+o[1]+'</option>').join('')+'</select>';
+  c.insertBefore(d,btn);
+  document.getElementById(id).value=cur;
+ }
+ mk('ly-lp2',LO,saved.lpos||'above');
+ mk('ly-tp',TO,saved.tpos||'def');
+ mk('ly-sp',SO,saved.spos||'def');
+}catch(e){}},1000);
+window._lyS2=async function(){
+ try{const r=await sb.from('site_config').select('v').eq('k','splash').maybeSingle();
+  const s=(r&&r.data&&r.data.v)?r.data.v:{};
+  const g=id=>document.getElementById(id);
+  if(g('ly-p'))s.pos=g('ly-p').value;
+  s.lpos=g('ly-lp2').value;
+  s.lsz=parseFloat((g('ly-lsz')||{}).value)||84;
+  s.tsz=parseFloat((g('ly-t')||{}).value)||30;
+  s.ssz=parseFloat((g('ly-s')||{}).value)||14.5;
+  s.bsz=parseFloat((g('ly-b')||{}).value)||16;
+  s.tpos=g('ly-tp').value;s.spos=g('ly-sp').value;
+  await saveCfg('splash',s);toast('💾 ذخیره شد — سایت رو ریفرش کن');}catch(e){toast('⚠️ خطا');}};
+})();
+</script>
 
