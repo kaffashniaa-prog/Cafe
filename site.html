@@ -561,3 +561,29 @@ rm();setInterval(rm,700);
 }catch(e){try{alert('خطای اسلایدر: '+e.message)}catch(_){}}})();
 })();
 </script>
+<script>
+/* ===== پچ سایت v9: عکس چپ + متن راست ===== */
+(function(){
+const st=document.createElement('style');
+st.textContent=
+'.sgwrap.sgv9 .sgslide{display:flex!important;flex-direction:row-reverse!important;align-items:center;gap:12px;padding:12px 14px 22px!important;min-height:128px}'+
+'.sgwrap.sgv9 .sgslide img{width:44%!important;flex:0 0 44%;height:112px!important;margin:0!important;border-radius:12px!important;object-fit:cover}'+
+'.sgwrap.sgv9 .sgtxt{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0}'+
+'.sgwrap.sgv9 .sgslide b{font-size:15px}'+
+'.sgwrap.sgv9 .sgslide p{margin:0!important;font-size:12.5px}'+
+'.sgwrap.sgv9 .sgslide.noimg{justify-content:center;text-align:center}';
+document.head.appendChild(st);
+let n=0;const iv=setInterval(function(){
+ const w=document.querySelector('.sgwrap');
+ if(!w){if(++n>40)clearInterval(iv);return;}
+ clearInterval(iv);w.classList.add('sgv9');
+ w.querySelectorAll('.sgslide').forEach(function(sl){
+  const img=sl.querySelector('img'),b=sl.querySelector('b'),p=sl.querySelector('p');
+  const td=document.createElement('div');td.className='sgtxt';
+  if(b)td.appendChild(b);if(p)td.appendChild(p);
+  sl.innerHTML='';if(img)sl.appendChild(img);sl.appendChild(td);
+  if(!img)sl.classList.add('noimg');
+ });
+},300);
+})();
+</script>
