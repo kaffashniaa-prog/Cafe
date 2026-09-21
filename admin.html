@@ -535,4 +535,92 @@ setInterval(function(){try{
 }catch(_){}},1200);
 })();
 </script>
-github.com/kaffashniaa-prog/Cafe/edit/main/admin.html
+<script>
+/* ===== پچ ادمین v14: حذف عکس + زوم انتخاب عکس ===== */
+(function(){
+setInterval(function(){try{
+ var p=document.getElementById('e-imgprev');
+ if(!p||p.dataset.d14)return;p.dataset.d14='1';
+ var b=document.createElement('button');b.className='b';b.textContent='🗑️ حذف عکس';
+ b.style.cssText='margin-top:6px;font-size:12px';
+ b.onclick=function(){eimg='';p.innerHTML='🖼 برای انتخاب عکس لمس کنید';toast('عکس حذف شد — 💾 ذخیره کن');};
+ p.parentNode.insertBefore(b,p.nextSibling);
+}catch(e){}},800);
+setInterval(function(){try{
+ if(cur!=='cats')return;
+ document.querySelectorAll('#v-cats .row').forEach(function(r){
+  if(r.querySelector('.ic14'))return;
+  var ib=null;r.querySelectorAll('button').forEach(function(x){if(x.textContent.indexOf('🖼')>-1)ib=x;});
+  if(!ib)return;
+  var g=groups.filter(function(x){return r.textContent.indexOf(x.name)>-1;})[0]||null;
+  var c=g?null:cats.filter(function(x){return r.textContent.indexOf(x.name)>-1;})[0]||null;
+  if(!g&&!c)return;
+  if(!(g?g.bg:c.img))return;
+  var b=document.createElement('button');b.className='b ic14';b.textContent='🚫';
+  b.onclick=async function(){try{
+   if(g){g.bg='';await saveCfg('groups',groups);}else{c.img='';await saveCfg('cats',cats);}
+   renderCats();toast('عکس حذف شد ✅');}catch(e){}};
+  r.insertBefore(b,ib.nextSibling);
+ });
+}catch(e){}},800);
+setInterval(function(){try{document.querySelectorAll('button').forEach(function(b){
+ if(b.textContent.indexOf('ماکیاتو')>-1)b.remove();});}catch(e){}},1500);
+window.pickImg=function(cb){
+ var i=document.createElement('input');i.type='file';i.accept='image/*';
+ i.onchange=function(){if(i.files[0])z14(i.files[0],cb);};i.click();};
+function z14(file,cb){
+ var fr=new FileReader();
+ fr.onload=function(){var im=new Image();
+  im.onload=function(){
+   var ov=document.createElement('div');
+   ov.style.cssText='position:fixed;inset:0;z-index:9999;background:#000D;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:12px';
+   var vp=document.createElement('div');
+   vp.style.cssText='position:relative;width:100%;max-width:400px;height:55vh;overflow:hidden;border-radius:16px;background:#111;touch-action:none';
+   var ic=new Image();ic.src=fr.result;
+   ic.style.cssText='position:absolute;left:50%;top:50%;pointer-events:none;user-select:none;-webkit-user-select:none';
+   vp.appendChild(ic);
+   var h=document.createElement('div');h.textContent='🤏 دو انگشت: زوم — ☝️ یه انگشت: جابه‌جایی';h.style.cssText='color:#fff;font-size:12px';
+   var rw=document.createElement('div');rw.style.cssText='display:flex;gap:8px;width:100%;max-width:400px';
+   var ok=document.createElement('button');ok.className='b gold';ok.style.flex='1';ok.textContent='✅ همین باشه';
+   var no=document.createElement('button');no.className='b';no.textContent='لغو';
+   rw.appendChild(ok);rw.appendChild(no);ov.appendChild(vp);ov.appendChild(h);ov.appendChild(rw);
+   document.body.appendChild(ov);
+   var bs=1,sc=1,tx=0,ty=0,W=0,H=0;
+   function draw(){var k=bs*sc;ic.style.width=im.naturalWidth+'px';ic.style.height=im.naturalHeight+'px';
+    ic.style.transform='translate(calc(-50% + '+tx+'px),calc(-50% + '+ty+'px)) scale('+k+')';}
+   function cl(){var k=bs*sc,mw=im.naturalWidth*k,mh=im.naturalHeight*k;
+    var mx=Math.max(0,(mw-W)/2),my=Math.max(0,(mh-H)/2);
+    tx=Math.max(-mx,Math.min(mx,tx));ty=Math.max(-my,Math.min(my,ty));}
+   setTimeout(function(){W=vp.clientWidth;H=vp.clientHeight;
+    bs=Math.max(W/im.naturalWidth,H/im.naturalHeight);cl();draw();},80);
+   var ts=[],d0=0,z0=1,pm=null;
+   vp.addEventListener('touchstart',function(e){e.preventDefault();ts=Array.prototype.slice.call(e.touches);
+    if(ts.length===1)pm={x:ts[0].clientX,y:ts[0].clientY};
+    else{d0=Math.hypot(ts[0].clientX-ts[1].clientX,ts[0].clientY-ts[1].clientY);z0=sc;}},{passive:false});
+   vp.addEventListener('touchmove',function(e){e.preventDefault();
+    var t=Array.prototype.slice.call(e.touches);
+    if(t.length===1&&pm){tx+=t[0].clientX-pm.x;ty+=t[0].clientY-pm.y;pm={x:t[0].clientX,y:t[0].clientY};}
+    else if(t.length===2&&d0>0){var d=Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+     sc=Math.max(1,Math.min(6,z0*d/d0));
+     var m0x=(ts[0].clientX+ts[1].clientX)/2,m0y=(ts[0].clientY+ts[1].clientY)/2;
+     var m1x=(t[0].clientX+t[1].clientX)/2,m1y=(t[0].clientY+t[1].clientY)/2;
+     tx+=m1x-m0x;ty+=m1y-m0y;pm=null;}
+    ts=t;cl();draw();},{passive:false});
+   vp.addEventListener('touchend',function(e){ts=Array.prototype.slice.call(e.touches);
+    if(ts.length===1)pm={x:ts[0].clientX,y:ts[0].clientY};if(ts.length<2)d0=0;});
+   no.onclick=function(){ov.remove();};
+   ok.onclick=function(){var k=bs*sc;
+    var sx=(W/2+tx)/k-im.naturalWidth/2,sy=(H/2+ty)/k-im.naturalHeight/2;
+    var kk=Math.min(1,1100/Math.max(W,H));
+    var c2=document.createElement('canvas');c2.width=Math.round(W*kk);c2.height=Math.round(H*kk);
+    c2.getContext('2d').drawImage(im,sx,sy,W/k,H/k,0,0,c2.width,c2.height);
+    c2.toBlob(function(bl){ov.remove();toast('⏳ آپلود…');
+     upImg(bl).then(function(u){cb(u);}).catch(function(){toast('⚠️ خطا در آپلود');});
+    },'image/jpeg',.82);};
+  };
+  im.onerror=function(){toast('⚠️ عکس باز نشد');};
+  im.src=fr.result;};
+ fr.readAsDataURL(file);}
+})();
+</script>
+
