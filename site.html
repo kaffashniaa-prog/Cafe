@@ -643,52 +643,41 @@ document.head.appendChild(st);
 })();
 </script>
 <script>
-/* ===== پچ سایت v12: لوگوی صفحه خوش‌آمد بالاتر ===== */
+/* ===== پچ سایت v16: چیدمان خوش‌آمد از ادمین (شامل لوگو) ===== */
 (function(){
-const st=document.createElement('style');
-st.textContent='#splash .spc{justify-content:flex-start!important;padding-top:14vh!important}#splash .spb{margin-top:auto!important;margin-bottom:6vh!important}#splash .spc::after{content:none!important}';
-document.head.appendChild(st);
-let n=0;const iv=setInterval(function(){
- const d=document.getElementById('splash');
- if(!d){if(++n>40)clearInterval(iv);return;}
- clearInterval(iv);
- const btn=d.querySelector('.spb');
- if(btn)d.querySelector('.spc').appendChild(btn);
-},300);
-})();
-</script>
-<script>
-/* ===== پچ سایت v13: چیدمان صفحه خوش‌آمد (مستقیم) ===== */
-(function(){
-let n=0;
-const iv=setInterval(function(){
- const d=document.getElementById('splash');
- if(!d){if(++n>60)clearInterval(iv);return;}
- const c=d.querySelector('.spc'),b=d.querySelector('.spb');
- if(!c){return;}
- clearInterval(iv);
- c.style.justifyContent='flex-start';
- c.style.paddingTop='13vh';
- c.style.paddingBottom='0';
- if(b){if(b.parentNode!==c)c.appendChild(b);
-  b.style.marginTop='auto';
-  b.style.marginBottom='7vh';}
-},250);
-})();
-</script>
-<script>
-/* ===== پچ سایت v14: چیدمان خوش‌آمد (همیشگی) ===== */
-(function(){
-setInterval(function(){try{
- const d=document.getElementById('splash');if(!d)return;
- const c=d.querySelector('.spc'),b=d.querySelector('.spb');
- if(!c)return;
- c.style.setProperty('justify-content','flex-start','important');
- c.style.setProperty('padding-top','13vh','important');
- c.style.setProperty('padding-bottom','0','important');
- if(b){if(b.parentNode!==c)c.appendChild(b);
-  b.style.setProperty('margin-top','auto','important');
-  b.style.setProperty('margin-bottom','7vh','important');}
-}catch(e){}},700);
+(async()=>{try{
+ const sb=supabase.createClient('https://dkmgewadohmnspkueodi.supabase.co','sb_publishable_1IKt1YXof1LUaVeM5VDgpQ_vb8QqjnJ');
+ const r=await sb.from('site_config').select('v').eq('k','splash').maybeSingle();
+ const s=r&&r.data?r.data.v:null;if(!s)return;
+ setInterval(function(){try{
+  const d=document.getElementById('splash');if(!d)return;
+  const c=d.querySelector('.spc');if(!c)return;
+  const h1=d.querySelector('h1'),p=d.querySelector('p'),b=d.querySelector('.spb'),lg=d.querySelector('.spl');
+  if(s.pos==='vtop'||s.pos==='top'){
+   c.style.setProperty('justify-content','flex-start','important');
+   c.style.setProperty('padding-top',(s.pos==='vtop'?'5vh':'13vh'),'important');
+   c.style.setProperty('padding-bottom','0','important');
+   if(b){if(b.parentNode!==c)c.appendChild(b);
+    b.style.setProperty('margin-top','auto','important');
+    b.style.setProperty('margin-bottom','6vh','important');}
+  }else{
+   c.style.setProperty('justify-content','center','important');
+   c.style.setProperty('padding-top','24px','important');
+  }
+  if(h1&&s.tsz)h1.style.setProperty('font-size',s.tsz+'px','important');
+  if(p&&s.ssz)p.style.setProperty('font-size',s.ssz+'px','important');
+  if(b&&s.bsz)b.style.setProperty('font-size',s.bsz+'px','important');
+  if(lg){
+   if(s.lpos==='none'){lg.style.setProperty('display','none','important');}
+   else{
+    lg.style.setProperty('display','flex','important');
+    if(s.lsz){lg.style.setProperty('width',s.lsz+'px','important');
+     lg.style.setProperty('height',s.lsz+'px','important');}
+    if(s.lpos==='below'&&p)c.insertBefore(lg,p);
+    else if(h1&&c.firstElementChild!==lg)c.insertBefore(lg,c.firstChild);
+   }
+  }
+ }catch(e){}},600);
+}catch(_){}})();
 })();
 </script>
