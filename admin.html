@@ -668,4 +668,43 @@ window.renderSugg=function(){render();};
 setTimeout(ld,300);
 })();
 </script>
+<script>
+/* ===== پچ ادمین v17: پیشنهادها + فونت/اندازه/محل ===== */
+(function(){
+try{toast('✅ پچ v17 فعال')}catch(_){}
+const esc=s=>(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+let S=[],ed=-1,sim='';
+async function ld(){try{const r=await sb.from('site_config').select('v').eq('k','suggestion').maybeSingle();const v=r&&r.data?r.data.v:null;S=Array.isArray(v)?v:(v?[v]:[]);}catch(e){S=[];}}
+function render(){
+ const vb=document.getElementById('v-sugg');if(!vb)return;
+ let h='<div class="card"><h3>⭐ پیشنهادهای روز ('+S.length+' از ۶)</h3>';
+ if(!S.length)h+='<div style="font-size:12.5px;color:#9A9182">پیشنهادی نداری — یکی اضافه کن</div>';
+ S.forEach((s,i)=>{h+='<div style="background:#FAF7F1;border:1px solid #E8DCC4;border-radius:14px;padding:10px;margin:8px 0"><div class="row">'+(s.img?'<img src="'+s.img+'" style="width:56px;height:42px;object-fit:cover;border-radius:10px">':'')+'<b style="flex:1;font-size:13.5px">'+esc(s.title||'بدون عنوان')+'</b><button class="b" onclick="window._sgEd('+i+')">✏️</button><button class="b" onclick="window._sgDel('+i+')">🗑️</button></div>'+(s.descr?'<div style="font-size:11.5px;color:#8A8272">'+esc(s.descr)+'</div>':'')+'</div>';});
+ if(ed<0)h+='<button class="b gold" style="width:100%" onclick="window._sgNew()">➕ افزودن پیشنهاد</button>';
+ h+='</div>';
+ if(ed>=0){const s=S[ed]||{};
+  h+='<div class="card"><h3>'+(ed<S.length?'✏️ ویرایش پیشنهاد':'➕ پیشنهاد جدید')+'</h3>'+
+  '<input id="sg-t" type="text" placeholder="عنوان (اختیاری)" value="'+esc(s.title)+'">'+
+  '<input id="sg-d" type="text" placeholder="توضیح (اختیاری)" value="'+esc(s.descr)+'">'+
+  '<div class="row"><select id="sg-sz" style="flex:1;border:1px solid #E8DCC4;border-radius:10px;padding:9px;font-family:inherit">'+[[15,'اندازه: عادی'],[20,'اندازه: متوسط'],[26,'اندازه: بزرگ'],[34,'اندازه: خیلی بزرگ']].map(o=>'<option value="'+o[0]+'"'+(((s.tsz||15)==o[0])?' selected':'')+'>'+o[1]+'</option>').join('')+'</select>'+
+  '<select id="sg-f" style="flex:1;border:1px solid #E8DCC4;border-radius:10px;padding:9px;font-family:inherit">'+[['n','فونت: عادی'],['t','فونت: تیتر'],['m','فونت: ظریف']].map(o=>'<option value="'+o[0]+'"'+(((s.fnt||'n')==o[0])?' selected':'')+'>'+o[1]+'</option>').join('')+'</select></div>'+
+  '<div class="row"><select id="sg-p" style="flex:1;border:1px solid #E8DCC4;border-radius:10px;padding:9px;font-family:inherit">'+[['mid','محل متن: وسط'],['top','محل متن: بالا'],['bot','محل متن: پایین']].map(o=>'<option value="'+o[0]+'"'+(((s.pos||'mid')==o[0])?' selected':'')+'>'+o[1]+'</option>').join('')+'</select></div>'+
+  '<div id="sg-img" class="mimg" onclick="window._sgImg()" style="cursor:pointer">'+((sim||s.img)?'<img src="'+(sim||s.img)+'" style="width:100%;border-radius:12px">':'🖼 برای انتخاب عکس لمس کنید')+'</div>'+
+  '<div class="row" style="margin-top:8px"><button class="b gold" style="flex:1" onclick="window._sgSave()">💾 ذخیره</button><button class="b" onclick="window._sgCancel()">لغو</button></div></div>';}
+ vb.innerHTML=h;}
+window._sgNew=()=>{if(S.length>=6){toast('حداکثر ۶ پیشنهاد');return;}ed=S.length;sim='';render();};
+window._sgEd=i=>{ed=i;sim='';render();};
+window._sgCancel=()=>{ed=-1;sim='';render();};
+window._sgImg=()=>pickImg(u=>{sim=u;render();});
+window._sgDel=async i=>{S.splice(i,1);ed=-1;await saveCfg('suggestion',S.length?S:null);render();toast('🗑️ حذف شد');};
+window._sgSave=async()=>{
+ const t=document.getElementById('sg-t').value.trim();
+ if(!t&&!sim){toast('عنوان یا عکس بذار');return;}
+ const row={title:t,descr:document.getElementById('sg-d').value.trim(),img:sim||(ed<S.length?(S[ed].img||''):''),tsz:parseInt(document.getElementById('sg-sz').value)||15,fnt:document.getElementById('sg-f').value,pos:document.getElementById('sg-p').value};
+ if(ed<S.length)S[ed]=row;else S.push(row);
+ ed=-1;sim='';await saveCfg('suggestion',S.length?S:null);render();toast('💾 ذخیره شد — سایت رو ریفرش کن');};
+window.renderSugg=async function(){await ld();render();};
+setTimeout(()=>{if(cur==='sugg')render();},600);
+})();
+</script>
 
