@@ -676,3 +676,19 @@ const iv=setInterval(function(){
 },250);
 })();
 </script>
+<script>
+/* ===== پچ سایت v14: چیدمان خوش‌آمد (همیشگی) ===== */
+(function(){
+setInterval(function(){try{
+ const d=document.getElementById('splash');if(!d)return;
+ const c=d.querySelector('.spc'),b=d.querySelector('.spb');
+ if(!c)return;
+ c.style.setProperty('justify-content','flex-start','important');
+ c.style.setProperty('padding-top','13vh','important');
+ c.style.setProperty('padding-bottom','0','important');
+ if(b){if(b.parentNode!==c)c.appendChild(b);
+  b.style.setProperty('margin-top','auto','important');
+  b.style.setProperty('margin-bottom','7vh','important');}
+}catch(e){}},700);
+})();
+</script>
