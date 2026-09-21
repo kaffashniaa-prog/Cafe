@@ -839,4 +839,43 @@ setInterval(async function(){
 },1200);
 })();
 </script>
+<script>
+/* ===== پچ ادمین v20: چیدمان صفحه خوش‌آمد ===== */
+(function(){
+try{toast('✅ پچ v20 فعال')}catch(_){}
+setInterval(function(){try{
+ const sp=document.getElementById('splashCard');
+ const vb=document.getElementById('v-brand');
+ if(!sp||!vb)return;
+ let c=document.getElementById('layCard');
+ if(!c){c=document.createElement('div');c.className='card';c.id='layCard';sp.parentNode.insertBefore(c,sp.nextSibling);}
+ if(c.dataset.v20)return;c.dataset.v20='1';
+ c.innerHTML='<h3>📐 چیدمان خوش‌آمد</h3>'+
+ '<div class="row"><select id="ly-p" style="flex:1;border:1px solid #E8DCC4;border-radius:10px;padding:9px;font-family:inherit">'+
+ '<option value="mid">محل: وسط صفحه</option><option value="top">محل: بالاتر از وسط</option><option value="vtop">محل: خیلی بالا</option></select></div>'+
+ '<div class="row"><select id="ly-t" style="flex:1;border:1px solid #E8DCC4;border-radius:10px;padding:9px;font-family:inherit">'+
+ '<option value="24">عنوان: کوچک</option><option value="30" selected>عنوان: عادی</option><option value="40">عنوان: بزرگ</option><option value="52">عنوان: خیلی بزرگ</option></select>'+
+ '<select id="ly-s" style="flex:1;border:1px solid #E8DCC4;border-radius:10px;padding:9px;font-family:inherit">'+
+ '<option value="12.5">زیرنویس: کوچک</option><option value="14.5" selected>زیرنویس: عادی</option><option value="18">زیرنویس: بزرگ</option><option value="24">زیرنویس: خیلی بزرگ</option></select></div>'+
+ '<div class="row"><select id="ly-b" style="flex:1;border:1px solid #E8DCC4;border-radius:10px;padding:9px;font-family:inherit">'+
+ '<option value="14">دکمه: کوچک</option><option value="16" selected>دکمه: عادی</option><option value="20">دکمه: بزرگ</option><option value="26">دکمه: خیلی بزرگ</option></select></div>'+
+ '<button class="b gold" style="width:100%" onclick="window._lySave()">💾 ذخیره چیدمان</button>'+
+ '<div style="font-size:11px;color:#9A9182;margin-top:7px">ایموجی رو مستقیم توی متن‌ها (تب تنظیمات بالا) تایپ کن 😊</div>';
+ (async()=>{try{const r=await sb.from('site_config').select('v').eq('k','splash').maybeSingle();
+  if(r&&r.data&&r.data.v){const s=r.data.v;
+   if(document.getElementById('ly-p'))document.getElementById('ly-p').value=s.pos||'mid';
+   if(document.getElementById('ly-t'))document.getElementById('ly-t').value=String(s.tsz||30);
+   if(document.getElementById('ly-s'))document.getElementById('ly-s').value=String(s.ssz||14.5);
+   if(document.getElementById('ly-b'))document.getElementById('ly-b').value=String(s.bsz||16);}}catch(e){}})();
+}catch(e){}},1200);
+window._lySave=async function(){
+ try{const r=await sb.from('site_config').select('v').eq('k','splash').maybeSingle();
+  const s=(r&&r.data&&r.data.v)?r.data.v:{};
+  s.pos=document.getElementById('ly-p').value;
+  s.tsz=parseFloat(document.getElementById('ly-t').value)||30;
+  s.ssz=parseFloat(document.getElementById('ly-s').value)||14.5;
+  s.bsz=parseFloat(document.getElementById('ly-b').value)||16;
+  await saveCfg('splash',s);toast('💾 ذخیره شد — سایت رو ریفرش کن');}catch(e){toast('⚠️ خطا');}};
+})();
+</script>
 
