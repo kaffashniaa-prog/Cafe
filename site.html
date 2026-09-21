@@ -587,3 +587,33 @@ let n=0;const iv=setInterval(function(){
 },300);
 })();
 </script>
+<script>
+/* ===== پچ سایت v10: فونت/اندازه/جای متن اسلایدها ===== */
+(function(){
+const st=document.createElement('style');
+st.textContent="@import url('https://fonts.googleapis.com/css2?family=Lalezar&family=Markazi+Text:wght@600&display=swap');";
+document.head.appendChild(st);
+const F={n:'',t:"'Lalezar',system-ui",m:"'Markazi Text',serif"};
+(async()=>{try{
+ const sb=supabase.createClient('https://dkmgewadohmnspkueodi.supabase.co','sb_publishable_1IKt1YXof1LUaVeM5VDgpQ_vb8QqjnJ');
+ const r=await sb.from('site_config').select('v').eq('k','suggestion').maybeSingle();
+ let v=r&&r.data?r.data.v:null;if(!v)return;
+ const S=Array.isArray(v)?v:[v];
+ let n=0;const iv=setInterval(function(){
+  const w=document.querySelector('.sgwrap');if(!w){if(++n>50)clearInterval(iv);return;}
+  const sls=w.querySelectorAll('.sgslide');if(!sls.length){if(++n>50)clearInterval(iv);return;}
+  clearInterval(iv);
+  sls.forEach(function(sl,i){
+   const s=S[i];if(!s)return;
+   const b=sl.querySelector('b'),p=sl.querySelector('p'),tx=sl.querySelector('.sgtxt');
+   const ff=F[s.fnt]||'';
+   if(b){if(s.tsz)b.style.fontSize=s.tsz+'px';if(ff)b.style.fontFamily=ff;}
+   if(p&&ff)p.style.fontFamily=ff;
+   const j=(s.pos==='top')?'flex-start':(s.pos==='bot')?'flex-end':'center';
+   if(sl.classList.contains('noimg'))sl.style.justifyContent=j;
+   else if(tx)tx.style.justifyContent=j;
+  });
+ },300);
+}catch(_){}})();
+})();
+</script>
