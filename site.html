@@ -617,3 +617,28 @@ const F={n:'',t:"'Lalezar',system-ui",m:"'Markazi Text',serif"};
 }catch(_){}})();
 })();
 </script>
+<script>
+/* ===== پچ سایت v11: صفحه خوش‌آمد ===== */
+(function(){
+const st=document.createElement('style');
+st.textContent='#splash{position:fixed;inset:0;z-index:9998;background:#14100C;display:flex;align-items:center;justify-content:center;transition:opacity .6s ease}#splash.off{opacity:0;pointer-events:none}#splash .spm{position:absolute;inset:0;overflow:hidden}#splash .spm img,#splash .spm video{width:100%;height:100%;object-fit:cover}#splash .spd{position:absolute;inset:0;background:linear-gradient(180deg,#14100CB8 0%,#14100C55 45%,#14100CE8 100%)}#splash .spc{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;padding:24px;text-align:center;width:100%}#splash .spl{width:84px;height:84px;border-radius:22px;object-fit:cover;box-shadow:0 8px 26px #0007;animation:spu .9s ease both}#splash h1{color:#F2E8D2;font-size:30px;font-weight:800;margin:8px 0 0;text-shadow:0 2px 18px #0008;animation:spu 1s ease both .15s}#splash p{color:#D9C9A6;font-size:14.5px;margin:0;animation:spu 1s ease both .45s}#splash .spb{margin-top:28px;background:linear-gradient(135deg,#B99A5B,#D4B87C);color:#fff;border:0;border-radius:999px;padding:15px 48px;font-family:inherit;font-size:16px;font-weight:800;box-shadow:0 10px 30px #B99A5B55;animation:spu 1s ease both .8s;cursor:pointer}@keyframes spu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}';
+document.head.appendChild(st);
+(async()=>{try{
+ const sb=supabase.createClient('https://dkmgewadohmnspkueodi.supabase.co','sb_publishable_1IKt1YXof1LUaVeM5VDgpQ_vb8QqjnJ');
+ const rs=await sb.from('site_config').select('v').eq('k','splash').maybeSingle();
+ const s=rs&&rs.data?rs.data.v:null;
+ if(!s||(!s.media&&!s.title&&!s.sub))return;
+ const rb=await sb.from('site_config').select('v').eq('k','brand').maybeSingle();
+ const logo=rb&&rb.data&&rb.data.v&&rb.data.v.logo?rb.data.v.logo:'';
+ const d=document.createElement('div');d.id='splash';
+ let m='';if(s.media){const v=s.media.indexOf('mp4')>-1;
+  m='<div class="spm">'+(v?'<video src="'+s.media+'" autoplay muted loop playsinline></video>':'<img src="'+s.media+'" alt="">')+'</div>';}
+ d.innerHTML=m+'<div class="spd"></div><div class="spc">'+
+  (logo?'<img class="spl" src="'+logo+'">':'')+
+  (s.title?'<h1>'+s.title+'</h1>':'')+(s.sub?'<p>'+s.sub+'</p>':'')+
+  '<button class="spb">'+(s.btn||'ورود به منو')+'</button></div>';
+ document.body.appendChild(d);
+ d.querySelector('.spb').onclick=()=>{d.classList.add('off');setTimeout(()=>d.remove(),650);};
+}catch(_){}})();
+})();
+</script>
