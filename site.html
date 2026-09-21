@@ -657,3 +657,22 @@ let n=0;const iv=setInterval(function(){
 },300);
 })();
 </script>
+<script>
+/* ===== پچ سایت v13: چیدمان صفحه خوش‌آمد (مستقیم) ===== */
+(function(){
+let n=0;
+const iv=setInterval(function(){
+ const d=document.getElementById('splash');
+ if(!d){if(++n>60)clearInterval(iv);return;}
+ const c=d.querySelector('.spc'),b=d.querySelector('.spb');
+ if(!c){return;}
+ clearInterval(iv);
+ c.style.justifyContent='flex-start';
+ c.style.paddingTop='13vh';
+ c.style.paddingBottom='0';
+ if(b){if(b.parentNode!==c)c.appendChild(b);
+  b.style.marginTop='auto';
+  b.style.marginBottom='7vh';}
+},250);
+})();
+</script>
